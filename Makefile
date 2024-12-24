@@ -106,25 +106,25 @@ larastan: ## запускает анализатор кода (larastan)
 
 .PHONY: test_init
 test_init: ## настройка тестового окружения
-	docker-compose run --rm php php artisan config:clear
-	docker-compose run --rm php php artisan cache:clear
-	docker-compose run --rm php php artisan key:generate -n --env=testing
-	docker-compose run --rm php php artisan migrate -n --env=testing
-	docker-compose run --rm php php artisan db:seed -n --env=testing
+	docker compose run --rm php php artisan config:clear
+	docker compose run --rm php php artisan cache:clear
+	docker compose run --rm php php artisan key:generate -n --env=testing
+	docker compose run --rm php php artisan migrate -n --env=testing
+	docker compose run --rm php php artisan db:seed -n --env=testing
 
 .PHONY: test_run
 test_run: ## запускает тесты
-	docker-compose exec php php artisan config:clear
-	docker-compose exec php php artisan cache:clear
-	docker-compose exec php php ./vendor/bin/phpunit
+	docker compose exec php php artisan config:clear
+	docker compose exec php php artisan cache:clear
+	docker compose exec php php ./vendor/bin/phpunit
 
 .PHONY: test_coverage_html
 test_coverage_html: ## генерация отчета по тестам (html)
-	docker-compose exec --env XDEBUG_MODE=coverage php php  ./vendor/bin/phpunit --coverage-html ./public/test/v-07/report
+	docker compose exec --env XDEBUG_MODE=coverage php php  ./vendor/bin/phpunit --coverage-html ./public/test/v-07/report
 
 .PHONY: test_coverage_text
 test_coverage_text: ## генерация отчета по тестам (text)
-	docker-compose exec --env XDEBUG_MODE=coverage php php  ./vendor/bin/phpunit --coverage-text
+	docker compose exec --env XDEBUG_MODE=coverage php php  ./vendor/bin/phpunit --coverage-text
 
 .PHONY: user
 user: ## user
