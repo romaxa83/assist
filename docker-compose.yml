@@ -1,0 +1,114 @@
+services:
+
+    nginx:
+        image: nginx:alpine
+        container_name: ${APP_NAME}__nginx
+        hostname: ${APP_NAME}__nginx
+        restart: unless-stopped
+        build:
+            context: docker
+            dockerfile: dev/nginx/Dockerfile
+        ports:
+            - ${DOCKER_ADDRESS}:80:80
+            - ${DOCKER_ADDRESS}:443:443
+        volumes:
+            - ./:/app
+        working_dir: /app
+        depends_on:
+            - php
+
+    php:
+        build: ./docker/dev/php/
+        container_name: ${APP_NAME}__php
+        hostname: ${APP_NAME}__php
+        working_dir: /app
+        volumes:
+            - ./:/app/
+            - ./storage/framework/tmp:/tmp
+            - ./docker/dev/php/.bashrc:/root/.bashrc
+            - ./docker/dev/php/.bash_aliases:/root/.bash_aliases
+        environment:
+            TERM: xterm-256color
+            COMPOSER_ALLOW_SUPERUSER: 1
+            XDEBUG_CONFIG: "client_host=${DOCKER_ADDRESS}"
+            PHP_IDE_CONFIG: "serverName=${APP_NAME}"
+        ports:
+            - ${DOCKER_ADDRESS}:6001:6001
+            - ${DOCKER_ADDRESS}:8000:8000
+        depends_on:
+            - db
+            - redis
+    #        entrypoint: ["/bin/bash", "/var/www/html/docker/bin/php_start.sh"]
+
+    db:
+        image: &db-image postgis/postgis:16-3.5-alpine
+        container_name: ${APP_NAME}__db
+        hostname: ${APP_NAME}__db
+        ports:
+            - ${DOCKER_ADDRESS}:${DB_PORT}:${DB_PORT}
+        environment:
+            POSTGRES_DB: ${DB_DATABASE}
+            POSTGRES_USER: ${DB_USERNAME}
+            POSTGRES_PASSWORD: ${DB_PASSWORD}
+        volumes:
+            - db_data:/var/lib/postgresql/data/
+        healthcheck:
+            test: pg_isready -U ${DB_USERNAME} -d ${DB_DATABASE}
+            interval: 5s
+            timeout: 10s
+            retries: 20
+
+    db_test:
+        image: *db-image
+        container_name: ${APP_NAME}__db_test
+        hostname: ${APP_NAME}__db_test
+        restart: unless-stopped
+        # розширюємо кількість одночасних підключень до Postgres БД та кількість транзакцій. Важливо для комфортного запуску паралельних тестів.
+        command: postgres -c 'max_connections=250' -c 'max_locks_per_transaction=128'
+        ports:
+            - ${DOCKER_ADDRESS}:5433:${DB_PORT}
+        environment:
+            POSTGRES_DB: db_test
+            POSTGRES_USER: ${DB_USERNAME}
+            POSTGRES_PASSWORD: ${DB_PASSWORD}
+        volumes:
+            - /var/lib/postgresql/data
+
+    redis:
+        image: redis:alpine
+        environment:
+            REDIS_PASSWORD: ${REDIS_PASSWORD}
+        container_name: ${APP_NAME}__redis
+        hostname: ${APP_NAME}__redis
+        ports:
+            - ${DOCKER_ADDRESS}:${REDIS_PORT}:${REDIS_PORT}
+        volumes:
+            - redis_data:/data
+        healthcheck:
+            test: redis-cli ping
+            interval: 5s
+            timeout: 10s
+            retries: 20
+
+    mailer:
+        image: mailhog/mailhog:latest
+        container_name: ${APP_NAME}__mailer
+        hostname: ${APP_NAME}__mailer
+        ports:
+            - ${DOCKER_ADDRESS}:8025:8025
+            - ${DOCKER_ADDRESS}:1025:1025
+
+volumes:
+    db_data:
+        driver: local
+        name: ${APP_NAME}_db_data
+    redis_data:
+        driver: local
+        name: ${APP_NAME}_redis_data
+
+networks:
+    default:
+        driver: bridge
+        ipam:
+            config:
+                - subnet: ${DOCKER_NETWORK}
