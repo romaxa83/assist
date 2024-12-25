@@ -102,7 +102,6 @@ class SyncPermission
 
             // добавляем новые пермишены к существующим
             $permissionDB = $permissionDB + $newPerms->pluck('name', 'id')->toArray();
-
         }
 
         return array_keys($permissionDB);

@@ -33,7 +33,11 @@ return [
     |
     */
 
-    'guard' => ['web'],
+    'guard' => [
+        'web',
+        \App\Core\Permissions\Enums\GuardEnum::User_guard(),
+        \App\Core\Permissions\Enums\GuardEnum::Admin_guard(),
+    ],
 
     /*
     |--------------------------------------------------------------------------

@@ -14,7 +14,7 @@ return [
     */
 
     'defaults' => [
-        'guard' => env('AUTH_GUARD', 'web'),
+        'guard' => env('AUTH_GUARD', \App\Core\Permissions\Enums\GuardEnum::Admin_guard()),
         'passwords' => env('AUTH_PASSWORD_BROKER', 'users'),
     ],
 
@@ -36,7 +36,15 @@ return [
     */
 
     'guards' => [
-        'web' => [
+//        'web' => [
+//            'driver' => 'session',
+//            'provider' => 'users',
+//        ],
+        \App\Core\Permissions\Enums\GuardEnum::User_guard() => [
+            'driver' => 'session',
+            'provider' => 'users',
+        ],
+        \App\Core\Permissions\Enums\GuardEnum::Admin_guard() => [
             'driver' => 'session',
             'provider' => 'users',
         ],

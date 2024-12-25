@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Models\Users\User;
+use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -19,6 +21,18 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        $this->registerMorphMap();
+    }
+
+    protected function registerMorphMap(): void
+    {
+        Relation::morphMap(self::morphs());
+    }
+
+    public static function morphs(): array
+    {
+        return [
+            User::MORPH_NAME => User::class,
+        ];
     }
 }

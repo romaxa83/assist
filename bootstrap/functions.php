@@ -7,6 +7,8 @@
 //    }
 //}
 
+use App\Services\Databases\TransactionService;
+
 if (! function_exists('json_to_array')) {
     function json_to_array(?string $jsonString = ''): array
     {
@@ -95,6 +97,19 @@ if (! function_exists('is_in_range')) {
         }
 
         return $min <= $number && $number <= $max;
+    }
+}
+
+if (!function_exists('make_transaction')) {
+    /**
+     * @param  Closure  $action
+     * @param  array<Illuminate\Database\Connection>  $connections
+     * @return mixed
+     * @throws Throwable
+     */
+    function make_transaction(Closure $action, array $connections = []): mixed
+    {
+        return app(TransactionService::class)->handle($action, $connections);
     }
 }
 
