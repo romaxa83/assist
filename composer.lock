@@ -4,8 +4,71 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "66093fc1a4f6cc45d24f4426ec00a59a",
+    "content-hash": "3dabd62e7ba209a5ca7690886589b9a4",
     "packages": [
+        {
+            "name": "arondeparon/laravel-request-sanitizer",
+            "version": "6.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/arondeparon/laravel-request-sanitizer.git",
+                "reference": "e292065ebf2469e3c9831d844b69fd9505055e2a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/arondeparon/laravel-request-sanitizer/zipball/e292065ebf2469e3c9831d844b69fd9505055e2a",
+                "reference": "e292065ebf2469e3c9831d844b69fd9505055e2a",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^8.1",
+                "symfony/http-foundation": "^4.3.4|>=5.1.3|^6.0"
+            },
+            "require-dev": {
+                "mockery/mockery": "^1.4",
+                "orchestra/testbench": "^6.0|^7.0|^8.0|^9.0",
+                "phpunit/phpunit": "^8.0|^9.0|^10.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "ArondeParon\\RequestSanitizer\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Aron Rotteveel",
+                    "email": "hi@aron.codes",
+                    "homepage": "https://github.com/arondeparon",
+                    "role": "Developer"
+                }
+            ],
+            "description": "An easy to use request sanitizer that allows you to sanitize your form data before validating it.",
+            "homepage": "https://github.com/arondeparon/laravel-request-sanitizer",
+            "keywords": [
+                "arondeparon",
+                "form",
+                "laravel",
+                "request",
+                "sanitizer",
+                "validation"
+            ],
+            "support": {
+                "issues": "https://github.com/arondeparon/laravel-request-sanitizer/issues",
+                "source": "https://github.com/arondeparon/laravel-request-sanitizer/tree/6.0.0"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/arondeparon",
+                    "type": "github"
+                }
+            ],
+            "time": "2024-06-16T21:41:14+00:00"
+        },
         {
             "name": "brick/math",
             "version": "0.12.1",

@@ -6,6 +6,7 @@
     "license": "MIT",
     "require": {
         "php": "^8.4",
+        "arondeparon/laravel-request-sanitizer": "^6.0",
         "darkaonline/l5-swagger": "^8.6",
         "laravel/framework": "^11.31",
         "laravel/sanctum": "^4.0",

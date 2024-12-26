@@ -40,7 +40,8 @@ class ApiController extends Controller
         }
 
         return response()->json([
-            'data' => $msg,
+            'success' => false,
+            'msg' => $msg,
         ], $code);
     }
 }

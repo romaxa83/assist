@@ -3,6 +3,7 @@
 namespace App\Models\Users;
 
 use App\Models\BaseAuthenticatableModel;
+use Database\Factories\Users\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Notifications\Notifiable;
 
@@ -13,10 +14,11 @@ use Illuminate\Notifications\Notifiable;
  * @property string created_at
  * @property string updated_at
  *
+ * @method static UserFactory factory(...$parameters)
  */
 class User extends BaseAuthenticatableModel
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
+    /** @use HasFactory<\Database\Factories\Users\UserFactory> */
     use HasFactory;
     use Notifiable;
 
