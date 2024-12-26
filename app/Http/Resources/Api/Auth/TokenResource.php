@@ -2,14 +2,14 @@
 
 namespace App\Http\Resources\Api\Auth;
 
+use App\Http\Resources\Api\BaseResource;
 use Illuminate\Http\Request;
-use Illuminate\Http\Resources\Json\JsonResource;
 use OpenAPI\Properties\PropertyString;
 use OpenAPI\Schemas\BaseScheme;
 
-class TokenResource extends JsonResource
+class TokenResource extends BaseResource
 {
-    public function toArray(Request $request): array
+    public function transformResource(Request $request): array
     {
         return [
             'token' => $this['token'],

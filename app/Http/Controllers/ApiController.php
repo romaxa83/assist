@@ -17,20 +17,24 @@ class ApiController extends Controller
     public static function successJsonMessage(
         null|string $msg = null,
         string|int $statusCode = Response::HTTP_OK
-    ) {
+    ): JsonResponse
+    {
         if (is_null($msg)) {
             $msg = 'Success';
         }
 
         return response()->json([
+            'success' => true,
             'data' => $msg,
         ], $statusCode);
     }
 
     public static function errorJsonMessage(
         null|string $msg = null,
-        $code = Response::HTTP_INTERNAL_SERVER_ERROR
-    ) {
+        $code = Response::HTTP_INTERNAL_SERVER_ERROR,
+        $stackTrace = []
+    ): JsonResponse
+    {
         if (is_null($msg)) {
             $msg = 'Error';
         }
@@ -39,9 +43,11 @@ class ApiController extends Controller
             $code = Response::HTTP_INTERNAL_SERVER_ERROR;
         }
 
-        return response()->json([
+        $data = [
             'success' => false,
             'msg' => $msg,
-        ], $code);
+        ];
+
+        return response()->json($data, $code);
     }
 }

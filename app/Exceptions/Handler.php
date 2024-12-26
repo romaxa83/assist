@@ -19,6 +19,7 @@ class Handler
     {
         $this->renderUnauthorized($exceptions);
         $this->renderNotFound($exceptions);
+        $this->renderError($exceptions);
 
 
         return $exceptions;
@@ -46,8 +47,24 @@ class Handler
         );
     }
 
-    protected function response(string $message, int $code, bool $asJson): Response
+    protected function renderError(BaseExceptions $exceptions): void
     {
+        $exceptions->renderable(
+            fn (\Error $e, ?Request $request = null) => $this->response(
+                message: $e->getMessage(),
+                code: \Illuminate\Http\Response::HTTP_INTERNAL_SERVER_ERROR,
+                asJson: $request?->expectsJson() ?? false
+            )
+        );
+    }
+
+    protected function response(
+        string $message,
+        int $code,
+        bool $asJson
+    ): Response
+    {
+//        dd($message, $code, $asJson);
         if ($asJson) {
             return ApiController::errorJsonMessage($message, $code);
 //            return response()->json(compact('message'), $code, options: $this->jsonFlags);

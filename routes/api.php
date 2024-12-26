@@ -12,5 +12,19 @@ Route::get('/tags', [CrudController::class, 'index'])
     ->name('api.tags.index');
 
 
-Route::post('login', [Api\Auth\Controller::class, 'login'])
-    ->name('api.login');
+Route::middleware(['auth:sanctum'])
+    ->name('api.')
+    ->group(function () {
+        Route::post('login', [Api\Auth\Controller::class, 'login'])
+            ->withoutMiddleware(['auth:sanctum'])
+            ->name('login');
+        Route::post('logout', [Api\Auth\Controller::class, 'logout'])
+            ->name('logout');
+
+
+        Route::get('profile', [Api\Users\ProfileController::class, 'user'])
+            ->name('profile');
+
+//        Route::post('logout', Actions\LogoutUser::class)
+//            ->name('logout');
+    });

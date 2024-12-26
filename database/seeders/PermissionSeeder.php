@@ -11,9 +11,9 @@ class PermissionSeeder extends Seeder
 {
     public function run(): void
     {
-        if(!App::environment('testing')) {
+//        if(!App::environment('testing')) {
             Artisan::call(SyncRoleAndPermission::class);
-        }
+//        }
     }
 }
 

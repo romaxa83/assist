@@ -34,6 +34,7 @@ class LoginTest extends TestCase
 
         $this->postJson(route('api.login'), $data)
             ->assertJsonStructure([
+                'success',
                 'data' => [
                     'token',
                 ]
@@ -59,6 +60,7 @@ class LoginTest extends TestCase
 
         $this->postJson(route('api.login'), $data)
             ->assertJsonStructure([
+                'success',
                 'data' => [
                     'token',
                 ]
