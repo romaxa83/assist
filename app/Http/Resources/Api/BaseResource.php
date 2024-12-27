@@ -4,14 +4,15 @@ namespace App\Http\Resources\Api;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Http\Resources\Json\ResourceCollection;
 
 class BaseResource extends JsonResource
 {
-    public function toArray(Request $request)
+    public function toArray($request)
     {
         return [
             'success' => true,
-            'data' => $this->transformResource($request)
+            'data' => parent::toArray($request),
         ];
     }
 
@@ -19,4 +20,14 @@ class BaseResource extends JsonResource
     {
         return [];
     }
+
+//    public function toResponse($request)
+//    {
+//        dd('f');
+//        if ($this->resource instanceof ResourceCollection) {
+//            return $this->resource->toResponse($request);
+//        }
+//
+//        return parent::toResponse($request);
+//    }
 }

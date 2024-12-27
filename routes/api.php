@@ -25,6 +25,13 @@ Route::middleware(['auth:sanctum'])
         Route::get('profile', [Api\Users\ProfileController::class, 'user'])
             ->name('profile');
 
-//        Route::post('logout', Actions\LogoutUser::class)
-//            ->name('logout');
+        // TAGS
+        Route::get('tags', [Api\Tags\CrudController::class, 'index'])
+            ->name('tag.index');
+        Route::post('tags', [Api\Tags\CrudController::class, 'create'])
+            ->name('tag.create');
+        Route::put('tags\{id}', [Api\Tags\CrudController::class, 'update'])
+            ->name('tag.update');
+        Route::delete('tags\{id}', [Api\Tags\CrudController::class, 'delete'])
+            ->name('tag.delete');
     });

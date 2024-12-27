@@ -113,3 +113,9 @@ if (!function_exists('make_transaction')) {
     }
 }
 
+if (!function_exists('slug')) {
+    function slug(string $str): string
+    {
+        return \Illuminate\Support\Str::slug($str);
+    }
+}

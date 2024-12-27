@@ -30,11 +30,5 @@ class UserBuilder extends BaseBuilder
         $this->data['name'] = $value;
         return $this;
     }
-
-    public function lastName(string $value): self
-    {
-        $this->data['last_name'] = $value;
-        return $this;
-    }
 }
 
