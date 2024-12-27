@@ -4,7 +4,7 @@ namespace OpenAPI\Request;
 
 use OpenApi\Attributes as OA;
 
-#[\Attribute(\Attribute::TARGET_CLASS)]
+#[\Attribute(\Attribute::TARGET_METHOD)]
 class RequestJson extends OA\RequestBody
 {
     public function __construct(

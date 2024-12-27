@@ -4,7 +4,7 @@ namespace OpenAPI\Responses;
 
 use OpenApi\Attributes as OA;
 
-#[\Attribute(\Attribute::TARGET_CLASS)]
+#[\Attribute(\Attribute::TARGET_METHOD)]
 class ResponseJsonSuccess extends OA\Response
 {
     public function __construct(

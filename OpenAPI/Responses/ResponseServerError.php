@@ -8,18 +8,18 @@ use OpenAPI\Properties\Fields\PropertyBool;
 use OpenAPI\Properties\PropertyMessage;
 
 #[\Attribute(\Attribute::TARGET_METHOD|\Attribute::TARGET_CLASS)]
-class ResponseUnauthorized extends OA\Response
+class ResponseServerError extends OA\Response
 {
     public function __construct()
     {
         $content = new OA\JsonContent(
             properties: [
                 new PropertyBool(property:'success', example:false),
-                new PropertyMessage('Unauthorized')
+                new PropertyMessage('Server Error')
             ]
         );
         parent::__construct(
-            response: Response::HTTP_UNAUTHORIZED,
+            response: Response::HTTP_INTERNAL_SERVER_ERROR,
             description: 'Unauthenticated',
             content: $content
         );

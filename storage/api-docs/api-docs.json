@@ -5,13 +5,85 @@
         "version": "1.0.0"
     },
     "paths": {
-        "/api/tags": {
-            "get": {
+        "/api/login": {
+            "post": {
                 "tags": [
                     "Auth"
                 ],
-                "description": "Get tags",
-                "operationId": "03db0ccb373394dad82663ca65a7317a",
+                "description": "Login user",
+                "operationId": "c1eb74b66ce0d18113aefb316505c8a2",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/LoginRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TokenResource"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false,
+                                            "nullable": false
+                                        },
+                                        "msg": {
+                                            "type": "string",
+                                            "example": "Unauthorized"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Unauthenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false,
+                                            "nullable": false
+                                        },
+                                        "msg": {
+                                            "type": "string",
+                                            "example": "Server Error"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/logout": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "description": "Logout user",
+                "operationId": "b8a2c1e511958c735513ba5d1e69babf",
                 "responses": {
                     "401": {
                         "description": "Unauthenticated",
@@ -19,9 +91,63 @@
                             "application/json": {
                                 "schema": {
                                     "properties": {
-                                        "message": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false,
+                                            "nullable": false
+                                        },
+                                        "msg": {
                                             "type": "string",
-                                            "example": "Some error message"
+                                            "example": "Unauthorized"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "Success response with message",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true,
+                                            "nullable": false
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "msg": {
+                                                    "type": "string",
+                                                    "example": "Logout",
+                                                    "nullable": false
+                                                }
+                                            },
+                                            "type": "object",
+                                            "nullable": false
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Unauthenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false,
+                                            "nullable": false
+                                        },
+                                        "msg": {
+                                            "type": "string",
+                                            "example": "Server Error"
                                         }
                                     },
                                     "type": "object"
@@ -35,6 +161,56 @@
                         "sanctum": []
                     }
                 ]
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "LoginRequest": {
+                "required": [
+                    "email",
+                    "password"
+                ],
+                "properties": {
+                    "email": {
+                        "type": "string",
+                        "example": "example@example.com",
+                        "nullable": false
+                    },
+                    "password": {
+                        "type": "string",
+                        "example": "Pas$word1",
+                        "nullable": false
+                    }
+                },
+                "type": "object",
+                "additionalProperties": false
+            },
+            "TokenResource": {
+                "required": [
+                    "success",
+                    "data"
+                ],
+                "properties": {
+                    "success": {
+                        "type": "boolean",
+                        "example": true,
+                        "nullable": false
+                    },
+                    "data": {
+                        "properties": {
+                            "token": {
+                                "type": "string",
+                                "example": "46|R9Nb3rAbdVnJT1EEI0fr56YzwP29QKtovoQ2tM2j47235739",
+                                "nullable": false
+                            }
+                        },
+                        "type": "object",
+                        "nullable": false
+                    }
+                },
+                "type": "object",
+                "additionalProperties": false
             }
         }
     },

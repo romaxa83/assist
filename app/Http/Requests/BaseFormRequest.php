@@ -3,10 +3,13 @@
 namespace App\Http\Requests;
 
 use App\Models\Users\User;
+use ArondeParon\RequestSanitizer\Traits\SanitizesInputs;
 use Illuminate\Foundation\Http\FormRequest;
 
  class BaseFormRequest extends FormRequest
 {
+     use SanitizesInputs;
+
      public function authorize(): bool
      {
          return true;

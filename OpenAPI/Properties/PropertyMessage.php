@@ -4,12 +4,12 @@ namespace OpenAPI\Properties;
 
 use OpenApi\Attributes as OA;
 
-class PropertyErrorMessage extends OA\Property
+class PropertyMessage extends OA\Property
 {
-    public function __construct(string $msg = 'Some error message')
+    public function __construct(string $msg = 'Some message')
     {
         parent::__construct(
-            property: 'message',
+            property: 'msg',
             type: 'string',
             example: $msg
         );

@@ -25,7 +25,7 @@ class ApiController extends Controller
 
         return response()->json([
             'success' => true,
-            'data' => $msg,
+            'data' => ['msg' => $msg,],
         ], $statusCode);
     }
 
