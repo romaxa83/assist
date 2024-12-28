@@ -26,7 +26,7 @@ use Illuminate\Foundation\Http\FormRequest;
      public function searchRule(): array
      {
          return [
-             'search' => ['nullable', 'string', 'min:3'],
+             'search' => ['nullable', 'string', 'min:2'],
          ];
      }
 

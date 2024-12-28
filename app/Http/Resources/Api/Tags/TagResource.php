@@ -3,6 +3,7 @@
 namespace App\Http\Resources\Api\Tags;
 
 use App\Http\Resources\Api\BaseResource;
+use App\Http\Resources\Traits\HasAppends;
 use App\Models\Tags\Tag;
 use Illuminate\Http\Request;
 use OpenAPI\Properties\Fields\PropertyBool;
@@ -33,18 +34,11 @@ class TagResource extends BaseResource
 {
     public function toArray($request)
     {
-        $data = [
+       return [
             'id' => $this->id,
             'name' => $this->name,
             'slug' => $this->slug,
             'color' => $this->color
         ];
-
-        dd($this->additional);
-
-        if($this->additional['is_single'])
-            return ['success' => true, 'data' => $data];
-
-        return $data;
     }
 }

@@ -30,24 +30,52 @@ class IndexTest extends TestCase
         $model_3 = $this->tagBuilder->weight(13)->create();
 
         $this->getJson(route('api.tag.index'))
-            ->dump()
             ->assertJson([
-                'success' => true,
                 'data' => [
-                    'id',
-                    'name',
-                    'slug',
-                    'color',
+                    ['id' => $model_3->id,],
+                    ['id' => $model_1->id,],
+                    ['id' => $model_2->id,],
                 ]
             ])
         ;
     }
 
+    public function test_search()
+    {
+        $this->loginAsAdmin();
+
+        /** @var $model Tag */
+        $model_1 = $this->tagBuilder
+            ->name('aabbaa')
+            ->weight(3)
+            ->create();
+        $model_2 = $this->tagBuilder
+            ->name('bbbbb')
+            ->weight(1)
+            ->create();
+        $model_3 = $this->tagBuilder
+            ->name('zzzzz')
+            ->weight(13)
+            ->create();
+
+        $this->getJson(route('api.tag.index',[
+            'search' => 'bb'
+        ]))
+            ->assertJson([
+                'data' => [
+                    ['id' => $model_1->id,],
+                    ['id' => $model_2->id,],
+                ]
+            ])
+            ->assertJsonCount(2, 'data')
+        ;
+    }
+
     public function test_fail_not_auth()
     {
-        $data = $this->data;
+        $this->tagBuilder->weight(3)->create();
 
-        $res = $this->postJson(route('api.tag.create'), $data)
+        $res = $this->getJson(route('api.tag.index'))
         ;
 
         self::assertUnauthorizedMsg($res);

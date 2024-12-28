@@ -29,7 +29,6 @@ class CreateTest extends TestCase
 
         $this->postJson(route('api.tag.create'), $data)
             ->assertJsonStructure([
-                'success',
                 'data' => [
                     'id',
                     'name',

@@ -31,7 +31,6 @@ class DeleteTest extends TestCase
 
         $this->deleteJson(route('api.tag.delete', ['id' => $model->id]))
             ->assertJson([
-                'success' => true,
                 'data' => [
                     'msg' => "Deleted"
                 ]

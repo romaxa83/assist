@@ -41,7 +41,6 @@ class UpdateTest extends TestCase
 
         $this->putJson(route('api.tag.update', ['id' => $model->id]), $data)
             ->assertJson([
-                'success' => true,
                 'data' => [
                     'id' => $model->id,
                     'name' => $data['name'],
