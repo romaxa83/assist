@@ -8,8 +8,8 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [ApiController::class, 'info'])
     ->name('api.info');
 
-Route::get('/tags', [CrudController::class, 'index'])
-    ->name('api.tags.index');
+//Route::get('/tags', [CrudController::class, 'index'])
+//    ->name('api.tags.index');
 
 
 Route::middleware(['auth:sanctum'])
@@ -30,8 +30,8 @@ Route::middleware(['auth:sanctum'])
             ->name('tag.index');
         Route::post('tags', [Api\Tags\CrudController::class, 'create'])
             ->name('tag.create');
-        Route::put('tags\{id}', [Api\Tags\CrudController::class, 'update'])
+        Route::put('tags/{id}', [Api\Tags\CrudController::class, 'update'])
             ->name('tag.update');
-        Route::delete('tags\{id}', [Api\Tags\CrudController::class, 'delete'])
+        Route::delete('tags/{id}', [Api\Tags\CrudController::class, 'delete'])
             ->name('tag.delete');
     });

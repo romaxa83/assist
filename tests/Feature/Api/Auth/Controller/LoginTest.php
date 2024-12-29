@@ -33,11 +33,9 @@ class LoginTest extends TestCase
         ];
 
         $this->postJson(route('api.login'), $data)
+            ->assertOk()
             ->assertJsonStructure([
-                'success',
-                'data' => [
-                    'token',
-                ]
+                'token',
             ])
         ;
     }
@@ -59,11 +57,9 @@ class LoginTest extends TestCase
         ];
 
         $this->postJson(route('api.login'), $data)
+            ->assertOk()
             ->assertJsonStructure([
-                'success',
-                'data' => [
-                    'token',
-                ]
+                'token',
             ])
         ;
     }
@@ -82,7 +78,7 @@ class LoginTest extends TestCase
         $res = $this->postJson(route('api.login'), $data)
         ;
 
-        self::assertUnauthorizedMsg($res);
+        self::assertUnauthorized($res);
     }
 
     public function test_fail_wrong_email(): void
@@ -99,6 +95,6 @@ class LoginTest extends TestCase
         $res = $this->postJson(route('api.login'), $data)
         ;
 
-        self::assertUnauthorizedMsg($res);
+        self::assertUnauthorized($res);
     }
 }

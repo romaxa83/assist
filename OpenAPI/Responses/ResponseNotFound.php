@@ -4,21 +4,21 @@ namespace OpenAPI\Responses;
 
 use Illuminate\Http\Response;
 use OpenApi\Attributes as OA;
-use OpenAPI\Properties\PropertyString;
+use OpenAPI\Properties\PropertyMessage;
 
 #[\Attribute(\Attribute::TARGET_METHOD|\Attribute::TARGET_CLASS)]
-class ResponseSuccessMessage extends OA\Response
+class ResponseNotFound extends OA\Response
 {
-    public function __construct(string $msg = 'Some message')
+    public function __construct()
     {
         $content = new OA\JsonContent(
             properties: [
-                new PropertyString(property: 'msg', example: $msg),
+                new PropertyMessage(__('Not Found'))
             ]
         );
         parent::__construct(
-            response: Response::HTTP_OK,
-            description: 'Success response with message',
+            response: Response::HTTP_NOT_FOUND,
+            description: 'The requested data was not found.',
             content: $content
         );
     }

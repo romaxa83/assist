@@ -3,11 +3,8 @@
 namespace App\Http\Resources\Api\Tags;
 
 use App\Http\Resources\Api\BaseResource;
-use App\Http\Resources\Traits\HasAppends;
 use App\Models\Tags\Tag;
-use Illuminate\Http\Request;
-use OpenAPI\Properties\Fields\PropertyBool;
-use OpenAPI\Properties\PropertyObject;
+use OpenAPI\Properties\Fields\PropertyId;
 use OpenAPI\Properties\PropertyString;
 use OpenAPI\Schemas\BaseScheme;
 
@@ -18,16 +15,19 @@ use OpenAPI\Schemas\BaseScheme;
 #[BaseScheme(
     resource: TagResource::class,
     properties: [
-        new PropertyBool(property: 'success'),
-        new PropertyObject(
-            property: 'data',
-            properties: [
-                'token' => new PropertyString(
-                    property: 'token',
-                    example: '46|R9Nb3rAbdVnJT1EEI0fr56YzwP29QKtovoQ2tM2j47235739'
-                ),
-            ]
+        new PropertyId(),
+        new PropertyString(
+            property: 'name',
+            example: 'database'
         ),
+        new PropertyString(
+            property: 'slug',
+            example: 'database'
+        ),
+        new PropertyString(
+            property: 'color',
+            example: '#d98b84'
+        )
     ]
 )]
 class TagResource extends BaseResource

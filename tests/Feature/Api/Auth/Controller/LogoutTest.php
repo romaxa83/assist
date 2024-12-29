@@ -24,9 +24,9 @@ class LogoutTest extends TestCase
         $this->loginAsAdmin();
 
         $this->postJson(route('api.logout'))
+            ->assertOk()
             ->assertJson([
-                'success' => true,
-                'data' => 'Logout'
+                'msg' => __('auth.logout')
             ])
         ;
     }
@@ -36,6 +36,6 @@ class LogoutTest extends TestCase
         $res = $this->postJson(route('api.logout'))
         ;
 
-        self::assertUnauthorizedMsg($res);
+        self::assertUnauthorized($res);
     }
 }

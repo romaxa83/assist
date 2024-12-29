@@ -27,10 +27,7 @@ class ProfileTest extends TestCase
 
         $this->getJson(route('api.profile'))
             ->assertJson([
-                'success' => true,
-                'data' => [
-                    'id' => $model->id,
-                ]
+                'id' => $model->id,
             ])
         ;
     }
@@ -40,6 +37,6 @@ class ProfileTest extends TestCase
         $res = $this->getJson(route('api.profile'))
         ;
 
-        self::assertUnauthorizedMsg($res);
+        self::assertUnauthorized($res);
     }
 }

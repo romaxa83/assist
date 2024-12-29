@@ -7,8 +7,8 @@ use OpenApi\Attributes as OA;
 class PropertyObject extends OA\Property
 {
     public function __construct(
-        string $property,
         array $properties,
+        ?string $property = null,
         string $description = null,
         bool $nullable = false
     ) {

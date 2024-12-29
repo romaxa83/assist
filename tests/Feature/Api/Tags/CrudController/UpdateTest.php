@@ -4,6 +4,7 @@ namespace Tests\Feature\Api\Tags\CrudController;
 
 use App\Models\Tags\Tag;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Http\Response;
 use Tests\Builders\Tags\TagBuilder;
 use Tests\TestCase;
 
@@ -26,7 +27,7 @@ class UpdateTest extends TestCase
         parent::setUp();
     }
 
-    public function test_success()
+    public function test_update()
     {
         $this->loginAsAdmin();
 
@@ -41,14 +42,74 @@ class UpdateTest extends TestCase
 
         $this->putJson(route('api.tag.update', ['id' => $model->id]), $data)
             ->assertJson([
-                'data' => [
-                    'id' => $model->id,
-                    'name' => $data['name'],
-                    'slug' => slug($data['name']),
-                    'color' => $data['color'],
-                ]
+                'id' => $model->id,
+                'name' => $data['name'],
+                'slug' => slug($data['name']),
+                'color' => $data['color'],
+            ])
+            ->assertValidResponse(200)
+        ;
+    }
+
+    public function test_update_not_unique_name()
+    {
+        $this->loginAsAdmin();
+
+        /** @var $model Tag */
+        $model = $this->tagBuilder->create();
+
+        $data = $this->data;
+        $data['name'] = $model->name;
+
+        $this->assertEquals($model->name, $data['name']);
+        $this->assertNotEquals($model->color, $data['color']);
+
+        $this->putJson(route('api.tag.update', ['id' => $model->id]), $data)
+            ->assertStatus(Response::HTTP_OK)
+            ->assertJson([
+                'id' => $model->id,
+                'name' => $data['name'],
+                'slug' => slug($data['name']),
+                'color' => $data['color'],
             ])
         ;
+    }
+
+    public function test_fail_unique_name()
+    {
+        $this->loginAsAdmin();
+
+        /** @var $model Tag */
+        $model = $this->tagBuilder->create();
+
+        $anotherModel = $this->tagBuilder->create();
+
+        $data = $this->data;
+        $data['name'] = $anotherModel->name;
+
+        $res = $this->putJson(route('api.tag.update', ['id' => $model->id]), $data)
+        ;
+
+        self::assertValidationError(
+            $res,
+            __('validation.attributes.name'),
+            __('validation.unique', ['attribute' => __('validation.attributes.name')])
+        );
+    }
+
+    public function test_fail_not_found_model()
+    {
+        $this->loginAsAdmin();
+
+        /** @var $model Tag */
+        $model = $this->tagBuilder->create();
+
+        $data = $this->data;
+
+        $res = $this->putJson(route('api.tag.update', ['id' => $model->id + 1]), $data)
+        ;
+
+        self::assertNotFound($res);
     }
 
     public function test_fail_not_auth()
@@ -61,6 +122,6 @@ class UpdateTest extends TestCase
         $res = $this->putJson(route('api.tag.update', ['id' => $model->id]), $data)
         ;
 
-        self::assertUnauthorizedMsg($res);
+        self::assertUnauthorized($res);
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace OpenAPI\Properties\Fields;
+namespace OpenAPI\Properties;
 
 use OpenApi\Attributes as OA;
 

@@ -4,7 +4,6 @@ namespace OpenAPI\Responses;
 
 use Illuminate\Http\Response;
 use OpenApi\Attributes as OA;
-use OpenAPI\Properties\Fields\PropertyBool;
 use OpenAPI\Properties\PropertyMessage;
 
 #[\Attribute(\Attribute::TARGET_METHOD|\Attribute::TARGET_CLASS)]
@@ -14,7 +13,6 @@ class ResponseUnauthorized extends OA\Response
     {
         $content = new OA\JsonContent(
             properties: [
-                new PropertyBool(property:'success', example:false),
                 new PropertyMessage('Unauthorized')
             ]
         );

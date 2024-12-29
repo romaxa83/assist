@@ -11,6 +11,7 @@ use Illuminate\Auth\AuthenticationException;
 use OpenAPI\Operation\ApiPost;
 use OpenAPI\Request\RequestJson;
 use OpenAPI\Responses;
+use OpenAPI\Parameters;
 
 class Controller extends ApiController
 {
@@ -19,6 +20,8 @@ class Controller extends ApiController
         tags: ['Auth'],
         description: 'Login user',
     )]
+    #[Parameters\Headers\ContentType]
+    #[Parameters\Headers\Accept]
     #[RequestJson(LoginRequest::class)]
     #[Responses\ResponseJsonSuccess(TokenResource::class)]
     #[Responses\ResponseUnauthorized]
@@ -34,7 +37,7 @@ class Controller extends ApiController
         $token = $user->createToken('api.user.'.$user->id)
             ->plainTextToken;
 
-        return TokenResource::make(['token' => $token]);
+        return TokenResource::make($token);
     }
 
     #[ApiPost(
@@ -43,13 +46,16 @@ class Controller extends ApiController
         description: 'Logout user',
         auth: true
     )]
+    #[Parameters\Headers\Authorization]
+    #[Parameters\Headers\ContentType]
+    #[Parameters\Headers\Accept]
     #[Responses\ResponseSuccessMessage('Logout')]
     #[Responses\ResponseServerError]
     public function logout(): JsonResponse
     {
         Auth::user()->tokens()->delete();
 
-        return self::successJsonMessage('Logout');
+        return self::successJsonMessage(__('auth.logout'));
     }
 }
 

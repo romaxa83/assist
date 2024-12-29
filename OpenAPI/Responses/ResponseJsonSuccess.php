@@ -2,6 +2,7 @@
 
 namespace OpenAPI\Responses;
 
+use Illuminate\Http\Response;
 use OpenApi\Attributes as OA;
 
 #[\Attribute(\Attribute::TARGET_METHOD)]
@@ -9,7 +10,7 @@ class ResponseJsonSuccess extends OA\Response
 {
     public function __construct(
         string $resource,
-        int $response = 200,
+        int $response = Response::HTTP_OK,
         string $description = 'Success',
     ) {
         $className = (new \ReflectionClass($resource))->getShortName();

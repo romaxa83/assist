@@ -7,9 +7,10 @@ use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Configuration\Exceptions as BaseExceptions;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\View;
+use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Throwable;
+use Illuminate\Http\Response as HttpResponse;
 
 class Handler
 {
@@ -17,8 +18,10 @@ class Handler
 
     public function __invoke(BaseExceptions $exceptions): BaseExceptions
     {
+//        dd($exceptions);
         $this->renderUnauthorized($exceptions);
         $this->renderNotFound($exceptions);
+        $this->renderValidation($exceptions);
         $this->renderError($exceptions);
 
 
@@ -30,7 +33,7 @@ class Handler
         $exceptions->renderable(
             fn (AuthenticationException $e, ?Request $request = null) => $this->response(
                 message: __('Unauthorized'),
-                code: \Illuminate\Http\Response::HTTP_UNAUTHORIZED,
+                code: HttpResponse::HTTP_UNAUTHORIZED,
                 asJson: $request?->expectsJson() ?? false
             )
         );
@@ -41,8 +44,20 @@ class Handler
         $exceptions->renderable(
             fn (NotFoundHttpException $e, ?Request $request = null) => $this->response(
                 message: __('Not Found'),
-                code: 404,
+                code: HttpResponse::HTTP_NOT_FOUND,
                 asJson: $request?->expectsJson() ?? false
+            )
+        );
+    }
+
+    protected function renderValidation(BaseExceptions $exceptions): void
+    {
+        $exceptions->renderable(
+            fn (ValidationException $e, ?Request $request = null) => $this->response(
+                message: $e->getMessage(),
+                code: HttpResponse::HTTP_UNPROCESSABLE_ENTITY,
+                asJson: $request?->expectsJson() ?? false,
+                errors: $e->errors()
             )
         );
     }
@@ -52,7 +67,7 @@ class Handler
         $exceptions->renderable(
             fn (\Error $e, ?Request $request = null) => $this->response(
                 message: $e->getMessage(),
-                code: \Illuminate\Http\Response::HTTP_INTERNAL_SERVER_ERROR,
+                code: HttpResponse::HTTP_INTERNAL_SERVER_ERROR,
                 asJson: $request?->expectsJson() ?? false
             )
         );
@@ -61,13 +76,16 @@ class Handler
     protected function response(
         string $message,
         int $code,
-        bool $asJson
+        bool $asJson,
+        array $errors = []
     ): Response
     {
-//        dd($message, $code, $asJson);
         if ($asJson) {
+            if($code === HttpResponse::HTTP_UNPROCESSABLE_ENTITY){
+                return ApiController::errorJsonValidation($message, $errors);
+            }
+
             return ApiController::errorJsonMessage($message, $code);
-//            return response()->json(compact('message'), $code, options: $this->jsonFlags);
         }
 
         $this->registerErrorViewPaths();

@@ -4,7 +4,7 @@ namespace OpenAPI\Responses;
 
 use OpenApi\Attributes as OA;
 
-#[\Attribute(\Attribute::TARGET_CLASS)]
+#[\Attribute(\Attribute::TARGET_CLASS|\Attribute::TARGET_METHOD)]
 class ResponseNoContent extends OA\Response
 {
     public function __construct()

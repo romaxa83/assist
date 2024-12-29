@@ -24,8 +24,7 @@ class ApiController extends Controller
         }
 
         return response()->json([
-            'success' => true,
-            'data' => ['msg' => $msg,],
+            'msg' => $msg,
         ], $statusCode);
     }
 
@@ -43,11 +42,23 @@ class ApiController extends Controller
             $code = Response::HTTP_INTERNAL_SERVER_ERROR;
         }
 
-        $data = [
-            'success' => false,
-            'msg' => $msg,
-        ];
-
-        return response()->json($data, $code);
+        return response()->json(['msg' => $msg], $code);
     }
+
+    public static function errorJsonValidation(
+        string $msg,
+        array $errors = [],
+    ): JsonResponse
+    {
+        return response()->json([
+            'msg' => $msg,
+            'errors' => $errors,
+        ], Response::HTTP_UNPROCESSABLE_ENTITY);
+    }
+
+    public static function noContent(): JsonResponse
+    {
+        return response()->json(status: Response::HTTP_NO_CONTENT);
+    }
+
 }

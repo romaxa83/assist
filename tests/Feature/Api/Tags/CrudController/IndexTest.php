@@ -31,12 +31,21 @@ class IndexTest extends TestCase
 
         $this->getJson(route('api.tag.index'))
             ->assertJson([
-                'data' => [
-                    ['id' => $model_3->id,],
-                    ['id' => $model_1->id,],
-                    ['id' => $model_2->id,],
-                ]
+                ['id' => $model_3->id,],
+                ['id' => $model_1->id,],
+                ['id' => $model_2->id,],
             ])
+            ->assertValidResponse(200)
+        ;
+    }
+
+    public function test_success_empty_data()
+    {
+        $this->loginAsAdmin();
+
+        $this->getJson(route('api.tag.index'))
+            ->assertJson([])
+            ->assertJsonCount(0)
         ;
     }
 
@@ -62,12 +71,10 @@ class IndexTest extends TestCase
             'search' => 'bb'
         ]))
             ->assertJson([
-                'data' => [
-                    ['id' => $model_1->id,],
-                    ['id' => $model_2->id,],
-                ]
+                ['id' => $model_1->id,],
+                ['id' => $model_2->id,],
             ])
-            ->assertJsonCount(2, 'data')
+            ->assertJsonCount(2)
         ;
     }
 
@@ -78,6 +85,6 @@ class IndexTest extends TestCase
         $res = $this->getJson(route('api.tag.index'))
         ;
 
-        self::assertUnauthorizedMsg($res);
+        self::assertUnauthorized($res);
     }
 }

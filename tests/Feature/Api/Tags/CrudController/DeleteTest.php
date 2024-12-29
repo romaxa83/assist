@@ -30,14 +30,25 @@ class DeleteTest extends TestCase
         $id = $model->id;
 
         $this->deleteJson(route('api.tag.delete', ['id' => $model->id]))
-            ->assertJson([
-                'data' => [
-                    'msg' => "Deleted"
-                ]
-            ])
+            ->assertValidResponse(204)
         ;
 
         $this->assertNull(Tag::find($id));
+    }
+
+
+    public function test_fail_not_found_model()
+    {
+        $this->loginAsAdmin();
+
+        /** @var $model Tag */
+        $model = $this->tagBuilder->create();
+
+
+        $res = $this->deleteJson(route('api.tag.delete', ['id' => $model->id +1]))
+        ;
+
+        self::assertNotFound($res);
     }
 
     public function test_fail_not_auth()
@@ -48,6 +59,6 @@ class DeleteTest extends TestCase
         $res = $this->deleteJson(route('api.tag.delete', ['id' => $model->id]))
         ;
 
-        self::assertUnauthorizedMsg($res);
+        self::assertUnauthorized($res);
     }
 }
