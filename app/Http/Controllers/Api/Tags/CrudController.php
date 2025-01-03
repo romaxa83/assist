@@ -56,11 +56,14 @@ class CrudController extends ApiController
     #[Parameters\Headers\Authorization]
     #[Parameters\Headers\ContentType]
     #[Parameters\Headers\Accept]
+
     #[RequestJson(TagRequest::class)]
+
     #[Responses\ResponseJsonSuccess(
         resource:TagResource::class,
         response: Response::HTTP_CREATED
     )]
+    #[Responses\ResponseInvalid]
     #[Responses\ResponseServerError]
     public function create(TagRequest $request): TagResource
     {
@@ -84,6 +87,7 @@ class CrudController extends ApiController
     #[RequestJson(TagRequest::class)]
     #[Responses\ResponseJsonSuccess(TagResource::class)]
     #[Responses\ResponseNotFound]
+    #[Responses\ResponseInvalid]
     #[Responses\ResponseServerError]
     public function update(TagRequest $request, $id): TagResource
     {

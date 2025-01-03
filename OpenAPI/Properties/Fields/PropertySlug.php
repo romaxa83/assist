@@ -1,6 +1,6 @@
 <?php
 
-namespace OpenAPI\Properties;
+namespace OpenAPI\Properties\Fields;
 
 class PropertySlug extends \OpenAPI\Properties\PropertyString
 {

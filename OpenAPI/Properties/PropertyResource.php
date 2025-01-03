@@ -1,17 +1,24 @@
 <?php
+
 namespace OpenAPI\Properties;
 
 use OpenApi\Attributes as OA;
+use ReflectionClass;
+use ReflectionException;
 
-class PropertyArray extends OA\Property
+class PropertyResource extends OA\Property
 {
+    /**
+     * @throws ReflectionException
+     */
     public function __construct(
         string $property,
-        OA\Schema $items,
-        string $description = null,
-        bool $nullable = false
+        string $resource,
+        ?bool $nullable = false,
+        ?string $description = null
     ) {
-
+        $className = (new ReflectionClass($resource))->getShortName();
+        $ref = "#/components/schemas/{$className}";
         if ($nullable) {
             return parent::__construct(
                 property: $property,
@@ -19,8 +26,7 @@ class PropertyArray extends OA\Property
                 nullable: true,
                 anyOf: [
                     new OA\Schema(
-                        type: 'array',
-                        items: $items
+                        ref: $ref
                     ),
                     new OA\Schema(
                         type: 'null',
@@ -28,13 +34,12 @@ class PropertyArray extends OA\Property
                 ]
             );
         }
-
         parent::__construct(
             property: $property,
+            ref: $ref,
             description: $description,
-            type: 'array',
-            items: $items,
-            nullable: false
+            type: 'object',
+            nullable: $nullable
         );
     }
 }

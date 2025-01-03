@@ -9,7 +9,7 @@ class PropertyErrorMessage extends OA\Property
     public function __construct(string $msg = 'Some error message')
     {
         parent::__construct(
-            property: 'message',
+            property: 'msg',
             type: 'string',
             example: $msg
         );
