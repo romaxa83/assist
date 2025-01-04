@@ -191,6 +191,7 @@ return [
     */
 
     'attributes' => [
+        'title' => 'Title',
         'name' => 'Name',
         'slug' => 'Slug',
     ],

@@ -34,4 +34,18 @@ Route::middleware(['auth:sanctum'])
             ->name('tag.update');
         Route::delete('tags/{id}', [Api\Tags\CrudController::class, 'delete'])
             ->name('tag.delete');
+
+        // NOTES
+        Route::get('notes', [Api\Notes\CrudController::class, 'index'])
+            ->name('note.index');
+        Route::get('notes/shortlist', [Api\Notes\CrudController::class, 'shortlist'])
+            ->name('note.shortlist');
+        Route::get('notes/{id}', [Api\Notes\CrudController::class, 'show'])
+            ->name('note.show');
+        Route::post('notes', [Api\Notes\CrudController::class, 'create'])
+            ->name('note.create');
+        Route::put('notes/{id}', [Api\Notes\CrudController::class, 'update'])
+            ->name('note.update');
+        Route::delete('notes/{id}', [Api\Notes\CrudController::class, 'delete'])
+            ->name('note.delete');
     });
