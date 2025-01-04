@@ -74,9 +74,6 @@ app_init: ## Инициализация ларавеловского прило�
 	docker compose exec php php artisan migrate
 	docker compose exec php php artisan db:seed
 	docker compose exec php php artisan storage:link
-	docker compose exec php php artisan passport:keys
-	docker compose exec php php artisan passport:client --password --provider=users --name='Users'
-	docker compose exec php php artisan passport:client --password --provider=admins --name='Admins'
 
 .PHONY: info_domen
 info_domen: ## Линки на сервисы сайта (для разных окружений)
