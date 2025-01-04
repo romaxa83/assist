@@ -32,7 +32,9 @@ class TagRequest extends BaseFormRequest
         $id = Route::getCurrentRoute()->parameter('id');
 
         $rules = [
-            'name' => ['required', 'string', Rule::unique(Tag::TABLE, 'name')],
+            'name' => ['required', 'string',
+                Rule::unique(Tag::TABLE, 'name')
+            ],
             'color' => ['nullable', 'string'],
         ];
 

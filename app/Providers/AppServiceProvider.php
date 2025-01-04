@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Models\Notes\Note;
 use Illuminate\Http\Resources\Json\JsonResource;
 use App\Models\Users\User;
 use Illuminate\Database\Eloquent\Relations\Relation;
@@ -35,6 +36,7 @@ class AppServiceProvider extends ServiceProvider
     {
         return [
             User::MORPH_NAME => User::class,
+            Note::MORPH_NAME => Note::class,
         ];
     }
 }

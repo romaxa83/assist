@@ -20,6 +20,8 @@ final class NoteService
 
         $model->save();
 
+        $model->tags()->sync($dto->tags);
+
         return $model;
     }
 

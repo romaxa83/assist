@@ -3,8 +3,10 @@
 namespace App\Http\Resources\Api\Notes;
 
 use App\Http\Resources\Api\BaseResource;
+use App\Http\Resources\Api\Tags\TagResource;
 use App\Models\Notes\Note;
 use OpenAPI\Properties\Fields\PropertyId;
+use OpenAPI\Properties\PropertyResourceCollection;
 use OpenAPI\Properties\PropertyString;
 use OpenAPI\Schemas\BaseScheme;
 
@@ -27,6 +29,10 @@ use OpenAPI\Schemas\BaseScheme;
         new PropertyString(
             property: 'text',
             example: 'some text'
+        ),
+        new PropertyResourceCollection(
+            property: 'tags',
+            resource: TagResource::class,
         )
     ]
 )]
@@ -38,7 +44,8 @@ class NoteResource extends BaseResource
             'id' => $this->id,
             'title' => $this->title,
             'slug' => $this->slug,
-            'text' => $this->text
+            'text' => $this->text,
+            'tags' => TagResource::collection($this->tags),
         ];
     }
 }

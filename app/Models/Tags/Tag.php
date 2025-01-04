@@ -2,6 +2,7 @@
 
 namespace App\Models\Tags;
 
+use App\Collections\TagCollection;
 use App\ModelFilters\Tags\TagFilter;
 use App\Models\BaseModel;
 use EloquentFilter\Filterable;
@@ -29,6 +30,11 @@ class Tag extends BaseModel
     public function modelFilter(): string
     {
         return TagFilter::class;
+    }
+
+    public function newCollection(array $models = []): TagCollection
+    {
+        return TagCollection::make($models);
     }
 }
 

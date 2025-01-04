@@ -5,6 +5,7 @@ namespace Tests\Feature\Api\Notes\CrudController;
 use App\Models\Notes\Note;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\Builders\Notes\NoteBuilder;
+use Tests\Builders\Tags\TagBuilder;
 use Tests\TestCase;
 
 class CreateTest extends TestCase
@@ -12,6 +13,7 @@ class CreateTest extends TestCase
     use DatabaseTransactions;
 
     protected NoteBuilder $noteBuilder;
+    protected TagBuilder $tagBuilder;
 
     protected array $data;
 
@@ -20,6 +22,7 @@ class CreateTest extends TestCase
         parent::setUp();
 
         $this->noteBuilder = resolve(NoteBuilder::class);
+        $this->tagBuilder = resolve(TagBuilder::class);
 
         $this->data = [
             'title' => 'test title',
@@ -32,9 +35,33 @@ class CreateTest extends TestCase
         $this->loginAsAdmin();
 
         $data = $this->data;
+        $data['tags'] = [
+            $this->tagBuilder->weight(1)->create()->id,
+            $this->tagBuilder->weight(10)->create()->id,
+        ];
 
         $this->postJson(route('api.note.create'), $data)
+            ->assertJson([
+                'title' => $data['title'],
+                'text' => $data['text'],
+                'tags' => [
+                    ['id' => $data['tags'][1]],
+                    ['id' => $data['tags'][0]],
+                ]
+            ])
+            ->assertJsonCount(2, 'tags')
             ->assertValidResponse(201)
+        ;
+    }
+
+    public function test_success_create_without_tags()
+    {
+        $this->loginAsAdmin();
+
+        $data = $this->data;
+
+        $this->postJson(route('api.note.create'), $data)
+            ->assertJsonCount(0, 'tags')
         ;
     }
 

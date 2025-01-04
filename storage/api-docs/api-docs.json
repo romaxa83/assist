@@ -1647,6 +1647,17 @@
                                 "type": "null"
                             }
                         ]
+                    },
+                    "tags": {
+                        "type": "array",
+                        "items": {
+                            "type": "integer"
+                        },
+                        "example": [
+                            1,
+                            2
+                        ],
+                        "nullable": false
                     }
                 },
                 "type": "object",
@@ -1697,7 +1708,8 @@
                     "id",
                     "title",
                     "slug",
-                    "text"
+                    "text",
+                    "tags"
                 ],
                 "properties": {
                     "id": {
@@ -1719,6 +1731,13 @@
                     "text": {
                         "type": "string",
                         "example": "some text",
+                        "nullable": false
+                    },
+                    "tags": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/TagResource"
+                        },
                         "nullable": false
                     }
                 },
