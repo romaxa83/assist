@@ -40,16 +40,32 @@ class CrudController extends ApiController
     #[Parameters\Headers\Authorization]
     #[Parameters\Headers\ContentType]
     #[Parameters\Headers\Accept]
+    #[Parameters\ParameterPage]
+    #[Parameters\ParameterPerPage]
     #[Parameters\ParameterSearch]
+    #[Parameters\ParameterIntArray(
+        parameter: 'tags'
+    )]
     #[Responses\ResponsePaginate(NoteResource::class)]
     #[Responses\ResponseServerError]
     public function index(NoteFilterRequest $request): ResourceCollection
     {
-        $recs = Note::query()
-            ->filter($request->validated())
-            ->orderBy('weight', 'desc')
-            ->paginate()
+        $filter = $request->validated();
+
+        $recsQuery = Note::query()
+            ->filter($filter)
         ;
+
+        if($search = $filter['search'] ?? null){
+            $recsQuery->search($search);
+        } else {
+            $recsQuery->orderBy('weight', 'desc');
+        }
+
+        $recs = $recsQuery->paginate(
+            page: $filter['page'] ?? 1,
+            perPage: $filter['per_page'] ?? Note::DEFAULT_PER_PAGE,
+        );
 
         return NoteResource::collection($recs);
     }

@@ -225,9 +225,36 @@
                         }
                     },
                     {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Page number",
+                        "required": false,
+                        "example": 1
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "Number of records per page",
+                        "required": false,
+                        "example": 10
+                    },
+                    {
                         "name": "search",
                         "in": "query",
                         "required": false
+                    },
+                    {
+                        "name": "tags[]",
+                        "in": "query",
+                        "description": "Filter by tags",
+                        "required": false,
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "example": null
+                            }
+                        }
                     }
                 ],
                 "responses": {

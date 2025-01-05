@@ -21,6 +21,12 @@ class NoteBuilder extends BaseBuilder
         return $this;
     }
 
+    public function text(string $value): self
+    {
+        $this->data['text'] = $value;
+        return $this;
+    }
+
     public function weight(int $value): self
     {
         $this->data['weight'] = $value;

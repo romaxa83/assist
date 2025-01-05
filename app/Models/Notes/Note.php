@@ -10,6 +10,7 @@ use App\Models\Tags\HasTagsTrait;
 use EloquentFilter\Filterable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Support\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 
 /**
  * @property int id
@@ -20,6 +21,9 @@ use Illuminate\Support\Carbon;
  * @property int weight
  * @property Carbon|null created_at
  * @property Carbon|null updated_at
+ *
+ * @see Note::scopeSearch()
+ * @method static Builder|Note search(string $search)
  */
 class Note extends BaseModel implements HasTags
 {
@@ -40,6 +44,15 @@ class Note extends BaseModel implements HasTags
     public function modelFilter(): string
     {
         return NoteFilter::class;
+    }
+
+    public function scopeSearch($query, string $search): void
+    {
+        $search = implode(' | ', array_filter(explode(' ', $search)));
+
+        $query->selectRaw("*, ts_rank(searchable, to_tsquery('russian', ?)) as score", [$search])
+            ->whereRaw("searchable @@ to_tsquery('russian', ?)", [$search])
+            ->orderByRaw("ts_rank(searchable, to_tsquery('russian', ?)) desc", [$search]);
     }
 }
 
