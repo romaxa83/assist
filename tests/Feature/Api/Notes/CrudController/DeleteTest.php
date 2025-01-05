@@ -5,6 +5,7 @@ namespace Tests\Feature\Api\Notes\CrudController;
 use App\Models\Notes\Note;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\Builders\Notes\NoteBuilder;
+use Tests\Builders\Tags\TagBuilder;
 use Tests\TestCase;
 
 class DeleteTest extends TestCase
@@ -12,10 +13,12 @@ class DeleteTest extends TestCase
     use DatabaseTransactions;
 
     protected NoteBuilder $noteBuilder;
+    protected TagBuilder $tagBuilder;
 
     public function setUp(): void
     {
         $this->noteBuilder = resolve(NoteBuilder::class);
+        $this->tagBuilder = resolve(TagBuilder::class);
 
         parent::setUp();
     }
@@ -24,8 +27,11 @@ class DeleteTest extends TestCase
     {
         $this->loginAsAdmin();
 
+        $tag_1 = $this->tagBuilder->weight(2)->create();
+        $tag_2 = $this->tagBuilder->weight(3)->create();
+
         /** @var $model Note */
-        $model = $this->noteBuilder->create();
+        $model = $this->noteBuilder->tags($tag_1, $tag_2)->create();
 
         $id = $model->id;
 
@@ -34,6 +40,12 @@ class DeleteTest extends TestCase
         ;
 
         $this->assertNull(Note::find($id));
+
+        $tag_1->refresh();
+        $tag_2->refresh();
+
+        $this->assertEquals(1, $tag_1->weight);
+        $this->assertEquals(2, $tag_2->weight);
     }
 
 

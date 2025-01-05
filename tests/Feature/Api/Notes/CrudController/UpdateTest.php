@@ -6,6 +6,7 @@ use App\Models\Notes\Note;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Http\Response;
 use Tests\Builders\Notes\NoteBuilder;
+use Tests\Builders\Tags\TagBuilder;
 use Tests\TestCase;
 
 class UpdateTest extends TestCase
@@ -13,12 +14,14 @@ class UpdateTest extends TestCase
     use DatabaseTransactions;
 
     protected NoteBuilder $noteBuilder;
+    protected TagBuilder $tagBuilder;
 
     protected array $data;
 
     public function setUp(): void
     {
         $this->noteBuilder = resolve(NoteBuilder::class);
+        $this->tagBuilder = resolve(TagBuilder::class);
 
         $this->data = [
             'title' => 'test title',
@@ -31,14 +34,62 @@ class UpdateTest extends TestCase
     {
         $this->loginAsAdmin();
 
+        $tag_1 = $this->tagBuilder->weight(1)->create();
+        $tag_2 = $this->tagBuilder->weight(3)->create();
+
         /** @var $model Note */
-        $model = $this->noteBuilder->create();
+        $model = $this->noteBuilder->tags($tag_1)->create();
+
+        $data = $this->data;
+        $data['tags'] = [
+            $tag_1->id,
+            $tag_2->id,
+        ];
+
+        $this->assertNotEquals($model->title, $data['title']);
+        $this->assertNotEquals($model->slug, slug($data['title']));
+        $this->assertNotEquals($model->text, $data['text']);
+
+        $this->assertCount(1, $model->tags);
+
+        $this->putJson(route('api.note.update', ['id' => $model->id]), $data)
+            ->assertJson([
+                'id' => $model->id,
+                'title' => $data['title'],
+                'slug' => slug($data['title']),
+                'text' => $data['text'],
+                'tags' => [
+                    ['id' => $tag_2->id],
+                    ['id' => $tag_1->id],
+                ]
+            ])
+            ->assertJsonCount(2, 'tags')
+            ->assertValidResponse(200)
+        ;
+
+        $tag_1->refresh();
+        $tag_2->refresh();
+
+        $this->assertEquals(1, $tag_1->weight);
+        $this->assertEquals(4, $tag_2->weight);
+    }
+
+    public function test_update_and_remove_tags()
+    {
+        $this->loginAsAdmin();
+
+        $tag_1 = $this->tagBuilder->weight(3)->create();
+
+        /** @var $model Note */
+        $model = $this->noteBuilder->tags($tag_1)->create();
 
         $data = $this->data;
 
         $this->assertNotEquals($model->title, $data['title']);
         $this->assertNotEquals($model->slug, slug($data['title']));
         $this->assertNotEquals($model->text, $data['text']);
+
+        $this->assertCount(1, $model->tags);
 
         $this->putJson(route('api.note.update', ['id' => $model->id]), $data)
             ->assertJson([
@@ -47,8 +98,13 @@ class UpdateTest extends TestCase
                 'slug' => slug($data['title']),
                 'text' => $data['text'],
             ])
+            ->assertJsonCount(0, 'tags')
             ->assertValidResponse(200)
         ;
+
+        $tag_1->refresh();
+
+        $this->assertEquals(2, $tag_1->weight);
     }
 
     public function test_update_not_unique_name()

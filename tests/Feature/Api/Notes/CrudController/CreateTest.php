@@ -34,10 +34,13 @@ class CreateTest extends TestCase
     {
         $this->loginAsAdmin();
 
+        $tag_1 = $this->tagBuilder->weight(1)->create();
+        $tag_2 = $this->tagBuilder->weight(10)->create();
+
         $data = $this->data;
         $data['tags'] = [
-            $this->tagBuilder->weight(1)->create()->id,
-            $this->tagBuilder->weight(10)->create()->id,
+            $tag_1->id,
+            $tag_2->id,
         ];
 
         $this->postJson(route('api.note.create'), $data)
@@ -45,13 +48,19 @@ class CreateTest extends TestCase
                 'title' => $data['title'],
                 'text' => $data['text'],
                 'tags' => [
-                    ['id' => $data['tags'][1]],
-                    ['id' => $data['tags'][0]],
+                    ['id' => $tag_2->id],
+                    ['id' => $tag_1->id],
                 ]
             ])
             ->assertJsonCount(2, 'tags')
             ->assertValidResponse(201)
         ;
+
+        $tag_1->refresh();
+        $tag_2->refresh();
+
+        $this->assertEquals(2, $tag_1->weight);
+        $this->assertEquals(11, $tag_2->weight);
     }
 
     public function test_success_create_without_tags()

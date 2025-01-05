@@ -15,14 +15,21 @@ final class NoteService
         NoteDto $dto,
     ): Note
     {
-        $model = $this->fill(new Note(), $dto, false);
-        $model = $this->setStatus($model, NoteStatus::Draft, false);
+        return make_transaction(function() use ($dto) {
 
-        $model->save();
+            $model = $this->fill(new Note(), $dto, false);
+            $model = $this->setStatus($model, NoteStatus::Draft, false);
 
-        $model->tags()->sync($dto->tags);
+            $model->save();
 
-        return $model;
+            if(count($dto->tags) > 0){
+                $model->tags()->sync($dto->tags);
+
+                $model->tags->increaseWeights();
+            }
+
+            return $model;
+        });
     }
 
     public function update(
@@ -30,7 +37,19 @@ final class NoteService
         NoteDto $dto,
     ): Note
     {
-        return $this->fill($model, $dto);
+        return make_transaction(function() use ($model, $dto) {
+
+            $model = $this->fill($model, $dto);
+
+            $model->tags->decreaseWeights();
+            $model->tags()->sync($dto->tags);
+
+            $model->refresh();
+
+            $model->tags->increaseWeights();
+
+            return $model;
+        });
     }
 
     public function setStatus(
@@ -50,6 +69,8 @@ final class NoteService
         Note $model,
     ): bool
     {
+        $model->tags->decreaseWeights();
+
         return $model->delete();
     }
 

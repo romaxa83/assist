@@ -33,4 +33,18 @@ class TagCollection extends Collection
 
         return implode(', ', $names);
     }
+
+    public function increaseWeights(): self
+    {
+        array_map(fn (Tag $tag) => $tag->increaseWeight(), $this->items);
+
+        return $this;
+    }
+
+    public function decreaseWeights(): self
+    {
+        array_map(fn (Tag $tag) => $tag->decreaseWeight(), $this->items);
+
+        return $this;
+    }
 }

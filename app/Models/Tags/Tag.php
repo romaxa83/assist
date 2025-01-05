@@ -36,5 +36,17 @@ class Tag extends BaseModel
     {
         return TagCollection::make($models);
     }
+
+    public function increaseWeight(): void
+    {
+        $this->weight++;
+        $this->save();
+    }
+
+    public function decreaseWeight(): void
+    {
+        $this->weight--;
+        $this->save();
+    }
 }
 
