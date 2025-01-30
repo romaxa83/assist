@@ -28,9 +28,7 @@ class CrudController extends ApiController
         path: '/api/tags',
         tags: ['Tags'],
         description: 'Get tags as list',
-        auth: true
     )]
-    #[Parameters\Headers\Authorization]
     #[Parameters\Headers\ContentType]
     #[Parameters\Headers\Accept]
     #[Parameters\ParameterSearch]

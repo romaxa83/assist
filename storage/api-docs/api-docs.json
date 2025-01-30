@@ -195,16 +195,6 @@
                 "operationId": "54dd1a197a02210a06d4d0706f259113",
                 "parameters": [
                     {
-                        "parameter": "Authorization",
-                        "name": "Authorization",
-                        "in": "header",
-                        "required": true,
-                        "schema": {
-                            "type": "string",
-                            "default": "Bearer <authorization_token>"
-                        }
-                    },
-                    {
                         "parameter": "Content-type",
                         "name": "Content-type",
                         "in": "header",
@@ -258,22 +248,6 @@
                     }
                 ],
                 "responses": {
-                    "401": {
-                        "description": "Unauthenticated",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "msg": {
-                                            "type": "string",
-                                            "example": "Unauthorized"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
                     "200": {
                         "description": "Success",
                         "content": {
@@ -452,12 +426,7 @@
                             }
                         }
                     }
-                },
-                "security": [
-                    {
-                        "sanctum": []
-                    }
-                ]
+                }
             },
             "post": {
                 "tags": [
@@ -1058,16 +1027,6 @@
                 "operationId": "b7119e8a3a29914f3a7bfc658ee2ea52",
                 "parameters": [
                     {
-                        "parameter": "Authorization",
-                        "name": "Authorization",
-                        "in": "header",
-                        "required": true,
-                        "schema": {
-                            "type": "string",
-                            "default": "Bearer <authorization_token>"
-                        }
-                    },
-                    {
                         "parameter": "Content-type",
                         "name": "Content-type",
                         "in": "header",
@@ -1094,22 +1053,6 @@
                     }
                 ],
                 "responses": {
-                    "401": {
-                        "description": "Unauthenticated",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "msg": {
-                                            "type": "string",
-                                            "example": "Unauthorized"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
                     "200": {
                         "description": "Success",
                         "content": {
@@ -1139,12 +1082,7 @@
                             }
                         }
                     }
-                },
-                "security": [
-                    {
-                        "sanctum": []
-                    }
-                ]
+                }
             },
             "post": {
                 "tags": [

@@ -27,6 +27,7 @@ Route::middleware(['auth:sanctum'])
 
         // TAGS
         Route::get('tags', [Api\Tags\CrudController::class, 'index'])
+            ->withoutMiddleware(['auth:sanctum'])
             ->name('tag.index');
         Route::post('tags', [Api\Tags\CrudController::class, 'create'])
             ->name('tag.create');
@@ -37,6 +38,7 @@ Route::middleware(['auth:sanctum'])
 
         // NOTES
         Route::get('notes', [Api\Notes\CrudController::class, 'index'])
+            ->withoutMiddleware(['auth:sanctum'])
             ->name('note.index');
         Route::get('notes/shortlist', [Api\Notes\CrudController::class, 'shortlist'])
             ->name('note.shortlist');

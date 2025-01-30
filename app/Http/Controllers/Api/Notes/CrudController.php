@@ -35,9 +35,7 @@ class CrudController extends ApiController
         path: '/api/notes',
         tags: ['Notes'],
         description: 'Get notes as pagination list',
-        auth: true
     )]
-    #[Parameters\Headers\Authorization]
     #[Parameters\Headers\ContentType]
     #[Parameters\Headers\Accept]
     #[Parameters\ParameterPage]
