@@ -5,6 +5,7 @@ namespace App\Http\Resources\Api\Tags;
 use App\Http\Resources\Api\BaseResource;
 use App\Models\Tags\Tag;
 use OpenAPI\Properties\Fields\PropertyId;
+use OpenAPI\Properties\PropertyInteger;
 use OpenAPI\Properties\PropertyString;
 use OpenAPI\Schemas\BaseScheme;
 
@@ -27,6 +28,10 @@ use OpenAPI\Schemas\BaseScheme;
         new PropertyString(
             property: 'color',
             example: '#d98b84'
+        ),
+        new PropertyInteger(
+            property: 'weight',
+            example: 4
         )
     ]
 )]
@@ -38,7 +43,8 @@ class TagResource extends BaseResource
             'id' => $this->id,
             'name' => $this->name,
             'slug' => $this->slug,
-            'color' => $this->color
+            'color' => $this->color,
+            'weight' => $this->weight
         ];
     }
 }

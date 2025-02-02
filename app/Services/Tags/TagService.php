@@ -14,7 +14,11 @@ final class TagService
         TagDto $dto,
     ): Tag
     {
-        return $this->fill(new Tag(), $dto);
+        $model = $this->fill(new Tag(), $dto, false);
+        $model->weight = 0;
+        $model->save();
+
+        return $model;
     }
 
     public function update(

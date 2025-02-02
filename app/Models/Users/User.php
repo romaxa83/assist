@@ -22,6 +22,9 @@ class User extends BaseAuthenticatableModel
     use HasFactory;
     use Notifiable;
 
+    public const TABLE = 'users';
+    protected $table = self::TABLE;
+
     const MORPH_NAME = 'user';
 
     /** @var list<string> */

@@ -3,7 +3,9 @@
 namespace App\Http\Requests\Api\Auth;
 
 use App\Http\Requests\BaseFormRequest;
+use App\Models\Users\User;
 use ArondeParon\RequestSanitizer\Sanitizers\Lowercase;
+use Illuminate\Validation\Rule;
 use OpenAPI\Properties\PropertyString;
 use OpenAPI\Schemas\BaseScheme;
 
@@ -31,7 +33,7 @@ class LoginRequest extends BaseFormRequest
     public function rules(): array
     {
         return [
-            'email' => ['required', 'email', 'max:191'],
+            'email' => ['required', 'email', Rule::exists(User::TABLE)],
             'password' => ['required', 'string'],
         ];
     }

@@ -1714,7 +1714,8 @@
                     "id",
                     "name",
                     "slug",
-                    "color"
+                    "color",
+                    "weight"
                 ],
                 "properties": {
                     "id": {
@@ -1736,6 +1737,11 @@
                     "color": {
                         "type": "string",
                         "example": "#d98b84",
+                        "nullable": false
+                    },
+                    "weight": {
+                        "type": "integer",
+                        "example": 4,
                         "nullable": false
                     }
                 },
