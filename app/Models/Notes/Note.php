@@ -7,8 +7,10 @@ use App\ModelFilters\Notes\NoteFilter;
 use App\Models\BaseModel;
 use App\Models\Tags\HasTags;
 use App\Models\Tags\HasTagsTrait;
+use App\Models\Users\User;
 use EloquentFilter\Filterable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 
@@ -19,8 +21,12 @@ use Illuminate\Database\Eloquent\Builder;
  * @property string slug
  * @property string text
  * @property int weight
+ * @property int author_id
  * @property Carbon|null created_at
  * @property Carbon|null updated_at
+ *
+ * @see self::author()
+ * @property User|BelongsTo author
  *
  * @see Note::scopeSearch()
  * @method static Builder|Note search(string $search)
@@ -44,6 +50,11 @@ class Note extends BaseModel implements HasTags
     public function modelFilter(): string
     {
         return NoteFilter::class;
+    }
+
+    public function author(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'author_id');
     }
 
     public function scopeSearch($query, string $search): void

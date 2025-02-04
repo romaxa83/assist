@@ -6,6 +6,7 @@ use App\Http\Resources\Api\BaseResource;
 use App\Http\Resources\Api\Tags\TagResource;
 use App\Models\Notes\Note;
 use OpenAPI\Properties\Fields\PropertyId;
+use OpenAPI\Properties\PropertyInteger;
 use OpenAPI\Properties\PropertyResourceCollection;
 use OpenAPI\Properties\PropertyString;
 use OpenAPI\Schemas\BaseScheme;
@@ -19,6 +20,10 @@ use OpenAPI\Schemas\BaseScheme;
     properties: [
         new PropertyId(),
         new PropertyString(
+            property: 'status',
+            example: 'draft'
+        ),
+        new PropertyString(
             property: 'title',
             example: 'database'
         ),
@@ -29,6 +34,14 @@ use OpenAPI\Schemas\BaseScheme;
         new PropertyString(
             property: 'text',
             example: 'some text'
+        ),
+        new PropertyInteger(
+            property: 'weight',
+            example: 8
+        ),
+        new PropertyString(
+            property: 'created_at',
+            example: '2025-02-02 11:49'
         ),
         new PropertyResourceCollection(
             property: 'tags',
@@ -42,9 +55,12 @@ class NoteResource extends BaseResource
     {
         return [
             'id' => $this->id,
+            'status' => $this->status->value,
             'title' => $this->title,
             'slug' => $this->slug,
             'text' => $this->text,
+            'weight' => $this->weight,
+            'created_at' => date_to_front($this->created_at),
             'tags' => TagResource::collection($this->tags),
         ];
     }

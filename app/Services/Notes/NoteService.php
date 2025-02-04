@@ -18,7 +18,7 @@ final class NoteService
         return make_transaction(function() use ($dto) {
 
             $model = $this->fill(new Note(), $dto, false);
-            $model = $this->setStatus($model, NoteStatus::Draft, false);
+            $model = $this->setStatus($model, NoteStatus::Draft(), false);
 
             $model->save();
 

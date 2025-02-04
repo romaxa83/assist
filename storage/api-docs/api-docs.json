@@ -665,16 +665,6 @@
                 "operationId": "7eeaaefe0df5da21ee0d73c15361055e",
                 "parameters": [
                     {
-                        "parameter": "Authorization",
-                        "name": "Authorization",
-                        "in": "header",
-                        "required": true,
-                        "schema": {
-                            "type": "string",
-                            "default": "Bearer <authorization_token>"
-                        }
-                    },
-                    {
                         "parameter": "Content-type",
                         "name": "Content-type",
                         "in": "header",
@@ -706,22 +696,6 @@
                     }
                 ],
                 "responses": {
-                    "401": {
-                        "description": "Unauthenticated",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "msg": {
-                                            "type": "string",
-                                            "example": "Unauthorized"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
                     "200": {
                         "description": "Success",
                         "content": {
@@ -748,12 +722,7 @@
                             }
                         }
                     }
-                },
-                "security": [
-                    {
-                        "sanctum": []
-                    }
-                ]
+                }
             },
             "put": {
                 "tags": [
@@ -1671,9 +1640,11 @@
             "NoteResource": {
                 "required": [
                     "id",
+                    "status",
                     "title",
                     "slug",
                     "text",
+                    "created_at",
                     "tags"
                 ],
                 "properties": {
@@ -1681,6 +1652,11 @@
                         "description": "Model id",
                         "type": "integer",
                         "example": 22,
+                        "nullable": false
+                    },
+                    "status": {
+                        "type": "string",
+                        "example": "draft",
                         "nullable": false
                     },
                     "title": {
@@ -1696,6 +1672,11 @@
                     "text": {
                         "type": "string",
                         "example": "some text",
+                        "nullable": false
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "example": "2025-02-02 11:49",
                         "nullable": false
                     },
                     "tags": {

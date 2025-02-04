@@ -119,3 +119,10 @@ if (!function_exists('slug')) {
         return \Illuminate\Support\Str::slug($str);
     }
 }
+
+if (!function_exists('date_to_front')) {
+    function date_to_front(\Carbon\CarbonImmutable|\Carbon\Carbon $model): string
+    {
+        return $model->format(\App\Enums\DateFormat::FRONT());
+    }
+}

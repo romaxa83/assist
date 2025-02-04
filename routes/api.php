@@ -43,6 +43,7 @@ Route::middleware(['auth:sanctum'])
         Route::get('notes/shortlist', [Api\Notes\CrudController::class, 'shortlist'])
             ->name('note.shortlist');
         Route::get('notes/{id}', [Api\Notes\CrudController::class, 'show'])
+            ->withoutMiddleware(['auth:sanctum'])
             ->name('note.show');
         Route::post('notes', [Api\Notes\CrudController::class, 'create'])
             ->name('note.create');

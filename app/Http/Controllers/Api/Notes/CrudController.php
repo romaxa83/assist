@@ -3,19 +3,12 @@
 namespace App\Http\Controllers\Api\Notes;
 
 use App\Dto\Notes\NoteDto;
-use App\Dto\Tags\TagDto;
-use App\Enums\Notes\NoteStatus;
 use App\Http\Controllers\ApiController;
 use App\Http\Requests\Api\Notes\NoteFilterRequest;
 use App\Http\Requests\Api\Notes\NoteRequest;
-use App\Http\Requests\Api\Tags\TagFilterRequest;
-use App\Http\Requests\Api\Tags\TagRequest;
 use App\Http\Resources\Api\Notes\NoteResource;
-use App\Http\Resources\Api\Tags\TagResource;
 use App\Models\Notes\Note;
-use App\Models\Tags\Tag;
 use App\Services\Notes\NoteService;
-use App\Services\Tags\TagService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 use Illuminate\Http\Response;
@@ -95,9 +88,7 @@ class CrudController extends ApiController
         path: '/api/notes/{id}',
         tags: ['Notes'],
         description: 'Get note by id',
-        auth: true
     )]
-    #[Parameters\Headers\Authorization]
     #[Parameters\Headers\ContentType]
     #[Parameters\Headers\Accept]
     #[Parameters\ParameterId]
