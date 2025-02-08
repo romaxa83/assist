@@ -14,6 +14,16 @@ class NoteFilter extends BaseModelFilter
         );
     }
 
+    public function id(int|string $value): void
+    {
+        $this->where('id', $value);
+    }
+
+    public function status(string $value): void
+    {
+        $this->where('status', $value);
+    }
+
     public function search(string $value): void
     {
 

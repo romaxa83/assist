@@ -20,6 +20,7 @@ final class NoteService
             $model = $this->fill(new Note(), $dto, false);
             $model = $this->setStatus($model, NoteStatus::DRAFT, false);
             $model->author_id = auth()->id();
+            $model->weight = 0;
 
             $model->save();
 

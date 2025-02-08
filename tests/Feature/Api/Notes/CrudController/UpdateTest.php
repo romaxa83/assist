@@ -168,7 +168,7 @@ class UpdateTest extends TestCase
         self::assertNotFound($res);
     }
 
-    public function test_fail_not_auth()
+    public function test_not_auth()
     {
         /** @var $model Note */
         $model = $this->noteBuilder->create();

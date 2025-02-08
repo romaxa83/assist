@@ -186,6 +186,132 @@
                 ]
             }
         },
+        "/api/notes/{id}/set-status": {
+            "post": {
+                "tags": [
+                    "Notes"
+                ],
+                "description": "Set status for note",
+                "operationId": "fb53cf0594fd6258c1e021348bb70186",
+                "parameters": [
+                    {
+                        "parameter": "Authorization",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "default": "Bearer <authorization_token>"
+                        }
+                    },
+                    {
+                        "parameter": "Content-type",
+                        "name": "Content-type",
+                        "in": "header",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "default": "application/json"
+                        }
+                    },
+                    {
+                        "parameter": "Accept",
+                        "name": "Accept",
+                        "in": "header",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "default": "application/json"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/NoteSetStatusRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/NoteResource"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "The requested data was not found.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "msg": {
+                                            "type": "string",
+                                            "example": "Not Found"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Invalid data",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "msg": {
+                                            "type": "string",
+                                            "example": "Some error message"
+                                        },
+                                        "errors": {
+                                            "properties": {
+                                                "field": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string"
+                                                    },
+                                                    "example": [
+                                                        "validation error by this field"
+                                                    ],
+                                                    "nullable": false
+                                                }
+                                            },
+                                            "type": "object",
+                                            "nullable": false
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "msg": {
+                                            "type": "string",
+                                            "example": "Server Error"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/api/notes": {
             "get": {
                 "tags": [
@@ -232,6 +358,15 @@
                         "name": "search",
                         "in": "query",
                         "required": false
+                    },
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "description": "Filter by status",
+                        "required": false,
+                        "schema": {
+                            "$ref": "#/components/schemas/NoteStatus"
+                        }
                     },
                     {
                         "name": "tags[]",
@@ -1540,6 +1675,19 @@
     },
     "components": {
         "schemas": {
+            "NoteStatus": {
+                "required": [],
+                "properties": {},
+                "type": "string",
+                "enum": [
+                    "DRAFT",
+                    "MODERATION",
+                    "MODERATED",
+                    "PUBLIC",
+                    "PRIVATE"
+                ],
+                "additionalProperties": false
+            },
             "LoginRequest": {
                 "required": [
                     "email",
@@ -1597,6 +1745,20 @@
                 "type": "object",
                 "additionalProperties": false
             },
+            "NoteSetStatusRequest": {
+                "required": [
+                    "status"
+                ],
+                "properties": {
+                    "status": {
+                        "type": "string",
+                        "example": "draft",
+                        "nullable": false
+                    }
+                },
+                "type": "object",
+                "additionalProperties": false
+            },
             "TagRequest": {
                 "required": [
                     "name"
@@ -1644,6 +1806,7 @@
                     "title",
                     "slug",
                     "text",
+                    "weight",
                     "created_at",
                     "tags"
                 ],
@@ -1672,6 +1835,11 @@
                     "text": {
                         "type": "string",
                         "example": "some text",
+                        "nullable": false
+                    },
+                    "weight": {
+                        "type": "integer",
+                        "example": 8,
                         "nullable": false
                     },
                     "created_at": {

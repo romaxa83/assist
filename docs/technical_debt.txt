@@ -1,0 +1,10 @@
+- при генерации апи документации, если использовать параметр enum, и передавать ему соответствующий
+    класс, он генерит их по названию, а не по значению (а фронт должен передавать значение)
+    // пример App\Http\Controllers\Api\Notes\CrudController@index
+    #[Parameters\ParameterEnum(
+            parameter: 'status',
+            enum:NoteStatus::class,
+    )]
+
+- при смене статуса для note, добавить валидацию, и тесты под валидацию
+    @see App\Http\Requests\Api\Notes\NoteSetStatusRequest

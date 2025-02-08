@@ -78,13 +78,13 @@ class IndexTest extends TestCase
         ;
     }
 
-    public function test_fail_not_auth()
+    public function test_not_auth()
     {
         $this->tagBuilder->weight(3)->create();
+        $this->tagBuilder->weight(3)->create();
 
-        $res = $this->getJson(route('api.tag.index'))
+        $this->getJson(route('api.tag.index'))
+            ->assertJsonCount(2)
         ;
-
-        self::assertUnauthorized($res);
     }
 }

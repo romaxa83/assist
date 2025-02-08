@@ -61,4 +61,12 @@ class ApiController extends Controller
         return response()->json(status: Response::HTTP_NO_CONTENT);
     }
 
+    public static function jsonData(
+        array $data = [],
+        string|int $statusCode = Response::HTTP_OK
+    ): JsonResponse
+    {
+        return response()->json($data, $statusCode);
+    }
+
 }

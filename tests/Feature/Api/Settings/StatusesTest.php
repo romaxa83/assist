@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\Api\Notes\CrudController;
+namespace Tests\Feature\Api\Settings;
 
 use App\Enums\Notes\NoteStatus;
 use App\Models\Notes\Note;
@@ -10,52 +10,29 @@ use Tests\Builders\Notes\NoteBuilder;
 use Tests\Builders\Tags\TagBuilder;
 use Tests\TestCase;
 
-class IndexTest extends TestCase
+class StatusesTest extends TestCase
 {
     use DatabaseTransactions;
 
     protected NoteBuilder $noteBuilder;
-    protected TagBuilder $tagBuilder;
 
     public function setUp(): void
     {
         parent::setUp();
-
-        $this->tagBuilder = resolve(TagBuilder::class);
         $this->noteBuilder = resolve(NoteBuilder::class);
     }
 
-    public function test_success()
+    public function test_get_statuses()
     {
         $this->loginAsAdmin();
 
-        $now = CarbonImmutable::now();
-
-        /** @var $model_1 Note */
-        $model_1 = $this->noteBuilder
-            ->created_at($now->subDays(3))
-            ->create();
-        $model_2 = $this->noteBuilder
-            ->created_at($now)
-            ->create();
-        $model_3 = $this->noteBuilder
-            ->created_at($now->subDays(2))
-            ->create();
-
-        $this->getJson(route('api.note.index'))
+        $this->getJson(route('api.note.statuses'))
+            ->dump()
             ->assertJson([
                 'data' => [
-                    ['id' => $model_2->id,],
-                    ['id' => $model_3->id,],
-                    ['id' => $model_1->id,],
+
                 ],
-                'meta' => [
-                    'current_page' => 1,
-                    'to' => 3,
-                    'total' => 3
-                ]
             ])
-            ->assertValidResponse(200)
         ;
     }
 

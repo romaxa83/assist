@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 abstract class BaseModel extends Model
 {
     public const DEFAULT_PER_PAGE = 10;
+    public const DEFAULT_SORT_TYPE = 'desc';
 
     public function __construct(array $attributes = [])
     {

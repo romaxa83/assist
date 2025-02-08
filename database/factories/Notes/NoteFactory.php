@@ -19,7 +19,7 @@ class NoteFactory extends Factory
 
         return [
             'title' => $name,
-            'status' => NoteStatus::Draft(),
+            'status' => NoteStatus::DRAFT(),
             'slug' => slug($name),
             'text' => $this->faker->text,
             'weight' => 0,

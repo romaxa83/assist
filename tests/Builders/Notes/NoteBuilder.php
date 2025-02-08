@@ -2,8 +2,10 @@
 
 namespace Tests\Builders\Notes;
 
+use App\Enums\Notes\NoteStatus;
 use App\Models\Notes\Note;
 use App\Models\Tags\Tag;
+use Carbon\CarbonImmutable;
 use Tests\Builders\BaseBuilder;
 
 class NoteBuilder extends BaseBuilder
@@ -24,6 +26,18 @@ class NoteBuilder extends BaseBuilder
     public function text(string $value): self
     {
         $this->data['text'] = $value;
+        return $this;
+    }
+
+    public function created_at(CarbonImmutable $value): self
+    {
+        $this->data['created_at'] = $value;
+        return $this;
+    }
+
+    public function status(NoteStatus $value): self
+    {
+        $this->data['status'] = $value;
         return $this;
     }
 

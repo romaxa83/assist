@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Notes;
 
 use App\Dto\Notes\NoteDto;
+use App\Enums\Notes\NoteStatus;
 use App\Http\Controllers\ApiController;
 use App\Http\Requests\Api\Notes\NoteFilterRequest;
 use App\Http\Requests\Api\Notes\NoteRequest;
@@ -34,6 +35,10 @@ class CrudController extends ApiController
     #[Parameters\ParameterPage]
     #[Parameters\ParameterPerPage]
     #[Parameters\ParameterSearch]
+    #[Parameters\ParameterEnum(
+        parameter: 'status',
+        enum:NoteStatus::class,
+    )]
     #[Parameters\ParameterIntArray(
         parameter: 'tags'
     )]
@@ -42,7 +47,7 @@ class CrudController extends ApiController
     public function index(NoteFilterRequest $request): ResourceCollection
     {
         $filter = $request->validated();
-
+//dd($request->all());
         $recsQuery = Note::query()
             ->filter($filter)
         ;
@@ -50,7 +55,7 @@ class CrudController extends ApiController
         if($search = $filter['search'] ?? null){
             $recsQuery->search($search);
         } else {
-            $recsQuery->orderBy('weight', 'desc');
+            $recsQuery->orderBy('created_at', Note::DEFAULT_SORT_TYPE);
         }
 
         $recs = $recsQuery->paginate(

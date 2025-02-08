@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Api\Notes\CrudController;
 
+use App\Enums\Notes\NoteStatus;
 use App\Models\Notes\Note;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\Builders\Notes\NoteBuilder;
@@ -45,8 +46,10 @@ class CreateTest extends TestCase
 
         $this->postJson(route('api.note.create'), $data)
             ->assertJson([
+                'status' => NoteStatus::DRAFT(),
                 'title' => $data['title'],
                 'text' => $data['text'],
+                'weight' => 0,
                 'tags' => [
                     ['id' => $tag_2->id],
                     ['id' => $tag_1->id],
@@ -74,7 +77,7 @@ class CreateTest extends TestCase
         ;
     }
 
-    public function test_fail_unique_name()
+    public function test_fail_unique_title()
     {
         $this->loginAsAdmin();
 

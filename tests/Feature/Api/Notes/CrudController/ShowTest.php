@@ -52,14 +52,15 @@ class ShowTest extends TestCase
         self::assertNotFound($res);
     }
 
-    public function test_fail_not_auth()
+    public function test_success_not_auth()
     {
         /** @var $model Note */
         $model = $this->noteBuilder->create();
 
-        $res = $this->getJson(route('api.note.show', ['id' => $model->id]))
+        $this->getJson(route('api.note.show', ['id' => $model->id]))
+            ->assertJson([
+                'id' => $model->id,
+            ])
         ;
-
-        self::assertUnauthorized($res);
     }
 }

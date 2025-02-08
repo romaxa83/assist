@@ -36,7 +36,7 @@ Route::middleware(['auth:sanctum'])
         Route::delete('tags/{id}', [Api\Tags\CrudController::class, 'delete'])
             ->name('tag.delete');
 
-        // NOTES
+        // NOTES CRUD
         Route::get('notes', [Api\Notes\CrudController::class, 'index'])
             ->withoutMiddleware(['auth:sanctum'])
             ->name('note.index');
@@ -51,4 +51,13 @@ Route::middleware(['auth:sanctum'])
             ->name('note.update');
         Route::delete('notes/{id}', [Api\Notes\CrudController::class, 'delete'])
             ->name('note.delete');
+        // NOTES ACTION
+        Route::post('notes/{id}/set-status', [Api\Notes\ActionController::class, 'setStatus'])
+            ->name('note.set-status');
+
+
+        // Settings
+        Route::get('settings/notes', [Api\Settings\Controller::class, 'notes'])
+            ->name('settings.notes');
+
     });
