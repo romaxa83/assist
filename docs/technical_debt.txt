@@ -8,3 +8,5 @@
 
 - при смене статуса для note, добавить валидацию, и тесты под валидацию
     @see App\Http\Requests\Api\Notes\NoteSetStatusRequest
+
+- добавить апи  документацию по для поля мета в note

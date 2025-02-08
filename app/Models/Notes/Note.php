@@ -65,5 +65,16 @@ class Note extends BaseModel implements HasTags
             ->whereRaw("searchable @@ to_tsquery('russian', ?)", [$search])
             ->orderByRaw("ts_rank(searchable, to_tsquery('russian', ?)) desc", [$search]);
     }
+
+    public function getMeta(User|null $user = null): array
+    {
+        $result = [];
+        if($user){
+            $result['statuses'] =  NoteStatus::getStatusesForChange($this->status, $user);
+        }
+
+
+        return $result;
+    }
 }
 

@@ -5,6 +5,7 @@ namespace App\Http\Resources\Api\Notes;
 use App\Http\Resources\Api\BaseResource;
 use App\Http\Resources\Api\Tags\TagResource;
 use App\Models\Notes\Note;
+use Illuminate\Support\Facades\Auth;
 use OpenAPI\Properties\Fields\PropertyId;
 use OpenAPI\Properties\PropertyInteger;
 use OpenAPI\Properties\PropertyResourceCollection;
@@ -62,6 +63,7 @@ class NoteResource extends BaseResource
             'weight' => $this->weight,
             'created_at' => date_to_front($this->created_at),
             'tags' => TagResource::collection($this->tags),
+            'meta' => $this->getMeta(Auth::guard('sanctum')->user())
         ];
     }
 }

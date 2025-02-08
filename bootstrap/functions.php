@@ -126,3 +126,10 @@ if (!function_exists('date_to_front')) {
         return $model->format(\App\Enums\DateFormat::FRONT());
     }
 }
+
+if (!function_exists('auth_user')) {
+    function auth_user(): \Illuminate\Contracts\Auth\Authenticatable|\App\Models\Users\User|null
+    {
+        return auth()->user();
+    }
+}

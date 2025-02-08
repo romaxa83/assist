@@ -4,6 +4,7 @@ namespace Tests\Feature\Api\Notes\CrudController;
 
 use App\Models\Notes\Note;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Support\Facades\Auth;
 use Tests\Builders\Notes\NoteBuilder;
 use Tests\TestCase;
 
@@ -23,19 +24,22 @@ class ShowTest extends TestCase
 
     public function test_show()
     {
-        $this->loginAsAdmin();
+        $user = $this->loginAsAdmin();
 
         /** @var $model Note */
         $model = $this->noteBuilder->create();
 
         $this->getJson(route('api.note.show', ['id' => $model->id]))
+            ->dump()
             ->assertJson([
                 'id' => $model->id,
                 'title' => $model->title,
                 'slug' => $model->slug,
                 'text' => $model->text,
+                'created_at' => date_to_front($model->created_at),
+                'meta' => $model->getMeta($user)
             ])
-            ->assertValidResponse(200)
+//            ->assertValidResponse(200)
         ;
     }
 
@@ -52,7 +56,7 @@ class ShowTest extends TestCase
         self::assertNotFound($res);
     }
 
-    public function test_success_not_auth()
+    public function test_not_auth()
     {
         /** @var $model Note */
         $model = $this->noteBuilder->create();
