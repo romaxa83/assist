@@ -392,7 +392,7 @@
                     {
                         "name": "status",
                         "in": "query",
-                        "description": "Filter by status",
+                        "description": "Statuses can be obtained upon request to the route - /api/settings/notes",
                         "required": false,
                         "schema": {
                             "$ref": "#/components/schemas/NoteStatus"
@@ -1927,7 +1927,8 @@
                     "text",
                     "weight",
                     "created_at",
-                    "tags"
+                    "tags",
+                    "meta"
                 ],
                 "properties": {
                     "id": {
@@ -1972,6 +1973,31 @@
                             "$ref": "#/components/schemas/TagResource"
                         },
                         "nullable": false
+                    },
+                    "meta": {
+                        "description": "Данные по модели, которые помогают обрабатывать ее",
+                        "properties": {
+                            "statuses": {
+                                "description": "Статусы на котороые можно переключуть данную модель",
+                                "type": "array",
+                                "items": {
+                                    "properties": {
+                                        "value": {
+                                            "type": "string",
+                                            "example": "draft",
+                                            "nullable": false
+                                        },
+                                        "label": {
+                                            "type": "string",
+                                            "example": "Draft",
+                                            "nullable": false
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        },
+                        "type": "object"
                     }
                 },
                 "type": "object",

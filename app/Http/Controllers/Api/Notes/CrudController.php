@@ -43,6 +43,7 @@ class CrudController extends ApiController
     #[Parameters\ParameterEnum(
         parameter: 'status',
         enum:NoteStatus::class,
+        description: 'Statuses can be obtained upon request to the route - /api/settings/notes'
     )]
     #[Parameters\ParameterIntArray(
         parameter: 'tags'

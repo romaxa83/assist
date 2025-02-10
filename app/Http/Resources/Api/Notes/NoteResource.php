@@ -6,6 +6,8 @@ use App\Http\Resources\Api\BaseResource;
 use App\Http\Resources\Api\Tags\TagResource;
 use App\Models\Notes\Note;
 use Illuminate\Support\Facades\Auth;
+use OpenApi\Attributes\Items;
+use OpenApi\Attributes\Property;
 use OpenAPI\Properties\Fields\PropertyId;
 use OpenAPI\Properties\PropertyInteger;
 use OpenAPI\Properties\PropertyResourceCollection;
@@ -47,6 +49,30 @@ use OpenAPI\Schemas\BaseScheme;
         new PropertyResourceCollection(
             property: 'tags',
             resource: TagResource::class,
+        ),
+        new Property(
+            description: "Данные по модели, которые помогают обрабатывать ее",
+            property: 'meta',
+            type: 'object',
+            properties: [
+                new Property(
+                    description: "Статусы на котороые можно переключуть данную модель",
+                    property: 'statuses',
+                    type: 'array',
+                    items: new Items(
+                        properties: [
+                            new PropertyString(
+                                property: 'value',
+                                example: 'draft',
+                            ),
+                            new PropertyString(
+                                property: 'label',
+                                example: 'Draft'
+                            ),
+                        ]
+                    )
+                )
+            ]
         )
     ]
 )]
