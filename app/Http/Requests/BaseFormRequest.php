@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Enums\DateFormat;
 use App\Models\Users\User;
 use ArondeParon\RequestSanitizer\Traits\SanitizesInputs;
 use Illuminate\Foundation\Http\FormRequest;
@@ -42,6 +43,14 @@ use Illuminate\Foundation\Http\FormRequest;
          return [
              'order_by' => ['nullable', 'string', $this->orderByIn($allowed)],
              'order_type' => ['nullable', 'string', $this->orderTypeIn()],
+         ];
+     }
+
+     public function dateRangeRule(): array
+     {
+         return [
+             'start_date' => ['nullable', 'string', 'date_format:'.DateFormat::FRONT_FILTER()],
+             'end_date' => ['nullable', 'string', 'date_format:'.DateFormat::FRONT_FILTER()],
          ];
      }
 

@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Api\Notes\CrudController;
 
+use App\Enums\DateFormat;
 use App\Enums\Notes\NoteStatus;
 use App\Models\Notes\Note;
 use Carbon\CarbonImmutable;
@@ -173,6 +174,40 @@ class IndexTest extends TestCase
                 ],
                 'meta' => [
                     'total' => 1
+                ]
+            ])
+        ;
+    }
+
+
+    public function test_success_filter_by_range_date()
+    {
+        $this->loginAsAdmin();
+
+        $now = CarbonImmutable::now();
+
+        /** @var $model_3 Note */
+        $model_1 = $this->noteBuilder
+            ->created_at($now->subDays(1))
+            ->create();
+        $model_2 =  $this->noteBuilder
+            ->created_at($now)
+            ->create();
+        $model_3 = $this->noteBuilder
+            ->created_at($now->subDays(4))
+            ->create();
+
+        $this->getJson(route('api.note.index', [
+            'start_date' => $now->subDays(2)->format(DateFormat::FRONT_FILTER()),
+            'end_date' => $now->format(DateFormat::FRONT_FILTER()),
+        ]))
+            ->assertJson([
+                'data' => [
+                    ['id' => $model_2->id,],
+                    ['id' => $model_1->id,],
+                ],
+                'meta' => [
+                    'total' => 2
                 ]
             ])
         ;

@@ -35,6 +35,8 @@ class CrudController extends ApiController
     #[Parameters\ParameterPage]
     #[Parameters\ParameterPerPage]
     #[Parameters\ParameterSearch]
+    #[Parameters\ParameterStartDate]
+    #[Parameters\ParameterEndDate]
     #[Parameters\ParameterEnum(
         parameter: 'status',
         enum:NoteStatus::class,

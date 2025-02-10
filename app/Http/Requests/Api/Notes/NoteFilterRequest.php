@@ -15,6 +15,7 @@ class NoteFilterRequest extends BaseFormRequest
             $this->idRule(),
             $this->searchRule(),
             $this->paginationRule(),
+            $this->dateRangeRule(),
             [
                 'status' => ['nullable', 'string', NoteStatus::ruleIn()],
                 'tags' => ['nullable', 'array'],

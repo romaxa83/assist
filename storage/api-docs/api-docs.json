@@ -360,6 +360,18 @@
                         "required": false
                     },
                     {
+                        "name": "start_date",
+                        "in": "query",
+                        "description": "Filter by start_date, format - Y-m-d",
+                        "required": false
+                    },
+                    {
+                        "name": "end_date",
+                        "in": "query",
+                        "description": "Filter by end_date, format - Y-m-d",
+                        "required": false
+                    },
+                    {
                         "name": "status",
                         "in": "query",
                         "description": "Filter by status",

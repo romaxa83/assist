@@ -2,7 +2,9 @@
 
 namespace App\ModelFilters\Notes;
 
+use App\Enums\DateFormat;
 use App\ModelFilters\BaseModelFilter;
+use Carbon\CarbonImmutable;
 use Illuminate\Database\Eloquent\Builder;
 
 class NoteFilter extends BaseModelFilter
@@ -22,6 +24,24 @@ class NoteFilter extends BaseModelFilter
     public function status(string $value): void
     {
         $this->where('status', $value);
+    }
+
+    public function startDate(string $value): void
+    {
+        $date = CarbonImmutable::createFromFormat(DateFormat::FRONT_FILTER(), $value)
+            ->startOfDay()
+            ->setTimezone('UTC')
+        ;
+        $this->where('created_at', '>=', $date);
+    }
+
+    public function endDate(string $value): void
+    {
+        $date = CarbonImmutable::createFromFormat(DateFormat::FRONT_FILTER(), $value)
+            ->endOfDay()
+            ->setTimezone('UTC')
+        ;
+        $this->where('created_at', '<=', $date);
     }
 
     public function search(string $value): void
