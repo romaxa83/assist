@@ -1152,6 +1152,95 @@
                 ]
             }
         },
+        "/api/settings/notes": {
+            "get": {
+                "tags": [
+                    "Settings"
+                ],
+                "description": "Get additional data for notes",
+                "operationId": "baea799304c134229b14f639edb4ff68",
+                "parameters": [
+                    {
+                        "parameter": "Authorization",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "default": "Bearer <authorization_token>"
+                        }
+                    },
+                    {
+                        "parameter": "Content-type",
+                        "name": "Content-type",
+                        "in": "header",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "default": "application/json"
+                        }
+                    },
+                    {
+                        "parameter": "Accept",
+                        "name": "Accept",
+                        "in": "header",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "default": "application/json"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "statuses": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "value": {
+                                                        "type": "string",
+                                                        "example": "draft",
+                                                        "nullable": false
+                                                    },
+                                                    "label": {
+                                                        "type": "string",
+                                                        "example": "Draft",
+                                                        "nullable": false
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "msg": {
+                                            "type": "string",
+                                            "example": "Server Error"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/api/tags": {
             "get": {
                 "tags": [
@@ -1965,6 +2054,10 @@
         {
             "name": "Notes",
             "description": "Notes"
+        },
+        {
+            "name": "Settings",
+            "description": "Settings"
         },
         {
             "name": "Tags",
