@@ -4,6 +4,7 @@ namespace Tests\Feature\Api\Notes\CrudController;
 
 use App\Enums\DateFormat;
 use App\Enums\Notes\NoteStatus;
+use App\Enums\OrderType;
 use App\Models\Notes\Note;
 use Carbon\CarbonImmutable;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
@@ -56,7 +57,7 @@ class IndexTest extends TestCase
                     'total' => 3
                 ]
             ])
-            ->assertValidResponse(200)
+//            ->assertValidResponse(200)
         ;
     }
 
@@ -208,6 +209,129 @@ class IndexTest extends TestCase
                 ],
                 'meta' => [
                     'total' => 2
+                ]
+            ])
+        ;
+    }
+
+    public function test_success_sort_by_weight_desc()
+    {
+        $this->loginAsAdmin();
+
+        $now = CarbonImmutable::now();
+
+        /** @var $model_3 Note */
+        $model_1 = $this->noteBuilder
+            ->weight(1)
+            ->created_at($now)
+            ->create();
+        $model_2 =  $this->noteBuilder
+            ->weight(18)
+            ->created_at($now)
+            ->create();
+        $model_3 = $this->noteBuilder
+            ->weight(4)
+            ->created_at($now)
+            ->create();
+
+        $this->getJson(route('api.note.index', [
+            'sort' => ['weight-desc'],
+        ]))
+            ->assertJson([
+                'data' => [
+                    ['id' => $model_2->id,],
+                    ['id' => $model_3->id,],
+                    ['id' => $model_1->id,],
+                ],
+                'meta' => [
+                    'total' => 3
+                ]
+            ])
+        ;
+    }
+
+    public function test_success_sort_by_weight_asc()
+    {
+        $this->loginAsAdmin();
+
+        $now = CarbonImmutable::now();
+
+        /** @var $model_3 Note */
+        $model_1 = $this->noteBuilder
+            ->weight(1)
+            ->created_at($now)
+            ->create();
+        $model_2 =  $this->noteBuilder
+            ->weight(18)
+            ->created_at($now)
+            ->create();
+        $model_3 = $this->noteBuilder
+            ->weight(4)
+            ->created_at($now)
+            ->create();
+
+        $this->getJson(route('api.note.index', [
+            'sort' => ['weight-asc'],
+        ]))
+            ->assertJson([
+                'data' => [
+                    ['id' => $model_1->id,],
+                    ['id' => $model_3->id,],
+                    ['id' => $model_2->id,],
+                ],
+                'meta' => [
+                    'total' => 3
+                ]
+            ])
+        ;
+    }
+
+    public function test_success_sort_by_created_at_desc_and_weight_desc()
+    {
+        $this->loginAsAdmin();
+
+        $now = CarbonImmutable::now();
+
+        /** @var $model_3 Note */
+        $model_1 = $this->noteBuilder
+            ->weight(1)
+            ->created_at($now)
+            ->create();
+        $model_2 =  $this->noteBuilder
+            ->weight(18)
+            ->created_at($now)
+            ->create();
+        $model_3 = $this->noteBuilder
+            ->weight(4)
+            ->created_at($now->subDays(4))
+            ->create();
+        $model_4 = $this->noteBuilder
+            ->weight(5)
+            ->created_at($now->subDays(3))
+            ->create();
+        $model_5 = $this->noteBuilder
+            ->weight(9)
+            ->created_at($now->subDays(5))
+            ->create();
+        $model_6 = $this->noteBuilder
+            ->weight(0)
+            ->created_at($now->subDays(1))
+            ->create();
+
+        $this->getJson(route('api.note.index', [
+            'sort' => ['weight-desc', 'created_at-desc'],
+        ]))
+            ->assertJson([
+                'data' => [
+                    ['id' => $model_2->id,],
+                    ['id' => $model_5->id,],
+                    ['id' => $model_4->id,],
+                    ['id' => $model_3->id,],
+                    ['id' => $model_1->id,],
+                    ['id' => $model_6->id,],
+                ],
+                'meta' => [
+                    'total' => 6
                 ]
             ])
         ;

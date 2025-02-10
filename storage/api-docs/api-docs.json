@@ -355,6 +355,24 @@
                         "example": 10
                     },
                     {
+                        "name": "sort[]",
+                        "in": "query",
+                        "description": "Sort by columns (default - created_at-desc)",
+                        "required": false,
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "enum",
+                                "enum": [
+                                    "weight-asc",
+                                    "weight-desc",
+                                    "created_at-asc",
+                                    "created_at-desc"
+                                ]
+                            }
+                        }
+                    },
+                    {
                         "name": "search",
                         "in": "query",
                         "required": false

@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests;
 
+use App\Core\Contracts\Model\Sortable;
 use App\Enums\DateFormat;
+use App\Enums\OrderType;
 use App\Models\Users\User;
 use ArondeParon\RequestSanitizer\Traits\SanitizesInputs;
 use Illuminate\Foundation\Http\FormRequest;
@@ -46,6 +48,17 @@ use Illuminate\Foundation\Http\FormRequest;
          ];
      }
 
+     public function sortRule(string $modelClass): array
+     {
+         /** @var $model Sortable */
+         $model = resolve($modelClass);
+
+         return [
+             'sort' => ['nullable', 'array'],
+             'sort.*' => ['required', 'string', 'in:' . $model::getSortEnumsAsString(',')],
+         ];
+     }
+
      public function dateRangeRule(): array
      {
          return [
@@ -86,6 +99,6 @@ use Illuminate\Foundation\Http\FormRequest;
 
      protected function orderTypeIn(): string
      {
-         return 'in:' . implode(',', ['asc', 'desc']);
+         return 'in:' . implode(',', [OrderType::ASC(), OrderType::DESC()]);
      }
 }

@@ -11,6 +11,7 @@ abstract class BaseModel extends Model
 {
     public const DEFAULT_PER_PAGE = 10;
     public const DEFAULT_SORT_TYPE = 'desc';
+    public const DEFAULT_SORT_FIELD = 'id';
 
     public function __construct(array $attributes = [])
     {

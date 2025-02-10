@@ -34,6 +34,9 @@ class CrudController extends ApiController
     #[Parameters\Headers\Accept]
     #[Parameters\ParameterPage]
     #[Parameters\ParameterPerPage]
+    #[Parameters\ParameterSort(
+        modelClass: Note::class,
+    )]
     #[Parameters\ParameterSearch]
     #[Parameters\ParameterStartDate]
     #[Parameters\ParameterEndDate]
@@ -49,7 +52,7 @@ class CrudController extends ApiController
     public function index(NoteFilterRequest $request): ResourceCollection
     {
         $filter = $request->validated();
-//dd($request->all());
+//dd($filter);
         $recsQuery = Note::query()
             ->filter($filter)
         ;
@@ -57,7 +60,14 @@ class CrudController extends ApiController
         if($search = $filter['search'] ?? null){
             $recsQuery->search($search);
         } else {
-            $recsQuery->orderBy('created_at', Note::DEFAULT_SORT_TYPE);
+            if(isset($filter['sort'])){
+                foreach ($filter['sort'] as $item){
+                    $item = explode('-', $item);
+                    $recsQuery->orderBy($item[0], $item[1]);
+                }
+            } else {
+                $recsQuery->orderBy(Note::DEFAULT_SORT_FIELD, Note::DEFAULT_SORT_TYPE);
+            }
         }
 
         $recs = $recsQuery->paginate(

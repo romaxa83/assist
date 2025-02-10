@@ -2,6 +2,8 @@
 
 namespace App\Models\Notes;
 
+use App\Core\Contracts\Model\Sortable;
+use App\Core\Traits\Model\Sortable as SortableTrait;
 use App\Enums\Notes\NoteStatus;
 use App\ModelFilters\Notes\NoteFilter;
 use App\Models\BaseModel;
@@ -31,21 +33,32 @@ use Illuminate\Database\Eloquent\Builder;
  * @see Note::scopeSearch()
  * @method static Builder|Note search(string $search)
  */
-class Note extends BaseModel implements HasTags
+class Note extends BaseModel implements HasTags, Sortable
 {
     /** @use HasFactory<\Database\Factories\Notes\NoteFactory> */
     use HasFactory;
     use Filterable;
     use HasTagsTrait;
+    use SortableTrait;
 
     public const TABLE = 'notes';
     protected $table = self::TABLE;
+
+    public const DEFAULT_SORT_FIELD = 'created_at';
 
     const MORPH_NAME = 'note';
 
     protected $casts = [
         'status' => NoteStatus::class,
     ];
+
+    public static function allowedSortFields(): array
+    {
+        return [
+            'weight',
+            'created_at',
+        ];
+    }
 
     public function modelFilter(): string
     {

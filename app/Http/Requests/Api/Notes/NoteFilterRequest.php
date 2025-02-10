@@ -4,6 +4,7 @@ namespace App\Http\Requests\Api\Notes;
 
 use App\Enums\Notes\NoteStatus;
 use App\Http\Requests\BaseFormRequest;
+use App\Models\Notes\Note;
 use App\Models\Tags\Tag;
 use Illuminate\Validation\Rule;
 
@@ -15,6 +16,7 @@ class NoteFilterRequest extends BaseFormRequest
             $this->idRule(),
             $this->searchRule(),
             $this->paginationRule(),
+            $this->sortRule(Note::class),
             $this->dateRangeRule(),
             [
                 'status' => ['nullable', 'string', NoteStatus::ruleIn()],
@@ -24,6 +26,3 @@ class NoteFilterRequest extends BaseFormRequest
         );
     }
 }
-
-
-
