@@ -14,7 +14,6 @@ class NoteFactory extends Factory
     /** @return array<string, mixed> */
     public function definition(): array
     {
-
         $name = $this->faker->unique()->sentence();
 
         return [
@@ -24,6 +23,8 @@ class NoteFactory extends Factory
             'text' => $this->faker->text,
             'weight' => 0,
             'author_id' => User::factory(),
+            'anchors' => [],
+            'links' => [],
         ];
     }
 }

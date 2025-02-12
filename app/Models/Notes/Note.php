@@ -22,6 +22,8 @@ use Illuminate\Database\Eloquent\Builder;
  * @property string title
  * @property string slug
  * @property string text
+ * @property array anchors
+ * @property array links
  * @property int weight
  * @property int author_id
  * @property Carbon|null created_at
@@ -50,6 +52,8 @@ class Note extends BaseModel implements HasTags, Sortable
 
     protected $casts = [
         'status' => NoteStatus::class,
+        'anchors' => 'array',
+        'links' => 'array',
     ];
 
     public static function allowedSortFields(): array

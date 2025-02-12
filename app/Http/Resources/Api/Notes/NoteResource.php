@@ -10,6 +10,8 @@ use OpenApi\Attributes\Items;
 use OpenApi\Attributes\Property;
 use OpenAPI\Properties\Fields\PropertyId;
 use OpenAPI\Properties\PropertyInteger;
+use OpenAPI\Properties\PropertyObjArray;
+use OpenAPI\Properties\PropertyObject;
 use OpenAPI\Properties\PropertyResourceCollection;
 use OpenAPI\Properties\PropertyString;
 use OpenAPI\Schemas\BaseScheme;
@@ -50,27 +52,54 @@ use OpenAPI\Schemas\BaseScheme;
             property: 'tags',
             resource: TagResource::class,
         ),
+        new PropertyObjArray(
+            property: 'links',
+            items: [
+                new PropertyString(
+                    property: 'title',
+                    example: 'Original text',
+                ),
+                new PropertyString(
+                    property: 'link',
+                    example: 'https://example.com'
+                ),
+            ]
+        ),
+        new PropertyObjArray(
+            property: 'anchors',
+            items: [
+                new PropertyString(
+                    property: 'tag',
+                    example: 'h2',
+                ),
+                new PropertyString(
+                    property: 'id',
+                    example: 'nav-1'
+                ),
+                new PropertyString(
+                    property: 'content',
+                    example: 'nav 1'
+                ),
+            ]
+        ),
         new Property(
             description: "Данные по модели, которые помогают обрабатывать ее",
             property: 'meta',
             type: 'object',
             properties: [
-                new Property(
+                new PropertyObjArray(
                     description: "Статусы на котороые можно переключуть данную модель",
                     property: 'statuses',
-                    type: 'array',
-                    items: new Items(
-                        properties: [
-                            new PropertyString(
-                                property: 'value',
-                                example: 'draft',
-                            ),
-                            new PropertyString(
-                                property: 'label',
-                                example: 'Draft'
-                            ),
-                        ]
-                    )
+                    items: [
+                        new PropertyString(
+                            property: 'value',
+                            example: 'draft',
+                        ),
+                        new PropertyString(
+                            property: 'label',
+                            example: 'Draft'
+                        ),
+                    ]
                 )
             ]
         )
@@ -89,6 +118,8 @@ class NoteResource extends BaseResource
             'weight' => $this->weight,
             'created_at' => date_to_front($this->created_at),
             'tags' => TagResource::collection($this->tags),
+            'anchors' => $this->anchors,
+            'links' => $this->links,
             'meta' => $this->getMeta(Auth::guard('sanctum')->user())
         ];
     }

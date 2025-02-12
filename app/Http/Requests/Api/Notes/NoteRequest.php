@@ -7,7 +7,10 @@ use App\Models\Notes\Note;
 use App\Models\Tags\Tag;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Validation\Rule;
+use OpenApi\Attributes\Items;
+use OpenApi\Attributes\Property;
 use OpenAPI\Properties;
+use OpenAPI\Properties\PropertyString;
 use OpenAPI\Schemas\BaseScheme;
 
 #[BaseScheme(
@@ -26,6 +29,20 @@ use OpenAPI\Schemas\BaseScheme;
         new Properties\PropertyIntArray(
             property: 'tags'
         ),
+        new Properties\PropertyObjArray(
+            description: "Adding links related to a notes",
+            property: 'links',
+            items:[
+                new PropertyString(
+                    property: 'title',
+                    example: 'Original text',
+                ),
+                new PropertyString(
+                    property: 'link',
+                    example: 'https://example.com'
+                ),
+            ]
+        )
     ]
 )]
 class NoteRequest extends BaseFormRequest
@@ -41,6 +58,9 @@ class NoteRequest extends BaseFormRequest
             'tags.*' => ['required', 'int',
                 Rule::exists(Tag::TABLE, 'id')
             ],
+            'links' => ['nullable' ,'array'],
+            'links.*.title' => ['required', 'string'],
+            'links.*.link' => ['required', 'string'],
         ];
 
         if($id){

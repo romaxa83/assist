@@ -1859,6 +1859,26 @@
                             2
                         ],
                         "nullable": false
+                    },
+                    "links": {
+                        "description": "Adding links related to a notes",
+                        "type": "array",
+                        "items": {
+                            "properties": {
+                                "title": {
+                                    "type": "string",
+                                    "example": "Original text",
+                                    "nullable": false
+                                },
+                                "link": {
+                                    "type": "string",
+                                    "example": "https://example.com",
+                                    "nullable": false
+                                }
+                            },
+                            "type": "object"
+                        },
+                        "nullable": false
                     }
                 },
                 "type": "object",
@@ -1928,6 +1948,8 @@
                     "weight",
                     "created_at",
                     "tags",
+                    "links",
+                    "anchors",
                     "meta"
                 ],
                 "properties": {
@@ -1974,6 +1996,49 @@
                         },
                         "nullable": false
                     },
+                    "links": {
+                        "type": "array",
+                        "items": {
+                            "properties": {
+                                "title": {
+                                    "type": "string",
+                                    "example": "Original text",
+                                    "nullable": false
+                                },
+                                "link": {
+                                    "type": "string",
+                                    "example": "https://example.com",
+                                    "nullable": false
+                                }
+                            },
+                            "type": "object"
+                        },
+                        "nullable": false
+                    },
+                    "anchors": {
+                        "type": "array",
+                        "items": {
+                            "properties": {
+                                "tag": {
+                                    "type": "string",
+                                    "example": "h2",
+                                    "nullable": false
+                                },
+                                "id": {
+                                    "type": "string",
+                                    "example": "nav-1",
+                                    "nullable": false
+                                },
+                                "content": {
+                                    "type": "string",
+                                    "example": "nav 1",
+                                    "nullable": false
+                                }
+                            },
+                            "type": "object"
+                        },
+                        "nullable": false
+                    },
                     "meta": {
                         "description": "Данные по модели, которые помогают обрабатывать ее",
                         "properties": {
@@ -1994,7 +2059,8 @@
                                         }
                                     },
                                     "type": "object"
-                                }
+                                },
+                                "nullable": false
                             }
                         },
                         "type": "object"

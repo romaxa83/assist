@@ -8,7 +8,9 @@ use App\Models\Notes\Note;
 
 final class NoteService
 {
-    public function __construct()
+    public function __construct(
+        protected TextProcessingService $textProcessingService
+    )
     {}
 
     public function create(
@@ -84,7 +86,8 @@ final class NoteService
     {
         $model->title = $dto->title;
         $model->slug = slug($dto->title);
-        $model->text = $dto->text;
+        $model->links = $dto->links;
+        list($model->text, $model->anchors) = $this->textProcessingService->addAnchorsToText($dto->text);
 
         if ($save) $model->save();
 
