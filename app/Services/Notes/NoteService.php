@@ -87,7 +87,10 @@ final class NoteService
         $model->title = $dto->title;
         $model->slug = slug($dto->title);
         $model->links = $dto->links;
-        list($model->text, $model->anchors) = $this->textProcessingService->addAnchorsToText($dto->text);
+        [
+            'text' => $model->text,
+            'anchors' => $model->anchors
+        ] = $this->textProcessingService->addAnchorsToText($dto->text);
 
         if ($save) $model->save();
 

@@ -34,6 +34,39 @@ class AddAnchorsToTextTest extends TestCase
         $this->assertEquals($expectedAnchors, $result['anchors']);
     }
 
+    public function test_add_anchors_to_text_language_ru(): void
+    {
+        $textOrigin = "какой-то текст <h2>заголовок 1</h2> продолжение текста <h2>заголовок 2</h2>";
+
+        $result = $this->service->addAnchorsToText($textOrigin);
+
+        $expectedText = 'какой-то текст <h2 id="zagolovok-1">заголовок 1</h2> продолжение текста <h2 id="zagolovok-2">заголовок 2</h2>';
+
+        $expectedAnchors = [
+            ['tag' => 'h2', 'id' => 'zagolovok-1', 'content' => 'заголовок 1'],
+            ['tag' => 'h2', 'id' => 'zagolovok-2', 'content' => 'заголовок 2'],
+        ];
+
+        $this->assertEquals($expectedText, $result['text']);
+        $this->assertEquals($expectedAnchors, $result['anchors']);
+    }
+
+    public function test_ignore_inner_tags(): void
+    {
+        $textOrigin = "some text <h2><b><i>nav 1</i></b></h2> another text";
+
+        $result = $this->service->addAnchorsToText($textOrigin);
+
+        $expectedText = 'some text <h2 id="nav-1"><b><i>nav 1</i></b></h2> another text';
+
+        $expectedAnchors = [
+            ['tag' => 'h2', 'id' => 'nav-1', 'content' => 'nav 1'],
+        ];
+
+        $this->assertEquals($expectedText, $result['text']);
+        $this->assertEquals($expectedAnchors, $result['anchors']);
+    }
+
     public function test_ignore_h1(): void
     {
         $textOrigin = "some text <h1>nav 1</h1> another text";

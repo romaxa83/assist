@@ -58,9 +58,9 @@ class NoteRequest extends BaseFormRequest
             'tags.*' => ['required', 'int',
                 Rule::exists(Tag::TABLE, 'id')
             ],
-            'links' => ['nullable' ,'array'],
-            'links.*.title' => ['required', 'string'],
-            'links.*.link' => ['required', 'string'],
+//            'links' => ['nullable' ,'array'],
+//            'links.*.title' => ['required', 'string'],
+//            'links.*.link' => ['required', 'string'],
         ];
 
         if($id){

@@ -2,6 +2,8 @@
 
 namespace App\Services\Notes;
 
+use Illuminate\Support\Str;
+
 final class TextProcessingService
 {
     public function __construct()
@@ -18,20 +20,23 @@ final class TextProcessingService
         // Callback функция для добавления якорей
         $modifiedText = preg_replace_callback($pattern, function ($matches) use (&$anchors) {
             $tag = $matches[1];
-            $content = $matches[2];
+            $contentWithTags = $matches[2];
+
+            // Убрать вложенные теги для получения текста без HTML
+            $plainContent = strip_tags($contentWithTags);
 
             // Генерация уникального ID из содержимого в теги
-            $id = strtolower(preg_replace('/[^a-z0-9]+/', '-', strip_tags($content)));
+            $id = Str::slug($plainContent);
 
             // Добавляем информацию в массив навигации
             $anchors[] = [
                 'tag' => $tag,
                 'id' => $id,
-                'content' => $content,
+                'content' => $plainContent,
             ];
 
             // Возвращаем модифицированный заголовок с якорем
-            return "<$tag id=\"$id\">$content</$tag>";
+            return "<$tag id=\"$id\">$contentWithTags</$tag>";
         }, $text);
 
         return [

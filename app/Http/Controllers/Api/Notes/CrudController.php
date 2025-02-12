@@ -140,6 +140,7 @@ class CrudController extends ApiController
     #[Responses\ResponseServerError]
     public function create(NoteRequest $request): NoteResource
     {
+
         $dto = NoteDto::byArgs($request->validated());
 
         return NoteResource::make(
