@@ -120,6 +120,7 @@ class NoteResource extends BaseResource
             'tags' => TagResource::collection($this->tags),
             'anchors' => $this->anchors,
             'links' => $this->links,
+            'text_blocks' => $this->text_blocks,
             'meta' => $this->getMeta(Auth::guard('sanctum')->user())
         ];
     }

@@ -13,9 +13,7 @@ final class NoteService
     )
     {}
 
-    public function create(
-        NoteDto $dto,
-    ): Note
+    public function create(NoteDto $dto,): Note
     {
         return make_transaction(function() use ($dto) {
 
@@ -84,13 +82,16 @@ final class NoteService
         bool $save = true
     ): Note
     {
+//        dd($this->textProcessingService->process($dto->text));
+
         $model->title = $dto->title;
         $model->slug = slug($dto->title);
         $model->links = $dto->links;
         [
             'text' => $model->text,
-            'anchors' => $model->anchors
-        ] = $this->textProcessingService->addAnchorsToText($dto->text);
+            'anchors' => $model->anchors,
+            'blocks' => $model->text_blocks
+        ] = $this->textProcessingService->process($dto->text);
 
         if ($save) $model->save();
 

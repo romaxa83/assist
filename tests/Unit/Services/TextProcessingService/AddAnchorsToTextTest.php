@@ -21,7 +21,7 @@ class AddAnchorsToTextTest extends TestCase
 
         $result = $this->service->addAnchorsToText($textOrigin);
 
-        $expectedText = 'some text <h2 id="nav-1">nav 1</h2> another text <h2 id="nav-2">nav 2</h2>  some text <h3 id="nav-3">nav 3</h3> another text <h2 id="nav-4">nav 4</h2>';
+        $expectedText = 'some text <h2  id="nav-1">nav 1</h2> another text <h2  id="nav-2">nav 2</h2>  some text <h3  id="nav-3">nav 3</h3> another text <h2  id="nav-4">nav 4</h2>';
 
         $expectedAnchors = [
             ['tag' => 'h2', 'id' => 'nav-1', 'content' => 'nav 1'],
@@ -40,10 +40,78 @@ class AddAnchorsToTextTest extends TestCase
 
         $result = $this->service->addAnchorsToText($textOrigin);
 
-        $expectedText = 'какой-то текст <h2 id="zagolovok-1">заголовок 1</h2> продолжение текста <h2 id="zagolovok-2">заголовок 2</h2>';
+        $expectedText = 'какой-то текст <h2  id="zagolovok-1">заголовок 1</h2> продолжение текста <h2  id="zagolovok-2">заголовок 2</h2>';
 
         $expectedAnchors = [
             ['tag' => 'h2', 'id' => 'zagolovok-1', 'content' => 'заголовок 1'],
+            ['tag' => 'h2', 'id' => 'zagolovok-2', 'content' => 'заголовок 2'],
+        ];
+
+        $this->assertEquals($expectedText, $result['text']);
+        $this->assertEquals($expectedAnchors, $result['anchors']);
+    }
+
+    public function test_add_anchors_to_text_if_anchor_exist(): void
+    {
+        $textOrigin = 'какой-то текст <h2 id="zagolovok-1">заголовок 1</h2> продолжение текста <h2 id="zagolovok-2">заголовок 2</h2>';
+
+        $result = $this->service->addAnchorsToText($textOrigin);
+
+        $expectedText = 'какой-то текст <h2  id="zagolovok-1">заголовок 1</h2> продолжение текста <h2  id="zagolovok-2">заголовок 2</h2>';
+
+        $expectedAnchors = [
+            ['tag' => 'h2', 'id' => 'zagolovok-1', 'content' => 'заголовок 1'],
+            ['tag' => 'h2', 'id' => 'zagolovok-2', 'content' => 'заголовок 2'],
+        ];
+
+        $this->assertEquals($expectedText, $result['text']);
+        $this->assertEquals($expectedAnchors, $result['anchors']);
+    }
+
+    public function test_add_anchors_to_text_if_exist_another_attribute(): void
+    {
+        //  <h3 style="text-align: center">
+        $textOrigin = 'какой-то текст <h2 style="text-align: center">заголовок 1</h2>';
+
+        $result = $this->service->addAnchorsToText($textOrigin);
+
+        $expectedText = 'какой-то текст <h2 style="text-align: center" id="zagolovok-1">заголовок 1</h2>';
+
+        $expectedAnchors = [
+            ['tag' => 'h2', 'id' => 'zagolovok-1', 'content' => 'заголовок 1'],
+        ];
+
+        $this->assertEquals($expectedText, $result['text']);
+        $this->assertEquals($expectedAnchors, $result['anchors']);
+    }
+
+    public function test_not_change_anchors_if_exist_another_attribute(): void
+    {
+
+        $textOrigin = 'какой-то текст <h2 style="text-align: center" id="zagolovok-1">заголовок 1</h2>';
+
+        $result = $this->service->addAnchorsToText($textOrigin);
+
+        $expectedText = 'какой-то текст <h2  style="text-align: center" id="zagolovok-1">заголовок 1</h2>';
+
+        $expectedAnchors = [
+            ['tag' => 'h2', 'id' => 'zagolovok-1', 'content' => 'заголовок 1'],
+        ];
+
+        $this->assertEquals($expectedText, $result['text']);
+        $this->assertEquals($expectedAnchors, $result['anchors']);
+    }
+
+    public function test_change_anchors_if_exist_another_attribute(): void
+    {
+
+        $textOrigin = 'какой-то текст <h2 style="text-align: center" id="zagolovok-1">заголовок 2</h2>';
+
+        $result = $this->service->addAnchorsToText($textOrigin);
+
+        $expectedText = 'какой-то текст <h2  style="text-align: center" id="zagolovok-2">заголовок 2</h2>';
+
+        $expectedAnchors = [
             ['tag' => 'h2', 'id' => 'zagolovok-2', 'content' => 'заголовок 2'],
         ];
 
@@ -57,7 +125,7 @@ class AddAnchorsToTextTest extends TestCase
 
         $result = $this->service->addAnchorsToText($textOrigin);
 
-        $expectedText = 'some text <h2 id="nav-1"><b><i>nav 1</i></b></h2> another text';
+        $expectedText = 'some text <h2  id="nav-1"><b><i>nav 1</i></b></h2> another text';
 
         $expectedAnchors = [
             ['tag' => 'h2', 'id' => 'nav-1', 'content' => 'nav 1'],
