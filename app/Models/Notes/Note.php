@@ -95,5 +95,24 @@ class Note extends BaseModel implements HasTags, Sortable
 
         return $result;
     }
+
+    public function getMetaForFullPrivate(User $user): array
+    {
+        $result = [];
+        if($user){
+            $result['statuses'] =  NoteStatus::getStatusesForChange($this->status, $user);
+        }
+
+
+        return $result;
+    }
+
+    public function getMetaForSimplePrivate(User $user): array
+    {
+        $result = [];
+        $result['actions'] = [];
+
+        return $result;
+    }
 }
 

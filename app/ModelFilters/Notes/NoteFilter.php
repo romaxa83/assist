@@ -21,9 +21,13 @@ class NoteFilter extends BaseModelFilter
         $this->where('id', $value);
     }
 
-    public function status(string $value): void
+    public function status(string|array $value): void
     {
-        $this->where('status', $value);
+        if(is_array($value)){
+            $this->whereIn('status', $value);
+        } else {
+            $this->where('status', $value);
+        }
     }
 
     public function startDate(string $value): void

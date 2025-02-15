@@ -40,7 +40,7 @@ class SetStatusTest extends TestCase
                 'id' => $model->id,
                 'status' => $data['status'],
             ])
-//            ->assertValidResponse(200)
+            ->assertValidResponse(200)
         ;
     }
 

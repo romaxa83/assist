@@ -56,7 +56,7 @@ class IndexTest extends TestCase
                     'total' => 3
                 ]
             ])
-//            ->assertValidResponse(200)
+            ->assertValidResponse(200)
         ;
     }
 

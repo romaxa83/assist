@@ -56,7 +56,7 @@ class CreateTest extends TestCase
                 ]
             ])
             ->assertJsonCount(2, 'tags')
-//            ->assertValidResponse(201)
+            ->assertValidResponse(201)
         ;
 
         $tag_1->refresh();

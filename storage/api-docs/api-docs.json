@@ -256,7 +256,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/NoteResource"
+                                    "$ref": "#/components/schemas/NotePrivateFullResource"
                                 }
                             }
                         }
@@ -469,7 +469,7 @@
                                         "data": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/components/schemas/NoteResource"
+                                                "$ref": "#/components/schemas/NotePrivateSimpleResource"
                                             }
                                         },
                                         "links": {
@@ -714,7 +714,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/NoteResource"
+                                    "$ref": "#/components/schemas/NotePrivateFullResource"
                                 }
                             }
                         }
@@ -843,7 +843,7 @@
                                 "schema": {
                                     "type": "array",
                                     "items": {
-                                        "$ref": "#/components/schemas/NoteResource"
+                                        "$ref": "#/components/schemas/NotePrivateShortResource"
                                     }
                                 }
                             }
@@ -944,7 +944,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/NoteResource"
+                                    "$ref": "#/components/schemas/NotePrivateFullResource"
                                 }
                             }
                         }
@@ -1051,7 +1051,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/NoteResource"
+                                    "$ref": "#/components/schemas/NotePrivateFullResource"
                                 }
                             }
                         }
@@ -1235,13 +1235,325 @@
                 ]
             }
         },
-        "/api/settings/notes": {
+        "/api/notes": {
             "get": {
                 "tags": [
-                    "Settings"
+                    "Notes"
+                ],
+                "description": "Get notes as pagination list",
+                "operationId": "077e8febe88153b015dbcbe030cc0ee7",
+                "parameters": [
+                    {
+                        "parameter": "Content-type",
+                        "name": "Content-type",
+                        "in": "header",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "default": "application/json"
+                        }
+                    },
+                    {
+                        "parameter": "Accept",
+                        "name": "Accept",
+                        "in": "header",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "default": "application/json"
+                        }
+                    },
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Page number",
+                        "required": false,
+                        "example": 1
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "Number of records per page",
+                        "required": false,
+                        "example": 10
+                    },
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "required": false
+                    },
+                    {
+                        "name": "tags[]",
+                        "in": "query",
+                        "description": "Filter by tags",
+                        "required": false,
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "example": null
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/NotePublicSimpleResource"
+                                            }
+                                        },
+                                        "links": {
+                                            "properties": {
+                                                "first": {
+                                                    "example": "https://site/api/route?page=1",
+                                                    "nullable": true,
+                                                    "anyOf": [
+                                                        {
+                                                            "type": "string"
+                                                        },
+                                                        {
+                                                            "type": "null"
+                                                        }
+                                                    ]
+                                                },
+                                                "last": {
+                                                    "example": "https://site/api/route?page=10",
+                                                    "nullable": true,
+                                                    "anyOf": [
+                                                        {
+                                                            "type": "string"
+                                                        },
+                                                        {
+                                                            "type": "null"
+                                                        }
+                                                    ]
+                                                },
+                                                "prev": {
+                                                    "example": "https://site/api/route?page=3",
+                                                    "nullable": true,
+                                                    "anyOf": [
+                                                        {
+                                                            "type": "string"
+                                                        },
+                                                        {
+                                                            "type": "null"
+                                                        }
+                                                    ]
+                                                },
+                                                "next": {
+                                                    "example": "https://site/api/route?page=5",
+                                                    "nullable": true,
+                                                    "anyOf": [
+                                                        {
+                                                            "type": "string"
+                                                        },
+                                                        {
+                                                            "type": "null"
+                                                        }
+                                                    ]
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "meta": {
+                                            "properties": {
+                                                "current_page": {
+                                                    "type": "integer",
+                                                    "example": 1,
+                                                    "nullable": false
+                                                },
+                                                "from": {
+                                                    "example": 1,
+                                                    "nullable": true,
+                                                    "anyOf": [
+                                                        {
+                                                            "type": "integer"
+                                                        },
+                                                        {
+                                                            "type": "null"
+                                                        }
+                                                    ]
+                                                },
+                                                "last_page": {
+                                                    "type": "integer",
+                                                    "example": 1,
+                                                    "nullable": false
+                                                },
+                                                "links": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "url": {
+                                                                "example": "https://site/api/route",
+                                                                "nullable": true,
+                                                                "anyOf": [
+                                                                    {
+                                                                        "type": "string"
+                                                                    },
+                                                                    {
+                                                                        "type": "null"
+                                                                    }
+                                                                ]
+                                                            },
+                                                            "label": {
+                                                                "type": "string",
+                                                                "example": "pagination.previous",
+                                                                "nullable": false
+                                                            },
+                                                            "active": {
+                                                                "type": "boolean",
+                                                                "example": true,
+                                                                "nullable": false
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                },
+                                                "path": {
+                                                    "type": "string",
+                                                    "example": "https://site/api/route",
+                                                    "nullable": false
+                                                },
+                                                "per_page": {
+                                                    "type": "integer",
+                                                    "example": 10,
+                                                    "nullable": false
+                                                },
+                                                "to": {
+                                                    "example": 10,
+                                                    "nullable": true,
+                                                    "anyOf": [
+                                                        {
+                                                            "type": "integer"
+                                                        },
+                                                        {
+                                                            "type": "null"
+                                                        }
+                                                    ]
+                                                },
+                                                "total": {
+                                                    "example": 100,
+                                                    "nullable": true,
+                                                    "anyOf": [
+                                                        {
+                                                            "type": "integer"
+                                                        },
+                                                        {
+                                                            "type": "null"
+                                                        }
+                                                    ]
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "msg": {
+                                            "type": "string",
+                                            "example": "Server Error"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/notes/{slug}": {
+            "get": {
+                "tags": [
+                    "Notes"
+                ],
+                "description": "Get note by slug",
+                "operationId": "d890512897a1fa75a4e8c23908805800",
+                "parameters": [
+                    {
+                        "parameter": "Content-type",
+                        "name": "Content-type",
+                        "in": "header",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "default": "application/json"
+                        }
+                    },
+                    {
+                        "parameter": "Accept",
+                        "name": "Accept",
+                        "in": "header",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "default": "application/json"
+                        }
+                    },
+                    {
+                        "name": "{slug}",
+                        "in": "path",
+                        "description": "Slug model",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "default": "slug"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/NotePublicFullResource"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "msg": {
+                                            "type": "string",
+                                            "example": "Server Error"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/private/settings/notes": {
+            "get": {
+                "tags": [
+                    "Settings private"
                 ],
                 "description": "Get additional data for notes",
-                "operationId": "baea799304c134229b14f639edb4ff68",
+                "operationId": "eca0498bd5b9c2cf3183f38a55d5ea15",
                 "parameters": [
                     {
                         "parameter": "Authorization",
@@ -1275,6 +1587,22 @@
                     }
                 ],
                 "responses": {
+                    "401": {
+                        "description": "Unauthenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "msg": {
+                                            "type": "string",
+                                            "example": "Unauthorized"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
                     "200": {
                         "description": "Success",
                         "content": {
@@ -1321,7 +1649,12 @@
                             }
                         }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
             }
         },
         "/api/private/tags": {
@@ -1815,13 +2148,13 @@
                 ]
             }
         },
-        "/api/profile": {
+        "/api/private/profile": {
             "get": {
                 "tags": [
-                    "Profile"
+                    "Profile private"
                 ],
                 "description": "Get auth user",
-                "operationId": "8b93687bc22b6d2a8fa735bc709bfdff",
+                "operationId": "1ec6df30f4004dfdf239f5b245dee914",
                 "parameters": [
                     {
                         "parameter": "Authorization",
@@ -2052,7 +2385,7 @@
                 "type": "object",
                 "additionalProperties": false
             },
-            "NoteResource": {
+            "NotePrivateFullResource": {
                 "required": [
                     "id",
                     "status",
@@ -2063,7 +2396,6 @@
                     "created_at",
                     "tags",
                     "links",
-                    "anchors",
                     "meta"
                 ],
                 "properties": {
@@ -2129,30 +2461,6 @@
                         },
                         "nullable": false
                     },
-                    "anchors": {
-                        "type": "array",
-                        "items": {
-                            "properties": {
-                                "tag": {
-                                    "type": "string",
-                                    "example": "h2",
-                                    "nullable": false
-                                },
-                                "id": {
-                                    "type": "string",
-                                    "example": "nav-1",
-                                    "nullable": false
-                                },
-                                "content": {
-                                    "type": "string",
-                                    "example": "nav 1",
-                                    "nullable": false
-                                }
-                            },
-                            "type": "object"
-                        },
-                        "nullable": false
-                    },
                     "meta": {
                         "description": "Данные по модели, которые помогают обрабатывать ее",
                         "properties": {
@@ -2178,6 +2486,243 @@
                             }
                         },
                         "type": "object"
+                    }
+                },
+                "type": "object",
+                "additionalProperties": false
+            },
+            "NotePrivateShortResource": {
+                "required": [
+                    "id",
+                    "title"
+                ],
+                "properties": {
+                    "id": {
+                        "description": "Model id",
+                        "type": "integer",
+                        "example": 22,
+                        "nullable": false
+                    },
+                    "title": {
+                        "type": "string",
+                        "example": "database",
+                        "nullable": false
+                    }
+                },
+                "type": "object",
+                "additionalProperties": false
+            },
+            "NotePrivateSimpleResource": {
+                "required": [
+                    "id",
+                    "status",
+                    "title",
+                    "slug",
+                    "weight",
+                    "created_at",
+                    "meta"
+                ],
+                "properties": {
+                    "id": {
+                        "description": "Model id",
+                        "type": "integer",
+                        "example": 22,
+                        "nullable": false
+                    },
+                    "status": {
+                        "type": "string",
+                        "example": "draft",
+                        "nullable": false
+                    },
+                    "title": {
+                        "type": "string",
+                        "example": "database",
+                        "nullable": false
+                    },
+                    "slug": {
+                        "type": "string",
+                        "example": "database",
+                        "nullable": false
+                    },
+                    "weight": {
+                        "type": "integer",
+                        "example": 8,
+                        "nullable": false
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "example": "2025-02-02",
+                        "nullable": false
+                    },
+                    "meta": {
+                        "description": "Данные по модели, которые помогают обрабатывать ее",
+                        "properties": {
+                            "actions": {
+                                "description": "Действия которые можно сделать с моделью для конкретного пользователя",
+                                "type": "array",
+                                "items": {
+                                    "properties": {}
+                                },
+                                "nullable": false
+                            }
+                        },
+                        "type": "object"
+                    }
+                },
+                "type": "object",
+                "additionalProperties": false
+            },
+            "NotePublicFullResource": {
+                "required": [
+                    "id",
+                    "title",
+                    "slug",
+                    "weight",
+                    "created_at",
+                    "tags",
+                    "links",
+                    "anchors",
+                    "text_blocks"
+                ],
+                "properties": {
+                    "id": {
+                        "description": "Model id",
+                        "type": "integer",
+                        "example": 22,
+                        "nullable": false
+                    },
+                    "title": {
+                        "type": "string",
+                        "example": "database",
+                        "nullable": false
+                    },
+                    "slug": {
+                        "type": "string",
+                        "example": "database",
+                        "nullable": false
+                    },
+                    "weight": {
+                        "type": "integer",
+                        "example": 8,
+                        "nullable": false
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "example": "2025-02-02",
+                        "nullable": false
+                    },
+                    "tags": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/TagResource"
+                        },
+                        "nullable": false
+                    },
+                    "links": {
+                        "type": "array",
+                        "items": {
+                            "properties": {
+                                "title": {
+                                    "type": "string",
+                                    "example": "Original text",
+                                    "nullable": false
+                                },
+                                "link": {
+                                    "type": "string",
+                                    "example": "https://example.com",
+                                    "nullable": false
+                                }
+                            },
+                            "type": "object"
+                        },
+                        "nullable": false
+                    },
+                    "anchors": {
+                        "type": "array",
+                        "items": {
+                            "properties": {
+                                "tag": {
+                                    "type": "string",
+                                    "example": "h2",
+                                    "nullable": false
+                                },
+                                "id": {
+                                    "type": "string",
+                                    "example": "nav-1",
+                                    "nullable": false
+                                },
+                                "content": {
+                                    "type": "string",
+                                    "example": "nav 1",
+                                    "nullable": false
+                                }
+                            },
+                            "type": "object"
+                        },
+                        "nullable": false
+                    },
+                    "text_blocks": {
+                        "type": "array",
+                        "items": {
+                            "properties": {
+                                "type": {
+                                    "type": "string",
+                                    "example": "text",
+                                    "nullable": false
+                                },
+                                "language": {
+                                    "type": "string",
+                                    "example": "text/html",
+                                    "nullable": false
+                                },
+                                "content": {
+                                    "type": "string",
+                                    "example": "<p>Did we mention that you have full control over the rendering</p>",
+                                    "nullable": false
+                                }
+                            },
+                            "type": "object"
+                        },
+                        "nullable": false
+                    }
+                },
+                "type": "object",
+                "additionalProperties": false
+            },
+            "NotePublicSimpleResource": {
+                "required": [
+                    "id",
+                    "title",
+                    "slug",
+                    "weight",
+                    "created_at"
+                ],
+                "properties": {
+                    "id": {
+                        "description": "Model id",
+                        "type": "integer",
+                        "example": 22,
+                        "nullable": false
+                    },
+                    "title": {
+                        "type": "string",
+                        "example": "database",
+                        "nullable": false
+                    },
+                    "slug": {
+                        "type": "string",
+                        "example": "database",
+                        "nullable": false
+                    },
+                    "weight": {
+                        "type": "integer",
+                        "example": 8,
+                        "nullable": false
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "example": "2025-02-02",
+                        "nullable": false
                     }
                 },
                 "type": "object",
@@ -2262,16 +2807,20 @@
             "description": "Notes private"
         },
         {
-            "name": "Settings",
-            "description": "Settings"
+            "name": "Notes",
+            "description": "Notes"
+        },
+        {
+            "name": "Settings private",
+            "description": "Settings private"
         },
         {
             "name": "Tags private",
             "description": "Tags private"
         },
         {
-            "name": "Profile",
-            "description": "Profile"
+            "name": "Profile private",
+            "description": "Profile private"
         }
     ]
 }

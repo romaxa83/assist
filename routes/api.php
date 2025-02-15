@@ -10,6 +10,13 @@ Route::get('/', [ApiController::class, 'info'])
 //Route::get('/tags', [CrudController::class, 'index'])
 //    ->name('api.tags.index');
 
+Route::name('api.')->group(function () {
+    Route::get('notes', [Api\Notes\Public\Controller::class, 'index'])
+        ->name('note.index');
+    Route::get('notes/{slug}', [Api\Notes\Public\Controller::class, 'show'])
+        ->name('note.show');
+});
+
 
 Route::middleware(['auth:sanctum'])
     ->name('api.')

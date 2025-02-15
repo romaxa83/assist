@@ -7,7 +7,9 @@ use App\Enums\Notes\NoteStatus;
 use App\Http\Controllers\ApiController;
 use App\Http\Requests\Api\Notes\NoteFilterRequest;
 use App\Http\Requests\Api\Notes\NoteRequest;
-use App\Http\Resources\Api\Notes\NoteResource;
+use App\Http\Resources\Api\Notes\NotePrivateFullResource;
+use App\Http\Resources\Api\Notes\NotePrivateShortResource;
+use App\Http\Resources\Api\Notes\NotePrivateSimpleResource;
 use App\Models\Notes\Note;
 use App\Services\Notes\NoteService;
 use Illuminate\Http\JsonResponse;
@@ -50,7 +52,7 @@ class CrudController extends ApiController
     #[Parameters\ParameterIntArray(
         parameter: 'tags'
     )]
-    #[Responses\ResponsePaginate(NoteResource::class)]
+    #[Responses\ResponsePaginate(NotePrivateSimpleResource::class)]
     #[Responses\ResponseServerError]
     public function index(NoteFilterRequest $request): ResourceCollection
     {
@@ -78,7 +80,7 @@ class CrudController extends ApiController
             perPage: $filter['per_page'] ?? Note::DEFAULT_PER_PAGE,
         );
 
-        return NoteResource::collection($recs);
+        return NotePrivateSimpleResource::collection($recs);
     }
 
     #[Operation\ApiGet(
@@ -91,7 +93,7 @@ class CrudController extends ApiController
     #[Parameters\Headers\ContentType]
     #[Parameters\Headers\Accept]
     #[Parameters\ParameterSearch]
-    #[Responses\ResponseCollection(NoteResource::class)]
+    #[Responses\ResponseCollection(NotePrivateShortResource::class)]
     #[Responses\ResponseServerError]
     public function shortlist(NoteFilterRequest $request): ResourceCollection
     {
@@ -101,7 +103,7 @@ class CrudController extends ApiController
             ->get()
         ;
 
-        return NoteResource::collection($recs);
+        return NotePrivateShortResource::collection($recs);
     }
 
     #[Operation\ApiGet(
@@ -114,16 +116,16 @@ class CrudController extends ApiController
     #[Parameters\Headers\ContentType]
     #[Parameters\Headers\Accept]
     #[Parameters\ParameterId]
-    #[Responses\ResponseJsonSuccess(NoteResource::class)]
+    #[Responses\ResponseJsonSuccess(NotePrivateFullResource::class)]
     #[Responses\ResponseServerError]
-    public function show($id): NoteResource
+    public function show($id): NotePrivateFullResource
     {
         $model = Note::query()
             ->where('id', $id)
             ->firstOrFail()
         ;
 
-        return NoteResource::make($model);
+        return NotePrivateFullResource::make($model);
     }
 
     #[Operation\ApiPost(
@@ -137,17 +139,16 @@ class CrudController extends ApiController
     #[Parameters\Headers\Accept]
     #[RequestJson(NoteRequest::class)]
     #[Responses\ResponseJsonSuccess(
-        resource:NoteResource::class,
+        resource:NotePrivateFullResource::class,
         response: Response::HTTP_CREATED
     )]
     #[Responses\ResponseInvalid]
     #[Responses\ResponseServerError]
-    public function create(NoteRequest $request): NoteResource
+    public function create(NoteRequest $request): NotePrivateFullResource
     {
-
         $dto = NoteDto::byArgs($request->validated());
 
-        return NoteResource::make(
+        return NotePrivateFullResource::make(
             $this->service->create($dto)
         );
     }
@@ -163,15 +164,15 @@ class CrudController extends ApiController
     #[Parameters\Headers\Accept]
     #[Parameters\ParameterId]
     #[RequestJson(NoteRequest::class)]
-    #[Responses\ResponseJsonSuccess(NoteResource::class)]
+    #[Responses\ResponseJsonSuccess(NotePrivateFullResource::class)]
     #[Responses\ResponseNotFound]
     #[Responses\ResponseInvalid]
     #[Responses\ResponseServerError]
-    public function update(NoteRequest $request, $id): NoteResource
+    public function update(NoteRequest $request, $id): NotePrivateFullResource
     {
         $dto = NoteDto::byArgs($request->validated());
 
-        return NoteResource::make(
+        return NotePrivateFullResource::make(
             $this->service->update(
                 Note::query()->findOrFail($id),
                 $dto

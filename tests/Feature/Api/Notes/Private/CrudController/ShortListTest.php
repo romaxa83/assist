@@ -35,7 +35,7 @@ class ShortListTest extends TestCase
                 ['id' => $model_1->id,],
                 ['id' => $model_2->id,],
             ])
-//            ->assertValidResponse(200)
+            ->assertValidResponse(200)
         ;
     }
 

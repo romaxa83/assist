@@ -41,6 +41,24 @@ class NoteBuilder extends BaseBuilder
         return $this;
     }
 
+    public function links(array $value): self
+    {
+        $this->data['links'] = $value;
+        return $this;
+    }
+
+    public function text_blocks(array $value): self
+    {
+        $this->data['text_blocks'] = $value;
+        return $this;
+    }
+
+    public function anchors(array $value): self
+    {
+        $this->data['anchors'] = $value;
+        return $this;
+    }
+
     public function weight(int $value): self
     {
         $this->data['weight'] = $value;
