@@ -7,14 +7,17 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [ApiController::class, 'info'])
     ->name('api.info');
 
-//Route::get('/tags', [CrudController::class, 'index'])
-//    ->name('api.tags.index');
 
 Route::name('api.')->group(function () {
+    // NOTES
     Route::get('notes', [Api\Notes\Public\Controller::class, 'index'])
         ->name('note.index');
     Route::get('notes/{slug}', [Api\Notes\Public\Controller::class, 'show'])
         ->name('note.show');
+
+    // TAGS
+    Route::get('tags', [Api\Tags\Public\Controller::class, 'index'])
+        ->name('tag.index');
 });
 
 

@@ -24,6 +24,8 @@ class Tag extends BaseModel
     use HasFactory;
     use Filterable;
 
+    public const DEFAULT_SORT_FIELD = 'weight';
+
     public const TABLE = 'tags';
     protected $table = self::TABLE;
 
