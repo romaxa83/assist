@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\Api\Tags\CrudController;
+namespace Tests\Feature\Api\Tags\Private\CrudController;
 
 use App\Models\Tags\Tag;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
@@ -29,7 +29,7 @@ class IndexTest extends TestCase
         $model_2 = $this->tagBuilder->weight(1)->create();
         $model_3 = $this->tagBuilder->weight(13)->create();
 
-        $this->getJson(route('api.tag.index'))
+        $this->getJson(route('api.private.tag.index'))
             ->assertJson([
                 ['id' => $model_3->id,],
                 ['id' => $model_1->id,],
@@ -43,7 +43,7 @@ class IndexTest extends TestCase
     {
         $this->loginAsAdmin();
 
-        $this->getJson(route('api.tag.index'))
+        $this->getJson(route('api.private.tag.index'))
             ->assertJson([])
             ->assertJsonCount(0)
         ;
@@ -67,7 +67,7 @@ class IndexTest extends TestCase
             ->weight(13)
             ->create();
 
-        $this->getJson(route('api.tag.index',[
+        $this->getJson(route('api.private.tag.index',[
             'search' => 'bb'
         ]))
             ->assertJson([
@@ -83,8 +83,9 @@ class IndexTest extends TestCase
         $this->tagBuilder->weight(3)->create();
         $this->tagBuilder->weight(3)->create();
 
-        $this->getJson(route('api.tag.index'))
-            ->assertJsonCount(2)
+        $res = $this->getJson(route('api.private.tag.index'))
         ;
+
+        self::assertUnauthorized($res);
     }
 }

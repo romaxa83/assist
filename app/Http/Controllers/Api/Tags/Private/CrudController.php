@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api\Tags;
+namespace App\Http\Controllers\Api\Tags\Private;
 
 use App\Dto\Tags\TagDto;
 use App\Http\Controllers\ApiController;
@@ -13,9 +13,9 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 use Illuminate\Http\Response;
 use OpenAPI\Operation;
+use OpenAPI\Parameters;
 use OpenAPI\Request\RequestJson;
 use OpenAPI\Responses;
-use OpenAPI\Parameters;
 
 class CrudController extends ApiController
 {
@@ -25,10 +25,12 @@ class CrudController extends ApiController
     {}
 
     #[Operation\ApiGet(
-        path: '/api/tags',
-        tags: ['Tags'],
+        path: '/api/private/tags',
+        tags: ['Tags private'],
         description: 'Get tags as list',
+        auth: true
     )]
+    #[Parameters\Headers\Authorization]
     #[Parameters\Headers\ContentType]
     #[Parameters\Headers\Accept]
     #[Parameters\ParameterSearch]
@@ -46,8 +48,8 @@ class CrudController extends ApiController
     }
 
     #[Operation\ApiPost(
-        path: '/api/tags',
-        tags: ['Tags'],
+        path: '/api/private/tags',
+        tags: ['Tags private'],
         description: 'Create tag',
         auth: true
     )]
@@ -73,8 +75,8 @@ class CrudController extends ApiController
     }
 
     #[Operation\ApiPut(
-        path: '/api/tags/{id}',
-        tags: ['Tags'],
+        path: '/api/private/tags/{id}',
+        tags: ['Tags private'],
         description: 'Update tag',
         auth: true
     )]
@@ -100,8 +102,8 @@ class CrudController extends ApiController
     }
 
     #[Operation\ApiDelete(
-        path: '/api/tags/{id}',
-        tags: ['Tags'],
+        path: '/api/private/tags/{id}',
+        tags: ['Tags private'],
         description: 'Delete tag',
         auth: true
     )]

@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\Api\Notes\CrudController;
+namespace Tests\Feature\Api\Notes\Private\CrudController;
 
 use App\Models\Notes\Note;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
@@ -35,7 +35,7 @@ class DeleteTest extends TestCase
 
         $id = $model->id;
 
-        $this->deleteJson(route('api.note.delete', ['id' => $model->id]))
+        $this->deleteJson(route('api.private.note.delete', ['id' => $model->id]))
             ->assertValidResponse(204)
         ;
 
@@ -57,7 +57,7 @@ class DeleteTest extends TestCase
         $model = $this->noteBuilder->create();
 
 
-        $res = $this->deleteJson(route('api.note.delete', ['id' => $model->id +1]))
+        $res = $this->deleteJson(route('api.private.note.delete', ['id' => $model->id +1]))
         ;
 
         self::assertNotFound($res);
@@ -68,7 +68,7 @@ class DeleteTest extends TestCase
         /** @var $model Note */
         $model = $this->noteBuilder->create();
 
-        $res = $this->deleteJson(route('api.note.delete', ['id' => $model->id]))
+        $res = $this->deleteJson(route('api.private.note.delete', ['id' => $model->id]))
         ;
 
         self::assertUnauthorized($res);

@@ -13,6 +13,6 @@ enum DateFormat: string
 {
     use InvokableCases;
 
-    case FRONT = 'Y-m-d H:i';
+    case FRONT = 'Y-m-d ';
     case FRONT_FILTER = 'Y-m-d';
 }

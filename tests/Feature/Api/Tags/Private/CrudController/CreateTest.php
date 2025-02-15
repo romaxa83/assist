@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\Api\Tags\CrudController;
+namespace Tests\Feature\Api\Tags\Private\CrudController;
 
 use App\Models\Tags\Tag;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
@@ -33,7 +33,7 @@ class CreateTest extends TestCase
 
         $data = $this->data;
 
-        $this->postJson(route('api.tag.create'), $data)
+        $this->postJson(route('api.private.tag.create'), $data)
             ->assertValidResponse(201)
         ;
     }
@@ -48,7 +48,7 @@ class CreateTest extends TestCase
         $data = $this->data;
         $data['name'] = $model->name;
 
-        $res = $this->postJson(route('api.tag.create'), $data)
+        $res = $this->postJson(route('api.private.tag.create'), $data)
         ;
 
         self::assertValidationError(
@@ -58,11 +58,11 @@ class CreateTest extends TestCase
         );
     }
 
-    public function test_fail_not_auth()
+    public function test_not_auth()
     {
         $data = $this->data;
 
-        $res = $this->postJson(route('api.tag.create'), $data)
+        $res = $this->postJson(route('api.private.tag.create'), $data)
         ;
 
         self::assertUnauthorized($res);

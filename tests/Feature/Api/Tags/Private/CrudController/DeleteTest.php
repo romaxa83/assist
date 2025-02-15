@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\Api\Tags\CrudController;
+namespace Tests\Feature\Api\Tags\Private\CrudController;
 
 use App\Models\Tags\Tag;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
@@ -29,7 +29,7 @@ class DeleteTest extends TestCase
 
         $id = $model->id;
 
-        $this->deleteJson(route('api.tag.delete', ['id' => $model->id]))
+        $this->deleteJson(route('api.private.tag.delete', ['id' => $model->id]))
             ->assertValidResponse(204)
         ;
 
@@ -45,18 +45,18 @@ class DeleteTest extends TestCase
         $model = $this->tagBuilder->create();
 
 
-        $res = $this->deleteJson(route('api.tag.delete', ['id' => $model->id +1]))
+        $res = $this->deleteJson(route('api.private.tag.delete', ['id' => $model->id +1]))
         ;
 
         self::assertNotFound($res);
     }
 
-    public function test_fail_not_auth()
+    public function test_not_auth()
     {
         /** @var $model Tag */
         $model = $this->tagBuilder->create();
 
-        $res = $this->deleteJson(route('api.tag.delete', ['id' => $model->id]))
+        $res = $this->deleteJson(route('api.private.tag.delete', ['id' => $model->id]))
         ;
 
         self::assertUnauthorized($res);

@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\Api\Users\ProfileController;
+namespace Tests\Feature\Api\Users\Private\ProfileController;
 
 use App\Models\Users\User;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
@@ -25,7 +25,7 @@ class ProfileTest extends TestCase
         /** @var $model User */
         $model = $this->loginAsAdmin();
 
-        $this->getJson(route('api.profile'))
+        $this->getJson(route('api.private.profile'))
             ->assertJson([
                 'id' => $model->id,
             ])
@@ -34,7 +34,7 @@ class ProfileTest extends TestCase
 
     public function test_fail_get_current_user()
     {
-        $res = $this->getJson(route('api.profile'))
+        $res = $this->getJson(route('api.private.profile'))
         ;
 
         self::assertUnauthorized($res);

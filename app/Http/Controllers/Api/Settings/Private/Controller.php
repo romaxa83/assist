@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Http\Controllers\Api\Settings;
+namespace App\Http\Controllers\Api\Settings\Private;
 
 use App\Enums\Notes\NoteStatus;
 use App\Http\Controllers\ApiController;
 use App\Services\Notes\NoteService;
 use Illuminate\Http\JsonResponse;
 use OpenAPI\Operation;
-use OpenAPI\Responses;
 use OpenAPI\Parameters;
+use OpenAPI\Responses;
 
 class Controller extends ApiController
 {
@@ -18,9 +18,10 @@ class Controller extends ApiController
     {}
 
     #[Operation\ApiGet(
-        path: '/api/settings/notes',
-        tags: ['Settings'],
+        path: '/api/private/settings/notes',
+        tags: ['Settings private'],
         description: 'Get additional data for notes',
+        auth: true
     )]
     #[Parameters\Headers\Authorization]
     #[Parameters\Headers\ContentType]

@@ -1,10 +1,9 @@
 <?php
 
-namespace Tests\Feature\Api\Notes\CrudController;
+namespace Tests\Feature\Api\Notes\Private\CrudController;
 
 use App\Models\Notes\Note;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
-use Illuminate\Support\Facades\Auth;
 use Tests\Builders\Notes\NoteBuilder;
 use Tests\TestCase;
 
@@ -29,8 +28,7 @@ class ShowTest extends TestCase
         /** @var $model Note */
         $model = $this->noteBuilder->create();
 
-        $this->getJson(route('api.note.show', ['id' => $model->id]))
-            ->dump()
+        $this->getJson(route('api.private.note.show', ['id' => $model->id]))
             ->assertJson([
                 'id' => $model->id,
                 'title' => $model->title,
@@ -50,7 +48,7 @@ class ShowTest extends TestCase
         /** @var $model Note */
         $model = $this->noteBuilder->create();
 
-        $res = $this->getJson(route('api.note.show', ['id' => $model->id + 1]))
+        $res = $this->getJson(route('api.private.note.show', ['id' => $model->id + 1]))
         ;
 
         self::assertNotFound($res);
@@ -61,10 +59,9 @@ class ShowTest extends TestCase
         /** @var $model Note */
         $model = $this->noteBuilder->create();
 
-        $this->getJson(route('api.note.show', ['id' => $model->id]))
-            ->assertJson([
-                'id' => $model->id,
-            ])
+        $res = $this->getJson(route('api.private.note.show', ['id' => $model->id]))
         ;
+
+        self::assertUnauthorized($res);
     }
 }

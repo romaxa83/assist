@@ -1,19 +1,19 @@
 <?php
 
-namespace App\Http\Controllers\Api\Users;
+namespace App\Http\Controllers\Api\Users\Private;
 
 use App\Http\Controllers\ApiController;
 use App\Http\Resources\Api\Users\ProfileResource;
 use Illuminate\Support\Facades\Auth;
 use OpenAPI\Operation;
-use OpenAPI\Responses;
 use OpenAPI\Parameters;
+use OpenAPI\Responses;
 
 class ProfileController extends ApiController
 {
     #[Operation\ApiGet(
-        path: '/api/profile',
-        tags: ['Profile'],
+        path: '/api/private/profile',
+        tags: ['Profile private'],
         description: 'Get auth user',
         auth: true
     )]

@@ -1,10 +1,9 @@
 <?php
 
-namespace Tests\Feature\Api\Notes\CrudController;
+namespace Tests\Feature\Api\Notes\Private\CrudController;
 
 use App\Enums\DateFormat;
 use App\Enums\Notes\NoteStatus;
-use App\Enums\OrderType;
 use App\Models\Notes\Note;
 use Carbon\CarbonImmutable;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
@@ -44,7 +43,7 @@ class IndexTest extends TestCase
             ->created_at($now->subDays(2))
             ->create();
 
-        $this->getJson(route('api.note.index'))
+        $this->getJson(route('api.private.note.index'))
             ->assertJson([
                 'data' => [
                     ['id' => $model_2->id,],
@@ -69,7 +68,7 @@ class IndexTest extends TestCase
         $this->noteBuilder->weight(1)->create();
         $this->noteBuilder->weight(13)->create();
 
-        $this->getJson(route('api.note.index', [
+        $this->getJson(route('api.private.note.index', [
             'page' => 2,
         ]))
             ->assertJson([
@@ -91,7 +90,7 @@ class IndexTest extends TestCase
         $this->noteBuilder->weight(1)->create();
         $this->noteBuilder->weight(13)->create();
 
-        $this->getJson(route('api.note.index', [
+        $this->getJson(route('api.private.note.index', [
             'per_page' => 2,
         ]))
             ->assertJson([
@@ -129,7 +128,7 @@ class IndexTest extends TestCase
             ->created_at($now->subDays(3))
             ->create();
 
-        $this->getJson(route('api.note.index', [
+        $this->getJson(route('api.private.note.index', [
             'tags' => [$tag_1->id, $tag_3->id]
         ]))
             ->assertJson([
@@ -166,7 +165,7 @@ class IndexTest extends TestCase
             ->created_at($now->subDays(3))
             ->create();
 
-        $this->getJson(route('api.note.index', [
+        $this->getJson(route('api.private.note.index', [
             'status' => NoteStatus::PRIVATE()
         ]))
             ->assertJson([
@@ -179,7 +178,6 @@ class IndexTest extends TestCase
             ])
         ;
     }
-
 
     public function test_success_filter_by_range_date()
     {
@@ -198,7 +196,7 @@ class IndexTest extends TestCase
             ->created_at($now->subDays(4))
             ->create();
 
-        $this->getJson(route('api.note.index', [
+        $this->getJson(route('api.private.note.index', [
             'start_date' => $now->subDays(2)->format(DateFormat::FRONT_FILTER()),
             'end_date' => $now->format(DateFormat::FRONT_FILTER()),
         ]))
@@ -234,7 +232,7 @@ class IndexTest extends TestCase
             ->created_at($now)
             ->create();
 
-        $this->getJson(route('api.note.index', [
+        $this->getJson(route('api.private.note.index', [
             'sort' => ['weight-desc'],
         ]))
             ->assertJson([
@@ -270,7 +268,7 @@ class IndexTest extends TestCase
             ->created_at($now)
             ->create();
 
-        $this->getJson(route('api.note.index', [
+        $this->getJson(route('api.private.note.index', [
             'sort' => ['weight-asc'],
         ]))
             ->assertJson([
@@ -318,7 +316,7 @@ class IndexTest extends TestCase
             ->created_at($now->subDays(1))
             ->create();
 
-        $this->getJson(route('api.note.index', [
+        $this->getJson(route('api.private.note.index', [
             'sort' => ['weight-desc', 'created_at-desc'],
         ]))
             ->assertJson([
@@ -358,7 +356,7 @@ class IndexTest extends TestCase
             ->weight(13)
             ->create();
 
-        $this->getJson(route('api.note.index', [
+        $this->getJson(route('api.private.note.index', [
             'search' => 'Загатовки поиск'
         ]))
             ->assertJson([
@@ -379,7 +377,7 @@ class IndexTest extends TestCase
     {
         $this->loginAsAdmin();
 
-        $this->getJson(route('api.note.index'))
+        $this->getJson(route('api.private.note.index'))
             ->assertJson([])
             ->assertJsonCount(0, 'data')
         ;
@@ -389,12 +387,9 @@ class IndexTest extends TestCase
     {
         $this->noteBuilder->create();
 
-        $this->getJson(route('api.note.index'))
-            ->assertJson([
-                'meta' => [
-                    'total' => 1
-                ]
-            ])
+        $res =  $this->getJson(route('api.private.note.index'))
         ;
+
+        self::assertUnauthorized($res);
     }
 }

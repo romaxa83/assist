@@ -1,23 +1,16 @@
 <?php
 
-namespace App\Http\Controllers\Api\Notes;
+namespace App\Http\Controllers\Api\Notes\Private;
 
-use App\Dto\Notes\NoteDto;
 use App\Enums\Notes\NoteStatus;
 use App\Http\Controllers\ApiController;
-use App\Http\Requests\Api\Notes\NoteFilterRequest;
-use App\Http\Requests\Api\Notes\NoteRequest;
 use App\Http\Requests\Api\Notes\NoteSetStatusRequest;
 use App\Http\Resources\Api\Notes\NoteResource;
-use App\Models\Notes\Note;
 use App\Services\Notes\NoteService;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Resources\Json\ResourceCollection;
-use Illuminate\Http\Response;
 use OpenAPI\Operation;
+use OpenAPI\Parameters;
 use OpenAPI\Request\RequestJson;
 use OpenAPI\Responses;
-use OpenAPI\Parameters;
 
 class ActionController extends ApiController
 {
@@ -27,9 +20,10 @@ class ActionController extends ApiController
     {}
 
     #[Operation\ApiPost(
-        path: '/api/notes/{id}/set-status',
-        tags: ['Notes'],
+        path: '/api/private/notes/{id}/set-status',
+        tags: ['Notes private'],
         description: 'Set status for note',
+        auth: true
     )]
     #[Parameters\Headers\Authorization]
     #[Parameters\Headers\ContentType]

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api\Notes;
+namespace App\Http\Controllers\Api\Notes\Private;
 
 use App\Dto\Notes\NoteDto;
 use App\Enums\Notes\NoteStatus;
@@ -14,9 +14,9 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 use Illuminate\Http\Response;
 use OpenAPI\Operation;
+use OpenAPI\Parameters;
 use OpenAPI\Request\RequestJson;
 use OpenAPI\Responses;
-use OpenAPI\Parameters;
 
 class CrudController extends ApiController
 {
@@ -26,10 +26,12 @@ class CrudController extends ApiController
     {}
 
     #[Operation\ApiGet(
-        path: '/api/notes',
-        tags: ['Notes'],
+        path: '/api/private/notes',
+        tags: ['Notes private'],
         description: 'Get notes as pagination list',
+        auth: true
     )]
+    #[Parameters\Headers\Authorization]
     #[Parameters\Headers\ContentType]
     #[Parameters\Headers\Accept]
     #[Parameters\ParameterPage]
@@ -80,8 +82,8 @@ class CrudController extends ApiController
     }
 
     #[Operation\ApiGet(
-        path: '/api/notes/shortlist',
-        tags: ['Notes'],
+        path: '/api/private/notes/shortlist',
+        tags: ['Notes private'],
         description: 'Get notes as list',
         auth: true
     )]
@@ -103,10 +105,12 @@ class CrudController extends ApiController
     }
 
     #[Operation\ApiGet(
-        path: '/api/notes/{id}',
-        tags: ['Notes'],
+        path: '/api/private/notes/{id}',
+        tags: ['Notes private'],
         description: 'Get note by id',
+        auth: true
     )]
+    #[Parameters\Headers\Authorization]
     #[Parameters\Headers\ContentType]
     #[Parameters\Headers\Accept]
     #[Parameters\ParameterId]
@@ -123,8 +127,8 @@ class CrudController extends ApiController
     }
 
     #[Operation\ApiPost(
-        path: '/api/notes',
-        tags: ['Notes'],
+        path: '/api/private/notes',
+        tags: ['Notes private'],
         description: 'Create note',
         auth: true
     )]
@@ -149,8 +153,8 @@ class CrudController extends ApiController
     }
 
     #[Operation\ApiPut(
-        path: '/api/notes/{id}',
-        tags: ['Notes'],
+        path: '/api/private/notes/{id}',
+        tags: ['Notes private'],
         description: 'Update note',
         auth: true
     )]
@@ -176,8 +180,8 @@ class CrudController extends ApiController
     }
 
     #[Operation\ApiDelete(
-        path: '/api/notes/{id}',
-        tags: ['Notes'],
+        path: '/api/private/notes/{id}',
+        tags: ['Notes private'],
         description: 'Delete note',
         auth: true
     )]
