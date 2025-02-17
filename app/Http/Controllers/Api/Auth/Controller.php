@@ -30,6 +30,7 @@ class Controller extends ApiController
     {
         $login = Auth::attempt($request->only(['email', 'password']));
 
+
         throw_unless($login, new AuthenticationException());
 
         $user = $request->user();

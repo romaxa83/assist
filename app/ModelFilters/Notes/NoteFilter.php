@@ -16,6 +16,13 @@ class NoteFilter extends BaseModelFilter
         );
     }
 
+    public function tagsSlug(array $value): void
+    {
+        $this->whereHas('tags',
+            fn(Builder $query) => $query->whereIn('slug', $value)
+        );
+    }
+
     public function id(int|string $value): void
     {
         $this->where('id', $value);
@@ -48,10 +55,13 @@ class NoteFilter extends BaseModelFilter
         $this->where('created_at', '<=', $date);
     }
 
-    public function search(string $value): void
+    public function searchTitle(string $value): void
     {
-
-
+        $this->where(
+            function (Builder $b) use ($value) {
+                return $b->whereRaw('lower(title) like ?', ['%' . escape_like(mb_convert_case($value, MB_CASE_LOWER)) . '%']);
+            }
+        );
     }
 }
 

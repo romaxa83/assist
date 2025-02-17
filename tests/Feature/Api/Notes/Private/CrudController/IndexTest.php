@@ -373,6 +373,44 @@ class IndexTest extends TestCase
         ;
     }
 
+    public function test_success_search_title()
+    {
+        $this->loginAsAdmin();
+
+        /** @var $model_1 Note */
+        $model_1 = $this->noteBuilder
+            ->title('addd TEST sdad')
+            ->text('Чтоб реализовать крутой поиск нужно создать правильные заготовки')
+            ->weight(1)
+            ->create();
+        $model_2 = $this->noteBuilder
+            ->title('Test searchModel')
+            ->text('В ларавел существуют такие связи')
+            ->weight(1)
+            ->create();
+        $model_3 = $this->noteBuilder
+            ->title('Фасетный поиска')
+            ->text('Чтоб test фасетный поиск нужно ....')
+            ->weight(13)
+            ->create();
+
+        $this->getJson(route('api.private.note.index', [
+            'search_title' => 'test'
+        ]))
+            ->assertJson([
+                'data' => [
+                    ['id' => $model_1->id,],
+                    ['id' => $model_2->id,],
+                ],
+                'meta' => [
+                    'current_page' => 1,
+                    'to' => 2,
+                    'total' => 2
+                ]
+            ])
+        ;
+    }
+
     public function test_success_empty_data()
     {
         $this->loginAsAdmin();

@@ -42,6 +42,10 @@ class CrudController extends ApiController
         modelClass: Note::class,
     )]
     #[Parameters\ParameterSearch]
+    #[Parameters\ParameterString(
+        parameter: 'search_title',
+        description: 'Search by title via LIKE'
+    )]
     #[Parameters\ParameterStartDate]
     #[Parameters\ParameterEndDate]
     #[Parameters\ParameterEnum(
@@ -93,6 +97,10 @@ class CrudController extends ApiController
     #[Parameters\Headers\ContentType]
     #[Parameters\Headers\Accept]
     #[Parameters\ParameterSearch]
+    #[Parameters\ParameterString(
+        parameter: 'search_title',
+        description: 'Search by title via LIKE'
+    )]
     #[Responses\ResponseCollection(NotePrivateShortResource::class)]
     #[Responses\ResponseServerError]
     public function shortlist(NoteFilterRequest $request): ResourceCollection

@@ -33,7 +33,11 @@ class LoginRequest extends BaseFormRequest
     public function rules(): array
     {
         return [
-            'email' => ['required', 'email', Rule::exists(User::TABLE)],
+            'email' => [
+                'required',
+                'email',
+                Rule::exists(User::TABLE)
+            ],
             'password' => ['required', 'string'],
         ];
     }

@@ -3,9 +3,11 @@
 namespace App\Http\Resources\Api\Notes;
 
 use App\Http\Resources\Api\BaseResource;
+use App\Http\Resources\Api\Tags\TagResource;
 use App\Models\Notes\Note;
 use OpenAPI\Properties\Fields\PropertyId;
 use OpenAPI\Properties\PropertyInteger;
+use OpenAPI\Properties\PropertyResourceCollection;
 use OpenAPI\Properties\PropertyString;
 use OpenAPI\Schemas\BaseScheme;
 
@@ -33,6 +35,10 @@ use OpenAPI\Schemas\BaseScheme;
             property: 'created_at',
             example: '2025-02-02'
         ),
+        new PropertyResourceCollection(
+            property: 'tags',
+            resource: TagResource::class,
+        ),
     ]
 )]
 class NotePublicSimpleResource extends BaseResource
@@ -45,6 +51,7 @@ class NotePublicSimpleResource extends BaseResource
             'slug' => $this->slug,
             'weight' => $this->weight,
             'created_at' => date_to_front($this->created_at),
+            'tags' => TagResource::collection($this->tags),
         ];
     }
 }

@@ -409,6 +409,12 @@
                         "required": false
                     },
                     {
+                        "name": "search_title",
+                        "in": "query",
+                        "description": "Search by title via LIKE",
+                        "required": false
+                    },
+                    {
                         "name": "start_date",
                         "in": "query",
                         "description": "Filter by start_date, format - Y-m-d",
@@ -816,6 +822,12 @@
                     {
                         "name": "search",
                         "in": "query",
+                        "required": false
+                    },
+                    {
+                        "name": "search_title",
+                        "in": "query",
+                        "description": "Search by title via LIKE",
                         "required": false
                     }
                 ],
@@ -2762,7 +2774,8 @@
                     "title",
                     "slug",
                     "weight",
-                    "created_at"
+                    "created_at",
+                    "tags"
                 ],
                 "properties": {
                     "id": {
@@ -2789,6 +2802,13 @@
                     "created_at": {
                         "type": "string",
                         "example": "2025-02-02",
+                        "nullable": false
+                    },
+                    "tags": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/TagResource"
+                        },
                         "nullable": false
                     }
                 },

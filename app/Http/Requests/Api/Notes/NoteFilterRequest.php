@@ -19,6 +19,7 @@ class NoteFilterRequest extends BaseFormRequest
             $this->sortRule(Note::class),
             $this->dateRangeRule(),
             [
+                'search_title' => ['nullable', 'string', 'min:3'],
                 'status' => ['nullable', 'string', NoteStatus::ruleIn()],
                 'tags' => ['nullable', 'array'],
                 'tags.*' => ['required', 'int', Rule::exists(Tag::TABLE, 'id')],
