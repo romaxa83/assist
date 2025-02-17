@@ -151,7 +151,7 @@ class IndexTest extends TestCase
             ->create();
 
         $this->getJson(route('api.note.index', [
-            'tags' => [$tag_1->id, $tag_3->id]
+            'tags' => [$tag_1->slug, $tag_3->slug]
         ]))
             ->assertJson([
                 'data' => [

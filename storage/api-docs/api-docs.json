@@ -1297,13 +1297,13 @@
                     {
                         "name": "tags[]",
                         "in": "query",
-                        "description": "Filter by tags",
+                        "description": "Search by tags via SLUG",
                         "required": false,
                         "schema": {
                             "type": "array",
                             "items": {
-                                "type": "integer",
-                                "example": null
+                                "type": "string",
+                                "example": "slug"
                             }
                         }
                     }

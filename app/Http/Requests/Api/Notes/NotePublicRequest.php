@@ -15,7 +15,7 @@ class NotePublicRequest extends BaseFormRequest
             $this->paginationRule(),
             [
                 'tags' => ['nullable', 'array'],
-                'tags.*' => ['required', 'int', Rule::exists(Tag::TABLE, 'id')],
+                'tags.*' => ['required', 'string', Rule::exists(Tag::TABLE, 'slug')],
             ]
         );
     }

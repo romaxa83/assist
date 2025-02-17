@@ -28,8 +28,9 @@ class Controller extends ApiController
     #[Parameters\ParameterPage]
     #[Parameters\ParameterPerPage]
     #[Parameters\ParameterSearch]
-    #[Parameters\ParameterIntArray(
-        parameter: 'tags'
+    #[Parameters\ParameterStringArray(
+        parameter: 'tags',
+        description: 'Search by tags via SLUG'
     )]
     #[Responses\ResponsePaginate(NotePublicSimpleResource::class)]
     #[Responses\ResponseServerError]
@@ -37,6 +38,10 @@ class Controller extends ApiController
     {
         $filter = $request->validated();
         $filter['status'] = [NoteStatus::PUBLIC()];
+        if(isset($filter['tags'])) {
+            $filter['tags_slug'] = $filter['tags'];
+            unset($filter['tags']);
+        }
 
         $recsQuery = Note::query()
             ->filter($filter)
