@@ -107,10 +107,82 @@ class Note extends BaseModel implements HasTags, Sortable
         return $result;
     }
 
+
+    public function canEdit(?User $user = null): array
+    {
+        $reason = [];
+        $can = true;
+        if(is_null($user)){
+            $can = false;
+            $reason[] = 'User is not logged in';
+        }
+        if($this->author_id !== $user->id){
+            $can = false;
+            $reason[] = 'User is not author';
+        }
+        if($this->status->isPublic() || $this->status->isPrivate()){
+            $can = false;
+            $reason[] = 'To edit a note, you need to unpublish it.';
+        }
+
+        return [
+            'can' => $can,
+            'reason' => $reason
+        ];
+    }
+
+    public function canDelete(?User $user = null): array
+    {
+        $reason = [];
+        $can = true;
+        if(is_null($user)){
+            $can = false;
+            $reason[] = 'User is not logged in';
+        }
+        if($this->author_id !== $user->id){
+            $can = false;
+            $reason[] = 'User is not author';
+        }
+        if($this->status->isPublic() || $this->status->isPrivate()){
+            $can = false;
+            $reason[] = 'To edit a note, you need to unpublish it.';
+        }
+
+        return [
+            'can' => $can,
+            'reason' => $reason
+        ];
+    }
+
+
+    public function canShowViaPublic(?User $user = null): array
+    {
+        $reason = [];
+        $can = true;
+        if(
+            $this->status->isDraft() 
+            || $this->status->isModeration()
+            || $this->status->isModerated()
+        ){
+            $can = false;
+            $reason[] = 'Note not published';
+        }
+
+        return [
+            'can' => $can,
+            'reason' => $reason
+        ];
+    }
+
+
     public function getMetaForSimplePrivate(User $user): array
     {
         $result = [];
-        $result['actions'] = [];
+        $result['actions'] = [
+            'edit' => $this->canEdit($user),
+            'delete' => $this->canDelete($user),
+            'show' => $this->canShowViaPublic($user),
+        ];
 
         return $result;
     }
