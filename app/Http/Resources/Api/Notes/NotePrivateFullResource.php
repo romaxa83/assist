@@ -100,6 +100,8 @@ class NotePrivateFullResource extends BaseResource
             'created_at' => date_to_front($this->created_at),
             'tags' => TagResource::collection($this->tags),
             'links' => $this->links,
+            'anchors' => $this->links,
+            'text_blocks' => $this->text_blocks,
             'meta' => $this->getMetaForFullPrivate(Auth::guard('sanctum')->user())
         ];
     }

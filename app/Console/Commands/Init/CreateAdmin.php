@@ -21,6 +21,29 @@ class CreateAdmin extends Command
 
     public function handle()
     {
+        $data = [
+            1 => 'one',
+            2 => 'two',
+        ];
+
+        $res = last($data);
+        dump($res);     // two
+
+        $res = last([]);
+        dump($res);     //one
+
+
+        dd();
+//        dd($res); // 1
+//
+//        $res = array_key_first([]);
+//        dd($res); // null
+//
+//
+//        //        array_key_first(array $array): int|string|null
+//
+//        dd('g');
+
         try {
             $start = microtime(true);
 

@@ -103,6 +103,9 @@ class Note extends BaseModel implements HasTags, Sortable
             $result['statuses'] =  NoteStatus::getStatusesForChange($this->status, $user);
         }
 
+        if($this->tags->isEmpty()){
+            $result['warning'][] = 'Notes need to be added tags';
+        }
 
         return $result;
     }
@@ -120,10 +123,10 @@ class Note extends BaseModel implements HasTags, Sortable
             $can = false;
             $reason[] = 'User is not author';
         }
-        if($this->status->isPublic() || $this->status->isPrivate()){
-            $can = false;
-            $reason[] = 'To edit a note, you need to unpublish it.';
-        }
+//        if($this->status->isPublic() || $this->status->isPrivate()){
+//            $can = false;
+//            $reason[] = 'To edit a note, you need to unpublish it.';
+//        }
 
         return [
             'can' => $can,
@@ -145,7 +148,7 @@ class Note extends BaseModel implements HasTags, Sortable
         }
         if($this->status->isPublic() || $this->status->isPrivate()){
             $can = false;
-            $reason[] = 'To edit a note, you need to unpublish it.';
+            $reason[] = 'To delete a note, you need to unpublish it.';
         }
 
         return [
@@ -160,7 +163,7 @@ class Note extends BaseModel implements HasTags, Sortable
         $reason = [];
         $can = true;
         if(
-            $this->status->isDraft() 
+            $this->status->isDraft()
             || $this->status->isModeration()
             || $this->status->isModerated()
         ){

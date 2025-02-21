@@ -2638,11 +2638,27 @@
                         "properties": {
                             "actions": {
                                 "description": "Действия которые можно сделать с моделью для конкретного пользователя",
-                                "type": "array",
-                                "items": {
-                                    "properties": {}
+                                "properties": {
+                                    "edit": {
+                                        "properties": {
+                                            "can": {
+                                                "type": "boolean"
+                                            },
+                                            "reason": {
+                                                "type": "array",
+                                                "items": {
+                                                    "type": "string"
+                                                },
+                                                "example": [
+                                                    "You are not allowed to edit this note"
+                                                ],
+                                                "nullable": false
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
                                 },
-                                "nullable": false
+                                "type": "object"
                             }
                         },
                         "type": "object"

@@ -10,6 +10,7 @@ use OpenAPI\Properties\Fields\PropertyId;
 use OpenAPI\Properties\PropertyInteger;
 use OpenAPI\Properties\PropertyObjArray;
 use OpenAPI\Properties\PropertyString;
+use OpenAPI\Properties\PropertyStringArray;
 use OpenAPI\Schemas\BaseScheme;
 
 /**
@@ -46,10 +47,26 @@ use OpenAPI\Schemas\BaseScheme;
             property: 'meta',
             type: 'object',
             properties: [
-                new PropertyObjArray(
+                new Property(
                     description: "Действия которые можно сделать с моделью для конкретного пользователя",
                     property: 'actions',
-                    items: []
+                    type: 'object',
+                    properties: [
+                        new Property(
+                            property: 'edit',
+                            type: 'object',
+                            properties: [
+                                new Property(
+                                    property: 'can',
+                                    type: 'boolean',
+                                ),
+                                new PropertyStringArray(
+                                    property: 'reason',
+                                    example: ['You are not allowed to edit this note']
+                                )
+                            ]
+                        )
+                    ]
                 )
             ]
         )
