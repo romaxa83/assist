@@ -19,7 +19,8 @@ class TagFactory extends Factory
             'name' => $name,
             'slug' => slug($name),
             'color' => $this->faker->hexColor,
-            'weight' => 0,
+            'public_attached' => 0,
+            'private_attached' => 0,
         ];
     }
 }

@@ -18,7 +18,7 @@ final class NoteService
         return make_transaction(function() use ($dto) {
 
             $model = $this->fill(new Note(), $dto, false);
-            $model = $this->setStatus($model, NoteStatus::DRAFT, false);
+            $model->status = NoteStatus::DRAFT;
             $model->author_id = auth()->id();
             $model->weight = 0;
 
@@ -26,8 +26,6 @@ final class NoteService
 
             if(count($dto->tags) > 0){
                 $model->tags()->sync($dto->tags);
-
-                $model->tags->increaseWeights();
             }
 
             return $model;
@@ -43,36 +41,18 @@ final class NoteService
 
             $model = $this->fill($model, $dto);
 
-            $model->tags->decreaseWeights();
             $model->tags()->sync($dto->tags);
 
             $model->refresh();
 
-            $model->tags->increaseWeights();
-
             return $model;
         });
-    }
-
-    public function setStatus(
-        Note $model,
-        NoteStatus $status,
-        bool $save = true
-    ): Note
-    {
-        $model->status = $status;
-
-        if ($save) $model->save();
-
-        return $model;
     }
 
     public function delete(
         Note $model,
     ): bool
     {
-        $model->tags->decreaseWeights();
-
         return $model->delete();
     }
 

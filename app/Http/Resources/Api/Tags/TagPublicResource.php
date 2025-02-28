@@ -14,7 +14,7 @@ use OpenAPI\Schemas\BaseScheme;
  */
 
 #[BaseScheme(
-    resource: TagResource::class,
+    resource: TagPublicResource::class,
     properties: [
         new PropertyId(),
         new PropertyString(
@@ -30,17 +30,13 @@ use OpenAPI\Schemas\BaseScheme;
             example: '#d98b84'
         ),
         new PropertyInteger(
-            property: 'public_attached',
+            property: 'attached',
             example: 4,
-            description: "How many notes are attached to this tag in public notes"
-        ),
-        new PropertyInteger(
-            property: 'private_attached',
-            example: 8,description: "How many notes are attached to this tag in private notes and public notes"
+            description: "How many notes are attached to this tag"
         ),
     ]
 )]
-class TagResource extends BaseResource
+class TagPublicResource extends BaseResource
 {
     public function toArray($request)
     {
@@ -49,8 +45,9 @@ class TagResource extends BaseResource
             'name' => $this->name,
             'slug' => $this->slug,
             'color' => $this->color,
-            'public_attached' => $this->public_attached,
-            'private_attached' => $this->private_attached,
+            'attached' => auth_user()
+                ? $this->private_attached
+                : $this->public_attached,
         ];
     }
 }

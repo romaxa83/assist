@@ -5,7 +5,6 @@ namespace App\Enums\Notes;
 use App\Core\Enums\Traits\InvokableCases;
 use App\Core\Enums\Traits\Label;
 use App\Core\Enums\Traits\RuleIn;
-use App\Models\Users\User;
 use OpenAPI\Schemas\BaseScheme;
 
 #[BaseScheme(
@@ -16,7 +15,6 @@ use OpenAPI\Schemas\BaseScheme;
 /**
  * @method static DRAFT()       // первичный статус (присваивается при создании), можно удалить
  * @method static MODERATION()  // заметка на модерации (доступен админу)
- * @method static MODERATED()   // заметка промодерирована (после чего владелец может сменить статус)
  * @method static PUBLIC()      // доступен всем
  * @method static PRIVATE()     // доступен только автору
  */
@@ -29,7 +27,6 @@ enum NoteStatus: string
 
     case DRAFT      = "draft";
     case MODERATION = "moderation";
-    case MODERATED  = "moderated";
     case PUBLIC     = "public";
     case PRIVATE    = "private";
 
@@ -42,10 +39,7 @@ enum NoteStatus: string
     {
         return $this === self::MODERATION;
     }
-    public function isModerated(): bool
-    {
-        return $this === self::MODERATED;
-    }
+
     public function isPublic(): bool
     {
         return $this === self::PUBLIC;
@@ -62,18 +56,11 @@ enum NoteStatus: string
             $statuses = [
                 $currentStatus,
                 self::MODERATION,
-                self::MODERATED,
             ];
         }
         if($currentStatus->isModeration()){
             $statuses = [
-                $currentStatus,
                 self::DRAFT,
-                self::MODERATED,
-            ];
-        }
-        if($currentStatus->isModerated()){
-            $statuses = [
                 $currentStatus,
                 self::PUBLIC,
                 self::PRIVATE,
@@ -81,14 +68,16 @@ enum NoteStatus: string
         }
         if($currentStatus->isPublic()){
             $statuses = [
+                self::MODERATION,
                 $currentStatus,
                 self::PRIVATE,
             ];
         }
         if($currentStatus->isPrivate()){
             $statuses = [
-                $currentStatus,
+                self::MODERATION,
                 self::PUBLIC,
+                $currentStatus,
             ];
         }
 

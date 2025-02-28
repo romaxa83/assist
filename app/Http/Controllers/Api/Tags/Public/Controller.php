@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Api\Tags\Public;
 
 use App\Http\Controllers\ApiController;
 use App\Http\Requests\Api\Tags\TagFilterRequest;
-use App\Http\Resources\Api\Tags\TagResource;
+use App\Http\Resources\Api\Tags\TagPublicResource;
 use App\Models\Tags\Tag;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 use OpenAPI\Operation;
@@ -24,17 +24,27 @@ class Controller extends ApiController
     #[Parameters\Headers\ContentType]
     #[Parameters\Headers\Accept]
     #[Parameters\ParameterSearch]
-    #[Responses\ResponseCollection(TagResource::class)]
+    #[Responses\ResponseCollection(TagPublicResource::class)]
     #[Responses\ResponseServerError]
     public function index(TagFilterRequest $request): ResourceCollection
     {
-        $recs = Tag::query()
+        $queryBuilder = Tag::query()
             ->filter($request->validated())
-            ->orderBy(Tag::DEFAULT_SORT_FIELD, Tag::DEFAULT_SORT_TYPE)
-            ->get()
         ;
 
-        return TagResource::collection($recs);
+        if(auth_user()){
+            $queryBuilder
+                ->where('private_attached', '>', 0)
+                ->orderBy('private_attached', Tag::DEFAULT_SORT_TYPE);
+        } else {
+            $queryBuilder
+                ->where('public_attached', '>', 0)
+                ->orderBy('public_attached', Tag::DEFAULT_SORT_TYPE);
+        }
+
+        return TagPublicResource::collection(
+            $queryBuilder->get()
+        );
     }
 }
 

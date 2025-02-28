@@ -46,6 +46,8 @@ class UpdateTest extends TestCase
                 'name' => $data['name'],
                 'slug' => slug($data['name']),
                 'color' => $data['color'],
+                'public_attached' => $model->public_attached,
+                'private_attached' => $model->private_attached,
             ])
 //            ->assertValidResponse(200)
         ;

@@ -36,6 +36,21 @@ class DeleteTest extends TestCase
         $this->assertNull(Tag::find($id));
     }
 
+    public function test_fail_has_notes()
+    {
+        $this->loginAsAdmin();
+
+        /** @var $model Tag */
+        $model = $this->tagBuilder
+            ->private_attached(1)->create();
+
+
+        $res = $this->deleteJson(route('api.private.tag.delete', ['id' => $model->id]))
+            ->dump()
+        ;
+
+        self::assertNotFound($res);
+    }
 
     public function test_fail_not_found_model()
     {

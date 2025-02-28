@@ -18,10 +18,11 @@ class Handler
 
     public function __invoke(BaseExceptions $exceptions): BaseExceptions
     {
-//        dd($exceptions);
+
         $this->renderUnauthorized($exceptions);
         $this->renderNotFound($exceptions);
         $this->renderValidation($exceptions);
+        $this->renderException($exceptions);
         $this->renderError($exceptions);
 
 
@@ -41,6 +42,8 @@ class Handler
 
     protected function renderNotFound(BaseExceptions $exceptions): void
     {
+
+//        dd('2');
         $exceptions->renderable(
             fn (NotFoundHttpException $e, ?Request $request = null) => $this->response(
                 message: __('Not Found'),
@@ -52,6 +55,8 @@ class Handler
 
     protected function renderValidation(BaseExceptions $exceptions): void
     {
+
+//        dd('3');
         $exceptions->renderable(
             fn (ValidationException $e, ?Request $request = null) => $this->response(
                 message: $e->getMessage(),
@@ -62,8 +67,28 @@ class Handler
         );
     }
 
+    protected function renderException(BaseExceptions $exceptions): void
+    {
+        $exceptions->renderable(
+            function ($e, ?Request $request = null) {
+                dd('e');
+            }
+        );
+
+
+//        $exceptions->renderable(
+//            fn (\hangeStatusException $e, ?Request $request = null) => $this->response(
+//                message: $e->getMessage(),
+//                code: HttpResponse::HTTP_UNPROCESSABLE_ENTITY,
+//                asJson: $request?->expectsJson() ?? false,
+//                errors: $e->errors()
+//            )
+//        );
+    }
+
     protected function renderError(BaseExceptions $exceptions): void
     {
+//        dd($exceptions);
         $exceptions->renderable(
             fn (\Error $e, ?Request $request = null) => $this->response(
                 message: $e->getMessage(),
@@ -80,6 +105,8 @@ class Handler
         array $errors = []
     ): Response
     {
+//        dd($message, $code, $asJson, $errors);
+
         if ($asJson) {
             if($code === HttpResponse::HTTP_UNPROCESSABLE_ENTITY){
                 return ApiController::errorJsonValidation($message, $errors);

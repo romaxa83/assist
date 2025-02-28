@@ -25,9 +25,9 @@ class IndexTest extends TestCase
         $this->loginAsAdmin();
 
         /** @var $model Tag */
-        $model_1 = $this->tagBuilder->weight(3)->create();
-        $model_2 = $this->tagBuilder->weight(1)->create();
-        $model_3 = $this->tagBuilder->weight(13)->create();
+        $model_1 = $this->tagBuilder->private_attached(3)->create();
+        $model_2 = $this->tagBuilder->private_attached(1)->create();
+        $model_3 = $this->tagBuilder->private_attached(13)->create();
 
         $this->getJson(route('api.private.tag.index'))
             ->assertJson([
@@ -56,15 +56,15 @@ class IndexTest extends TestCase
         /** @var $model Tag */
         $model_1 = $this->tagBuilder
             ->name('aabbaa')
-            ->weight(3)
+            ->private_attached(3)
             ->create();
         $model_2 = $this->tagBuilder
             ->name('bbbbb')
-            ->weight(1)
+            ->private_attached(1)
             ->create();
         $model_3 = $this->tagBuilder
             ->name('zzzzz')
-            ->weight(13)
+            ->private_attached(13)
             ->create();
 
         $this->getJson(route('api.private.tag.index',[
@@ -80,8 +80,7 @@ class IndexTest extends TestCase
 
     public function test_not_auth()
     {
-        $this->tagBuilder->weight(3)->create();
-        $this->tagBuilder->weight(3)->create();
+        $this->tagBuilder->create();
 
         $res = $this->getJson(route('api.private.tag.index'))
         ;

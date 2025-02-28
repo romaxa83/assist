@@ -2202,7 +2202,7 @@
                                 "schema": {
                                     "type": "array",
                                     "items": {
-                                        "$ref": "#/components/schemas/TagResource"
+                                        "$ref": "#/components/schemas/TagPublicResource"
                                     }
                                 }
                             }
@@ -2831,13 +2831,13 @@
                 "type": "object",
                 "additionalProperties": false
             },
-            "TagResource": {
+            "TagPublicResource": {
                 "required": [
                     "id",
                     "name",
                     "slug",
                     "color",
-                    "weight"
+                    "attached"
                 ],
                 "properties": {
                     "id": {
@@ -2861,9 +2861,57 @@
                         "example": "#d98b84",
                         "nullable": false
                     },
-                    "weight": {
+                    "attached": {
+                        "description": "How many notes are attached to this tag",
                         "type": "integer",
                         "example": 4,
+                        "nullable": false
+                    }
+                },
+                "type": "object",
+                "additionalProperties": false
+            },
+            "TagResource": {
+                "required": [
+                    "id",
+                    "name",
+                    "slug",
+                    "color",
+                    "public_attached",
+                    "private_attached"
+                ],
+                "properties": {
+                    "id": {
+                        "description": "Model id",
+                        "type": "integer",
+                        "example": 22,
+                        "nullable": false
+                    },
+                    "name": {
+                        "type": "string",
+                        "example": "database",
+                        "nullable": false
+                    },
+                    "slug": {
+                        "type": "string",
+                        "example": "database",
+                        "nullable": false
+                    },
+                    "color": {
+                        "type": "string",
+                        "example": "#d98b84",
+                        "nullable": false
+                    },
+                    "public_attached": {
+                        "description": "How many notes are attached to this tag in public notes",
+                        "type": "integer",
+                        "example": 4,
+                        "nullable": false
+                    },
+                    "private_attached": {
+                        "description": "How many notes are attached to this tag in private notes and public notes",
+                        "type": "integer",
+                        "example": 8,
                         "nullable": false
                     }
                 },

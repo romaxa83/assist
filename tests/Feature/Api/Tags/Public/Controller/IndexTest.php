@@ -20,20 +20,86 @@ class IndexTest extends TestCase
         $this->tagBuilder = resolve(TagBuilder::class);
     }
 
-    public function test_success()
+    public function test_success_as_auth_user()
     {
-        /** @var $model Tag */
-        $model_1 = $this->tagBuilder->weight(3)->create();
-        $model_2 = $this->tagBuilder->weight(1)->create();
-        $model_3 = $this->tagBuilder->weight(13)->create();
+        $this->loginAsAdmin();
 
+        /** @var $model Tag */
+        $model_1 = $this->tagBuilder
+            ->public_attached(3)
+            ->private_attached(4)
+            ->create();
+        $model_2 = $this->tagBuilder
+            ->public_attached(23)
+            ->private_attached(24)
+            ->create();
+        $model_3 = $this->tagBuilder
+            ->public_attached(13)
+            ->private_attached(14)
+            ->create();
+
+        $this->tagBuilder
+            ->public_attached(1)
+            ->private_attached(0)
+            ->create();
 
         $this->getJson(route('api.tag.index'))
             ->assertJson([
-                ['id' => $model_3->id,],
-                ['id' => $model_1->id,],
-                ['id' => $model_2->id,],
+                [
+                    'id' => $model_2->id,
+                    'attached' => 24,
+                ],
+                [
+                    'id' => $model_3->id,
+                    'attached' => 14,
+                ],
+                [
+                    'id' => $model_1->id,
+                    'attached' => 4,
+                ],
             ])
+            ->assertJsonCount(3)
+            ->assertValidResponse(200)
+        ;
+    }
+
+    public function test_success_as_guest_user()
+    {
+        /** @var $model Tag */
+        $model_1 = $this->tagBuilder
+            ->public_attached(3)
+            ->private_attached(4)
+            ->create();
+        $model_2 = $this->tagBuilder
+            ->public_attached(23)
+            ->private_attached(24)
+            ->create();
+        $model_3 = $this->tagBuilder
+            ->public_attached(13)
+            ->private_attached(14)
+            ->create();
+
+        $this->tagBuilder
+            ->public_attached(0)
+            ->private_attached(1)
+            ->create();
+
+        $this->getJson(route('api.tag.index'))
+            ->assertJson([
+                [
+                    'id' => $model_2->id,
+                    'attached' => 23,
+                ],
+                [
+                    'id' => $model_3->id,
+                    'attached' => 13,
+                ],
+                [
+                    'id' => $model_1->id,
+                    'attached' => 3,
+                ],
+            ])
+            ->assertJsonCount(3)
             ->assertValidResponse(200)
         ;
     }
@@ -55,15 +121,15 @@ class IndexTest extends TestCase
         /** @var $model Tag */
         $model_1 = $this->tagBuilder
             ->name('aabbaa')
-            ->weight(3)
+            ->private_attached(4)
             ->create();
         $model_2 = $this->tagBuilder
             ->name('bbbbb')
-            ->weight(1)
+            ->private_attached(4)
             ->create();
         $model_3 = $this->tagBuilder
             ->name('zzzzz')
-            ->weight(13)
+            ->private_attached(4)
             ->create();
 
         $this->getJson(route('api.tag.index',[

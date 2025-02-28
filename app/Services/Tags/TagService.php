@@ -15,7 +15,8 @@ final class TagService
     ): Tag
     {
         $model = $this->fill(new Tag(), $dto, false);
-        $model->weight = 0;
+        $model->public_attached = 0;
+        $model->private_attached = 0;
         $model->save();
 
         return $model;
@@ -33,6 +34,10 @@ final class TagService
         Tag $model,
     ): bool
     {
+        if($model->private_attached > 0){
+            throw new \Exception(__('system.tags.actions.failed.delete.has_notes'));
+        }
+
         return $model->delete();
     }
 

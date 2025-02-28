@@ -13,7 +13,8 @@ use Illuminate\Support\Carbon;
  * @property int id
  * @property string name
  * @property string slug
- * @property int weight
+ * @property int public_attached    // кол-во привязанных публичных заметок
+ * @property int private_attached   // кол-во привязанных публичных и приватных заметок
  * @property string|null color
  * @property Carbon|null created_at
  * @property Carbon|null updated_at
@@ -24,7 +25,7 @@ class Tag extends BaseModel
     use HasFactory;
     use Filterable;
 
-    public const DEFAULT_SORT_FIELD = 'weight';
+    public const DEFAULT_SORT_FIELD = 'private_attached';
 
     public const TABLE = 'tags';
     protected $table = self::TABLE;
@@ -39,16 +40,25 @@ class Tag extends BaseModel
         return TagCollection::make($models);
     }
 
-    public function increaseWeight(): void
+    public function increasePublicAttached(bool $save = true): void
     {
-        $this->weight++;
-        $this->save();
+        $this->public_attached++;
+        if ($save)  $this->save();
+    }
+    public function decreasePublicAttached(bool $save = true): void
+    {
+        $this->public_attached--;
+        if ($save)  $this->save();
     }
 
-    public function decreaseWeight(): void
+    public function increasePrivateAttached(bool $save = true): void
     {
-        $this->weight--;
-        $this->save();
+        $this->private_attached++;
+        if ($save)  $this->save();
+    }
+    public function decreasePrivateAttached(bool $save = true): void
+    {
+        $this->private_attached--;
+        if ($save)  $this->save();
     }
 }
-

@@ -18,9 +18,21 @@ class TagBuilder extends BaseBuilder
         return $this;
     }
 
-    public function weight(int $value): self
+    public function public_attached(int $value): self
     {
-        $this->data['weight'] = $value;
+        $this->data['public_attached'] = $value;
+        return $this;
+    }
+
+    public function private_attached(int $value): self
+    {
+        $this->data['private_attached'] = $value;
+        return $this;
+    }
+
+    public function all_attached(int $value): self
+    {
+        $this->data['all_attached'] = $value;
         return $this;
     }
 }

@@ -6,7 +6,7 @@ use App\Enums\Notes\NoteStatus;
 use App\Http\Controllers\ApiController;
 use App\Http\Requests\Api\Notes\NoteSetStatusRequest;
 use App\Http\Resources\Api\Notes\NotePrivateFullResource;
-use App\Services\Notes\NoteService;
+use App\Services\Notes\NoteStatusService;
 use OpenAPI\Operation;
 use OpenAPI\Parameters;
 use OpenAPI\Request\RequestJson;
@@ -15,7 +15,7 @@ use OpenAPI\Responses;
 class ActionController extends ApiController
 {
     public function __construct(
-        protected NoteService $service
+        protected NoteStatusService $service
     )
     {}
 

@@ -27,8 +27,8 @@ class DeleteTest extends TestCase
     {
         $this->loginAsAdmin();
 
-        $tag_1 = $this->tagBuilder->weight(2)->create();
-        $tag_2 = $this->tagBuilder->weight(3)->create();
+        $tag_1 = $this->tagBuilder->private_attached(2)->create();
+        $tag_2 = $this->tagBuilder->private_attached(3)->create();
 
         /** @var $model Note */
         $model = $this->noteBuilder->tags($tag_1, $tag_2)->create();
@@ -44,8 +44,8 @@ class DeleteTest extends TestCase
         $tag_1->refresh();
         $tag_2->refresh();
 
-        $this->assertEquals(1, $tag_1->weight);
-        $this->assertEquals(2, $tag_2->weight);
+        $this->assertEquals(2, $tag_1->private_attached);
+        $this->assertEquals(3, $tag_2->private_attached);
     }
 
 

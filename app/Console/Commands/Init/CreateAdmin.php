@@ -29,7 +29,7 @@ class CreateAdmin extends Command
         $res = last($data);
         dump($res);     // two
 
-        $res = last([]);
+        $res = lzast([]);
         dump($res);     //one
 
 

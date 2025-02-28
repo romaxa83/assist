@@ -40,7 +40,7 @@ class CrudController extends ApiController
     {
         $recs = Tag::query()
             ->filter($request->validated())
-            ->orderBy('weight', 'desc')
+            ->orderBy(Tag::DEFAULT_SORT_FIELD, Tag::DEFAULT_SORT_TYPE)
             ->get()
         ;
 

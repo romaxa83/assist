@@ -34,6 +34,11 @@ class CreateTest extends TestCase
         $data = $this->data;
 
         $this->postJson(route('api.private.tag.create'), $data)
+            ->assertJson([
+                'slug' => 'test',
+                'public_attached' => 0,
+                'private_attached' => 0,
+            ])
             ->assertValidResponse(201)
         ;
     }

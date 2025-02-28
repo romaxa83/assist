@@ -34,16 +34,30 @@ class TagCollection extends Collection
         return implode(', ', $names);
     }
 
-    public function increaseWeights(): self
+    public function increasePublicAttached(bool $save = true): self
     {
-        array_map(fn (Tag $tag) => $tag->increaseWeight(), $this->items);
+        array_map(fn (Tag $tag) => $tag->increasePublicAttached($save), $this->items);
 
         return $this;
     }
 
-    public function decreaseWeights(): self
+    public function decreasePublicAttached(bool $save = true): self
     {
-        array_map(fn (Tag $tag) => $tag->decreaseWeight(), $this->items);
+        array_map(fn (Tag $tag) => $tag->decreasePublicAttached($save), $this->items);
+
+        return $this;
+    }
+
+    public function increasePrivateAttached(bool $save = true): self
+    {
+        array_map(fn (Tag $tag) => $tag->increasePrivateAttached($save), $this->items);
+
+        return $this;
+    }
+
+    public function decreasePrivateAttached(bool $save = true): self
+    {
+        array_map(fn (Tag $tag) => $tag->decreasePrivateAttached($save), $this->items);
 
         return $this;
     }
