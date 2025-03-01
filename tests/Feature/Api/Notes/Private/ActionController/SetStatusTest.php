@@ -57,13 +57,12 @@ class SetStatusTest extends TestCase
                 'meta' => [
                     'statuses' => [
                         ['value' => NoteStatus::DRAFT->value],
-                        ['value' => NoteStatus::MODERATION->value],
                         ['value' => NoteStatus::PUBLIC->value],
                         ['value' => NoteStatus::PRIVATE->value],
                     ]
                 ]
             ])
-            ->assertJsonCount(4, 'meta.statuses')
+            ->assertJsonCount(3, 'meta.statuses')
 //            ->assertValidResponse(200)
         ;
 
@@ -158,12 +157,11 @@ class SetStatusTest extends TestCase
                 'status' => $data['status'],
                 'meta' => [
                     'statuses' => [
-                        ['value' => NoteStatus::DRAFT->value],
                         ['value' => NoteStatus::MODERATION->value]
                     ]
                 ]
             ])
-            ->assertJsonCount(2, 'meta.statuses')
+            ->assertJsonCount(1, 'meta.statuses')
         ;
 
         $tag_1->refresh();
@@ -205,12 +203,11 @@ class SetStatusTest extends TestCase
                 'meta' => [
                     'statuses' => [
                         ['value' => NoteStatus::MODERATION->value],
-                        ['value' => NoteStatus::PUBLIC->value],
                         ['value' => NoteStatus::PRIVATE->value],
                     ]
                 ]
             ])
-            ->assertJsonCount(3, 'meta.statuses')
+            ->assertJsonCount(2, 'meta.statuses')
         ;
 
         $tag_1->refresh();
@@ -257,11 +254,10 @@ class SetStatusTest extends TestCase
                     'statuses' => [
                         ['value' => NoteStatus::MODERATION->value],
                         ['value' => NoteStatus::PUBLIC->value],
-                        ['value' => NoteStatus::PRIVATE->value],
                     ]
                 ]
             ])
-            ->assertJsonCount(3, 'meta.statuses')
+            ->assertJsonCount(2, 'meta.statuses')
         ;
 
         $tag_1->refresh();
@@ -307,13 +303,12 @@ class SetStatusTest extends TestCase
                 'meta' => [
                     'statuses' => [
                         ['value' => NoteStatus::DRAFT->value],
-                        ['value' => NoteStatus::MODERATION->value],
                         ['value' => NoteStatus::PUBLIC->value],
                         ['value' => NoteStatus::PRIVATE->value],
                     ]
                 ]
             ])
-            ->assertJsonCount(4, 'meta.statuses')
+            ->assertJsonCount(3, 'meta.statuses')
         ;
 
         $tag_1->refresh();
@@ -360,11 +355,10 @@ class SetStatusTest extends TestCase
                     'statuses' => [
                         ['value' => NoteStatus::MODERATION->value],
                         ['value' => NoteStatus::PUBLIC->value],
-                        ['value' => NoteStatus::PRIVATE->value],
                     ]
                 ]
             ])
-            ->assertJsonCount(3, 'meta.statuses')
+            ->assertJsonCount(2, 'meta.statuses')
         ;
 
         $tag_1->refresh();
@@ -410,12 +404,11 @@ class SetStatusTest extends TestCase
                 'meta' => [
                     'statuses' => [
                         ['value' => NoteStatus::MODERATION->value],
-                        ['value' => NoteStatus::PUBLIC->value],
                         ['value' => NoteStatus::PRIVATE->value],
                     ]
                 ]
             ])
-            ->assertJsonCount(3, 'meta.statuses')
+            ->assertJsonCount(2, 'meta.statuses')
         ;
 
         $tag_1->refresh();
@@ -461,13 +454,12 @@ class SetStatusTest extends TestCase
                 'meta' => [
                     'statuses' => [
                         ['value' => NoteStatus::DRAFT->value],
-                        ['value' => NoteStatus::MODERATION->value],
                         ['value' => NoteStatus::PUBLIC->value],
                         ['value' => NoteStatus::PRIVATE->value],
                     ]
                 ]
             ])
-            ->assertJsonCount(4, 'meta.statuses')
+            ->assertJsonCount(3, 'meta.statuses')
         ;
 
         $tag_1->refresh();

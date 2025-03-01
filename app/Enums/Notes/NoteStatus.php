@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Enums\Notes;
 
 use App\Core\Enums\Traits\InvokableCases;
@@ -11,6 +10,7 @@ use OpenAPI\Schemas\BaseScheme;
     resource: NoteStatus::class,
     properties: []
 )]
+
 
 /**
  * @method static DRAFT()       // первичный статус (присваивается при создании), можно удалить
@@ -54,14 +54,12 @@ enum NoteStatus: string
         $statuses = [];
         if($currentStatus->isDraft()){
             $statuses = [
-                $currentStatus,
                 self::MODERATION,
             ];
         }
         if($currentStatus->isModeration()){
             $statuses = [
                 self::DRAFT,
-                $currentStatus,
                 self::PUBLIC,
                 self::PRIVATE,
             ];
@@ -69,7 +67,6 @@ enum NoteStatus: string
         if($currentStatus->isPublic()){
             $statuses = [
                 self::MODERATION,
-                $currentStatus,
                 self::PRIVATE,
             ];
         }
@@ -77,7 +74,6 @@ enum NoteStatus: string
             $statuses = [
                 self::MODERATION,
                 self::PUBLIC,
-                $currentStatus,
             ];
         }
 

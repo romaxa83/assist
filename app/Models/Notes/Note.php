@@ -96,19 +96,7 @@ class Note extends BaseModel implements HasTags, Sortable
         return $result;
     }
 
-    public function getMetaForFullPrivate(User $user): array
-    {
-        $result = [];
-        if($user){
-            $result['statuses'] =  NoteStatus::getStatusesForChange($this->status, $user);
-        }
 
-        if($this->tags->isEmpty()){
-            $result['warning'][] = 'Notes need to be added tags';
-        }
-
-        return $result;
-    }
 
 
     public function canEdit(?User $user = null): array
@@ -123,10 +111,10 @@ class Note extends BaseModel implements HasTags, Sortable
             $can = false;
             $reason[] = 'User is not author';
         }
-//        if($this->status->isPublic() || $this->status->isPrivate()){
-//            $can = false;
-//            $reason[] = 'To edit a note, you need to unpublish it.';
-//        }
+        if($this->status->isPublic() || $this->status->isPrivate()){
+            $can = false;
+            $reason[] = 'To edit a note, you need to unpublish it.';
+        }
 
         return [
             'can' => $can,
@@ -165,7 +153,6 @@ class Note extends BaseModel implements HasTags, Sortable
         if(
             $this->status->isDraft()
             || $this->status->isModeration()
-            || $this->status->isModerated()
         ){
             $can = false;
             $reason[] = 'Note not published';
@@ -177,6 +164,33 @@ class Note extends BaseModel implements HasTags, Sortable
         ];
     }
 
+    private function getWarning(): array
+    {
+        $result = [
+            'has' => false,
+            'reason' => [],
+        ];
+
+        if($this->tags->isEmpty()){
+            $result['has'] = true;
+            $result['reason'][] = 'The note has no attached tags';
+        }
+
+        return $result;
+    }
+
+
+    public function getMetaForFullPrivate(User $user): array
+    {
+        $result = [];
+        if($user){
+            $result['statuses'] =  NoteStatus::getStatusesForChange($this->status, $user);
+        }
+
+        $result['warning'] = $this->getWarning();
+
+        return $result;
+    }
 
     public function getMetaForSimplePrivate(User $user): array
     {
@@ -186,6 +200,8 @@ class Note extends BaseModel implements HasTags, Sortable
             'delete' => $this->canDelete($user),
             'show' => $this->canShowViaPublic($user),
         ];
+        $result['statuses'] = NoteStatus::getStatusesForChange($this->status);
+        $result['warning'] = $this->getWarning();
 
         return $result;
     }
