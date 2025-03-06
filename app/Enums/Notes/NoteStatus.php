@@ -54,18 +54,21 @@ enum NoteStatus: string
         $statuses = [];
         if($currentStatus->isDraft()){
             $statuses = [
+                $currentStatus,
                 self::MODERATION,
             ];
         }
         if($currentStatus->isModeration()){
             $statuses = [
                 self::DRAFT,
+                $currentStatus,
                 self::PUBLIC,
                 self::PRIVATE,
             ];
         }
         if($currentStatus->isPublic()){
             $statuses = [
+                $currentStatus,
                 self::MODERATION,
                 self::PRIVATE,
             ];
@@ -74,15 +77,13 @@ enum NoteStatus: string
             $statuses = [
                 self::MODERATION,
                 self::PUBLIC,
+                $currentStatus
             ];
         }
 
         $result = [];
         foreach ($statuses as $case) {
-            $result[] = [
-                'value' => $case->value,
-                'label' => $case->label()
-            ];
+            $result[$case->value] = $case->label();
         }
 
         return $result;

@@ -17,7 +17,10 @@ return Application::configure(basePath: dirname(__DIR__))
 //    ->withMiddleware(function (Middleware $middleware) {
 //        //
 //    })
-    ->withExceptions(new ExceptionHandler())
+    ->withExceptions(fn() => new ExceptionHandler(app()))
+
     ->withCommands([__DIR__ . '/../app/Console/Commands'])
     ->create()
     ;
+
+

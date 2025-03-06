@@ -4,8 +4,10 @@ namespace App\Models\Users;
 
 use App\Models\BaseAuthenticatableModel;
 use Database\Factories\Users\UserFactory;
+use Filament\Models\Contracts\FilamentUser;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Notifications\Notifiable;
+use Filament\Panel;
 
 /**
  * @property int id
@@ -16,7 +18,7 @@ use Illuminate\Notifications\Notifiable;
  *
  * @method static UserFactory factory(...$parameters)
  */
-class User extends BaseAuthenticatableModel
+class User extends BaseAuthenticatableModel implements FilamentUser
 {
     /** @use HasFactory<\Database\Factories\Users\UserFactory> */
     use HasFactory;
@@ -47,5 +49,13 @@ class User extends BaseAuthenticatableModel
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function canAccessPanel(Panel $panel): bool
+    {
+        // TODO
+        // @see https://filamentphp.com/docs/3.x/panels/installation#allowing-users-to-access-a-panel
+//        return str_ends_with($this->email, '@yourdomain.com') && $this->hasVerifiedEmail();
+        return true;
     }
 }

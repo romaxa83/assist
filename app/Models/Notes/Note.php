@@ -179,7 +179,7 @@ class Note extends BaseModel implements HasTags, Sortable
         return $result;
     }
 
-
+    //
     public function getMetaForFullPrivate(User $user): array
     {
         $result = [];
@@ -194,6 +194,36 @@ class Note extends BaseModel implements HasTags, Sortable
 
     public function getMetaForSimplePrivate(User $user): array
     {
+        $result = [];
+        $result['actions'] = [
+            'edit' => $this->canEdit($user),
+            'delete' => $this->canDelete($user),
+            'show' => $this->canShowViaPublic($user),
+        ];
+        $result['statuses'] = NoteStatus::getStatusesForChange($this->status);
+        $result['warning'] = $this->getWarning();
+
+        return $result;
+    }
+
+    // метаданные для одной модели
+    public function getMetaFullPrivate(User $user): array
+    {
+        $result = [];
+        if($user){
+            $result['statuses'] =  NoteStatus::getStatusesForChange($this->status, $user);
+        }
+
+        $result['warning'] = $this->getWarning();
+
+        return $result;
+    }
+
+    // метаданные для списка
+    public function getMetaPrivate(?User $user = null): array
+    {
+        if (is_null($user)) $user = auth()->user();
+
         $result = [];
         $result['actions'] = [
             'edit' => $this->canEdit($user),

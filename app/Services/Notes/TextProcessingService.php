@@ -41,20 +41,77 @@ final class TextProcessingService
         $blocks = [];
 
         // Шаблон для поиска блоков <pre><code>...</code></pre> и разделения текста
-        $pattern = '/<pre><code>{{\s*(\w*)\s*}}(.*?)<\/code><\/pre>/s';
+        $patternCode = '/<pre><code>{{\s*(\w*)\s*}}(.*?)<\/code><\/pre>/s';
+        $patternQuote = '/<blockquote>(.*?)<\/blockquote>/s';
 
-        $splitParts = preg_split($pattern, $text, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
+
+        $splitParts = preg_split($patternCode, $text, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
+
+
 
         for ($i = 0; $i < count($splitParts); $i++) {
             if ($i % 3 === 0) {
-                // Обычный текстовый блок
-                $blocks[] = [
-                    'type' => 'text',
-                    'language' => 'text/html',
-                    'content' => $splitParts[$i],
-                ];
+                // Внутри обычного текста ищем блоки <blockquote>
+                if (preg_match_all($patternQuote, $splitParts[$i], $quoteMatches, PREG_OFFSET_CAPTURE)) {
+                    $lastOffset = 0;
+
+                    foreach ($quoteMatches[0] as $key => $quoteMatch) {
+                        $offset = $quoteMatch[1];
+
+                        // Добавляем текст до цитаты (если есть).
+                        $textBeforeQuote = substr($splitParts[$i], $lastOffset, $offset - $lastOffset);
+                        if (!empty(trim($textBeforeQuote))) {
+                            $blocks[] = [
+                                'type' => 'text',
+                                'language' => 'text/html',
+                                'content' => $textBeforeQuote,
+                            ];
+                        }
+
+                        // Обрабатываем блок <blockquote>
+                        $quoteContent = $quoteMatch[0];
+
+                        // Ищем конструкцию {{update}}
+                        if (preg_match('/{{\s*(\w+)\s*}}/', $quoteContent, $match)) {
+                            $class = 'blockquote-' . $match[1]; // Создаем класс blockquote-update
+                            $quoteContent = str_replace($match[0], '', $quoteContent); // Убираем {{update}} из цитаты
+
+                            // Добавляем класс в тег <blockquote>
+                            $quoteContent = preg_replace(
+                                '/<blockquote(.*?)>/',
+                                '<blockquote class="' . htmlspecialchars($class) . '"$1>',
+                                $quoteContent
+                            );
+                        }
+
+                        $blocks[] = [
+                            'type' => 'quote',
+                            'language' => 'text/html',
+                            'content' => trim($quoteContent),
+                        ];
+
+                        $lastOffset = $offset + strlen($quoteMatch[0]);
+                    }
+
+                    // Добавляем оставшийся текст после последней цитаты (если есть).
+                    $textAfterQuote = substr($splitParts[$i], $lastOffset);
+                    if (!empty(trim($textAfterQuote))) {
+                        $blocks[] = [
+                            'type' => 'text',
+                            'language' => 'text/html',
+                            'content' => $textAfterQuote,
+                        ];
+                    }
+                } else {
+                    // Если в тексте нет цитат <blockquote>, добавляем весь текст как один блок.
+                    $blocks[] = [
+                        'type' => 'text',
+                        'language' => 'text/html',
+                        'content' => $splitParts[$i],
+                    ];
+                }
             } elseif ($i % 3 === 1) {
-                // Язык блока кода
+                // Если это блок кода <pre><code>
                 $language = $splitParts[$i] ?: 'plain';
                 $blocks[] = [
                     'type' => 'code',
@@ -63,6 +120,7 @@ final class TextProcessingService
                 ];
             }
         }
+
 
         return $blocks;
     }

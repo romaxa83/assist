@@ -2,142 +2,78 @@
 
 namespace App\Exceptions;
 
-use App\Http\Controllers\ApiController;
 use Illuminate\Auth\AuthenticationException;
-use Illuminate\Foundation\Configuration\Exceptions as BaseExceptions;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\View;
+use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Validation\ValidationException;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Illuminate\Http\Response as HttpResponse;
+use Throwable; // Для обработки исключений
 
-class Handler
+class Handler extends ExceptionHandler
 {
-    protected int $jsonFlags = JSON_UNESCAPED_SLASHES ^ JSON_UNESCAPED_UNICODE;
+    /**
+     * Список исключений, которые НЕ нужно логировать.
+     *
+     * @var array<int, class-string<\Throwable>>
+     */
+    protected $dontReport = [
+        // Исключения, которые не нужно логировать
+    ];
 
-    public function __invoke(BaseExceptions $exceptions): BaseExceptions
+    /**
+     * Список входных данных, которые нельзя добавлять в дампы исключений.
+     *
+     * @var array<int, string>
+     */
+    protected $dontFlash = [
+        'password',
+        'password_confirmation',
+    ];
+
+    /**
+     * Логирование или уведомление об исключении.
+     *
+     * @param  \Throwable  $e
+     * @return void
+     * @throws \Exception
+     */
+    public function report(Throwable $e) // Логируем исключение
     {
-
-        $this->renderUnauthorized($exceptions);
-        $this->renderNotFound($exceptions);
-        $this->renderValidation($exceptions);
-        $this->renderException($exceptions);
-        $this->renderError($exceptions);
-
-
-        return $exceptions;
+        parent::report($e);
     }
 
-    protected function renderUnauthorized(BaseExceptions $exceptions): void
+    /**
+     * Рендерит исключение в HTTP-ответ.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \Throwable  $e
+     * @return \Symfony\Component\HttpFoundation\Response
+     * @throws \Throwable
+     */
+    public function render($request, Throwable $e)
     {
-        $exceptions->renderable(
-            fn (AuthenticationException $e, ?Request $request = null) => $this->response(
-                message: __('Unauthorized'),
-                code: HttpResponse::HTTP_UNAUTHORIZED,
-                asJson: $request?->expectsJson() ?? false
-            )
-        );
-    }
-
-    protected function renderNotFound(BaseExceptions $exceptions): void
-    {
-
-//        dd('2');
-        $exceptions->renderable(
-            fn (NotFoundHttpException $e, ?Request $request = null) => $this->response(
-                message: __('Not Found'),
-                code: HttpResponse::HTTP_NOT_FOUND,
-                asJson: $request?->expectsJson() ?? false
-            )
-        );
-    }
-
-    protected function renderValidation(BaseExceptions $exceptions): void
-    {
-
-//        dd('3');
-        $exceptions->renderable(
-            fn (ValidationException $e, ?Request $request = null) => $this->response(
-                message: $e->getMessage(),
-                code: HttpResponse::HTTP_UNPROCESSABLE_ENTITY,
-                asJson: $request?->expectsJson() ?? false,
-                errors: $e->errors()
-            )
-        );
-    }
-
-    protected function renderException(BaseExceptions $exceptions): void
-    {
-        $exceptions->renderable(
-            function ($e, ?Request $request = null) {
-                dd('e');
-            }
-        );
-
-
-//        $exceptions->renderable(
-//            fn (\hangeStatusException $e, ?Request $request = null) => $this->response(
-//                message: $e->getMessage(),
-//                code: HttpResponse::HTTP_UNPROCESSABLE_ENTITY,
-//                asJson: $request?->expectsJson() ?? false,
-//                errors: $e->errors()
-//            )
-//        );
-    }
-
-    protected function renderError(BaseExceptions $exceptions): void
-    {
-//        dd($exceptions);
-        $exceptions->renderable(
-            fn (\Error $e, ?Request $request = null) => $this->response(
-                message: $e->getMessage(),
-                code: HttpResponse::HTTP_INTERNAL_SERVER_ERROR,
-                asJson: $request?->expectsJson() ?? false
-            )
-        );
-    }
-
-    protected function response(
-        string $message,
-        int $code,
-        bool $asJson,
-        array $errors = []
-    ): Response
-    {
-//        dd($message, $code, $asJson, $errors);
-
-        if ($asJson) {
-            if($code === HttpResponse::HTTP_UNPROCESSABLE_ENTITY){
-                return ApiController::errorJsonValidation($message, $errors);
-            }
-
-            return ApiController::errorJsonMessage($message, $code);
+        // Custom обработка NotFoundHttpException
+        if ($e instanceof NotFoundHttpException) {
+            return response()->json([
+                'message' => 'Маршрут не найден',
+            ], 404);
         }
 
-        $this->registerErrorViewPaths();
+        // Custom обработка ValidationException
+        if ($e instanceof ValidationException) {
+            return response()->json([
+                'message' => $e->getMessage(),
+                'errors' => $e->errors(),
+            ], 422);
+        }
 
-        return response()->view($this->view($code), status: $code);
-    }
+        // AuthenticationException
+        if ($e instanceof AuthenticationException) {
+            return response()->json([
+                'message' => 'Неавторизованное действие',
+            ], 401);
+        }
 
-    protected function view(int $code): string
-    {
-        return view()->exists('errors::' . $code) ? 'errors::' . $code : 'errors::400';
-    }
-
-    protected function registerErrorViewPaths(): void
-    {
-        View::replaceNamespace(
-            'errors',
-            collect(config('view.paths'))
-                ->map(fn (string $path) => "$path/errors")
-                ->push($this->vendorViews())
-                ->all()
-        );
-    }
-
-    protected function vendorViews(): string
-    {
-        return __DIR__ . '/../../vendor/laravel/framework/src/Illuminate/Foundation/Exceptions/views';
+        // Дефолтное поведение (включает отображение ошибок при APP_DEBUG=true)
+        return parent::render($request, $e);
     }
 }

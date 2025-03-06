@@ -30,6 +30,11 @@ class Tag extends BaseModel
     public const TABLE = 'tags';
     protected $table = self::TABLE;
 
+    protected $fillable = [
+        'name',
+        'color'
+    ];
+
     public function modelFilter(): string
     {
         return TagFilter::class;
