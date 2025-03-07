@@ -2,20 +2,19 @@
 
 namespace App\Filament\Resources;
 
-use App\Enums\Notes\NoteStatus;
 use App\Filament\Resources\NoteResource\Pages;
 use App\Filament\Resources\NoteResource\RelationManagers;
-use App\Models\Blog\Post;
 use App\Models\Notes\Note;
+use App\Models\Tags\Tag;
 use Filament\Forms;
 use Filament\Forms\Components\SpatieTagsInput;
 use Filament\Forms\Form;
+use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Str;
+use Filament\Infolists\Components;
 
 class NoteResource extends Resource
 {
@@ -47,15 +46,23 @@ class NoteResource extends Resource
                             ->maxLength(255)
                             ->unique(Note::class, 'slug', ignoreRecord: true),
 
+
+                        Forms\Components\Select::make('tags')
+                            ->label('Tags')
+//                            ->searchable()
+                            ->preload()
+
+                            ->multiple()
+                            ->relationship(name: 'tags', titleAttribute: 'name')
+                            ->preload()
+
+
+//                            ->options(Tag::all()->pluck('name', 'id')->toArray())
+                        ,
+
                         Forms\Components\MarkdownEditor::make('text')
                             ->required()
                             ->columnSpan('full'),
-
-
-//                        Forms\Components\Select::make('blog_category_id')
-//                            ->relationship('category', 'name')
-//                            ->searchable()
-//                            ->required(),
 
                     ])
                     ->columns(2),
@@ -72,8 +79,6 @@ class NoteResource extends Resource
                     ->sortable()
                     ->searchable()
                     ->extraAttributes(['class' => 'w-16'])
-//                        ->size('10px')
-
                     ->alignCenter()
                 ,
                 Tables\Columns\TextColumn::make('title')
@@ -83,7 +88,6 @@ class NoteResource extends Resource
                     ->alignLeft()
                     ->description(fn (Note $record): string => $record->slug)
                 ,
-
                 Tables\Columns\SelectColumn::make('status')
                     ->options(function (Note $model) {
                         return $model->getMetaPrivate()['statuses'] ?? [];
@@ -94,79 +98,10 @@ class NoteResource extends Resource
                         $service->setStatus($model, $state);
                     })
                 ,
-                    Tables\Columns\TextColumn::make('created_at')
-                        ->label('Created Date')
-                        ->sortable()
-                        ->date()
-
-//                Tables\Columns\TextColumn::make('status')
-//                    ->size('xs')
-////                    ->size('sm')
-//                    ->badge()
-//                    ->sortable()
-//                    ->aligncenter()
-//                    ->color(fn (Note $record): string => match ($record->status) {
-//                        NoteStatus::DRAFT => 'gray',
-//                        NoteStatus::MODERATION => 'warning',
-//                        NoteStatus::PUBLIC => 'success',
-//                        NoteStatus::PRIVATE => 'danger',
-//                    })
-////                    ->color(function (Note $record) {
-////                        dd($record->status->value);
-////                    })
-//                ,
-
-
-//                Tables\Columns\Layout\Split::make([
-//                    Tables\Columns\TextColumn::make('id')
-//                        ->label('ID')
-//                        ->sortable()
-//                        ->searchable()
-//                        ->extraAttributes(['class' => 'w-16'])
-////                        ->size('10px')
-//
-//                        ->alignCenter()
-//
-//
-//                    ,
-//
-//                    Tables\Columns\TextColumn::make('created_at')
-//                        ->label('Created Date')
-//                        ->sortable()
-//                        ->date()
-//                        ->description(fn (Note $record): string => $record->updated_at)
-//                    ,
-//
-//
-//                    Tables\Columns\Layout\Stack::make([
-//                        Tables\Columns\TextColumn::make('title')
-//                            ->searchable()
-//                            ->sortable()
-//                            ->weight('medium')
-//                            ->alignLeft(),
-//
-//                        Tables\Columns\TextColumn::make('slug')
-//                            ->label('Email address')
-//                            ->searchable()
-//                            ->sortable()
-//                            ->color('gray')
-//                            ->alignLeft(),
-//                    ])->space(),
-
-//                ])
-//                    ->from()
-
-
-
-//                Tables\Columns\TextColumn::make('id'),
-//                Tables\Columns\TextColumn::make('title')
-//                    ->searchable()
-//                    ->sortable(),
-////                Tables\Columns\TextColumn::make('slug'),
-//                Tables\Columns\TextColumn::make('created_at')
-//                    ->label('Created Date')
-//                    ->sortable()
-//                    ->date()
+                Tables\Columns\TextColumn::make('created_at')
+                    ->label('Created Date')
+                    ->sortable()
+                    ->date()
             ])
             ->filters([
                 //
@@ -186,6 +121,35 @@ class NoteResource extends Resource
             ]);
     }
 
+//    public static function infolist(Infolist $infolist): Infolist
+//    {
+//        return $infolist
+//            ->schema([
+//                Components\Section::make()
+//                    ->schema([
+//                        Components\Split::make([
+//                            Components\Grid::make(2)
+//                                ->schema([
+//                                    Components\Group::make([
+//                                        Components\TextEntry::make('title'),
+//                                        Components\TextEntry::make('slug'),
+//                                        Components\TextEntry::make('created_at')
+//                                            ->badge()
+//                                            ->date()
+//                                            ->color('success'),
+//                                    ]),
+//                                ]),
+//                                ]),
+//                    ]),
+//                Components\Section::make('Text as HTML')
+//                    ->schema([
+//                        Components\TextEntry::make('text_html')
+//                            ->html()
+//                    ])
+//                    ->collapsible(),
+//            ]);
+//    }
+
     public static function getRelations(): array
     {
         return [
@@ -199,6 +163,7 @@ class NoteResource extends Resource
             'index' => Pages\ListNotes::route('/'),
             'create' => Pages\CreateNote::route('/create'),
             'edit' => Pages\EditNote::route('/{record}/edit'),
+            'view' => Pages\ViewNote::route('/{record}'),
         ];
     }
 }

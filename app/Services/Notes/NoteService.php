@@ -4,12 +4,15 @@ namespace App\Services\Notes;
 
 use App\Dto\Notes\NoteDto;
 use App\Enums\Notes\NoteStatus;
+use App\Models\Notes\Link;
 use App\Models\Notes\Note;
+use App\Services\TextProcess\TextProcessService;
+use League\CommonMark\CommonMarkConverter;
 
 final class NoteService
 {
     public function __construct(
-        protected TextProcessingService $textProcessingService
+        protected TextProcessService $textProcessService
     )
     {}
 
@@ -39,9 +42,43 @@ final class NoteService
     {
         return make_transaction(function() use ($model, $dto) {
 
-            $model = $this->fill($model, $dto);
+            $model = $this->fill($model, $dto, false);
 
             $model->tags()->sync($dto->tags);
+
+            $payload = $this->textProcessService
+                ->run($dto->text);
+
+            $model->text_html = $payload->processedText;
+            $model->text_blocks = $payload->blocks;
+            $model->anchors = $payload->anchors;
+
+            $model->save();
+
+            foreach ($payload->links as $link){
+                if($linkModel = $model->links->where('link', $link['link'])->first()){
+                    $linkModel->link = $link['link'];
+                    $linkModel->name = $link['name'];
+                    $linkModel->is_external = $link['is_external'];
+                    $linkModel->to_note_id = $link['to_id'];
+                    $linkModel->active = true;
+                    $linkModel->attributes = $link['attributes'];
+                    $linkModel->save();
+                } else {
+                    $linkModel = new Link();
+                    $linkModel->note_id = $model->id;
+                    $linkModel->link = $link['link'];
+                    $linkModel->name = $link['name'];
+                    $linkModel->is_external = $link['is_external'];
+                    $linkModel->to_note_id = $link['to_id'];
+                    $linkModel->active = true;
+                    $linkModel->attributes = $link['attributes'];
+                    $linkModel->save();
+                }
+            }
+
+
+
 
             $model->refresh();
 
@@ -62,17 +99,9 @@ final class NoteService
         bool $save = true
     ): Note
     {
-//        dd($this->textProcessingService->process($dto->text));
-
         $model->title = $dto->title;
         $model->slug = slug($dto->title);
         $model->text = $dto->text;
-//        $model->links = $dto->links;
-//        [
-//            'text' => $model->text,
-//            'anchors' => $model->anchors,
-//            'blocks' => $model->text_blocks
-//        ] = $this->textProcessingService->process($dto->text);
 
         if ($save) $model->save();
 

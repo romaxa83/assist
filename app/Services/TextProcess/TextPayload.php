@@ -8,6 +8,7 @@ final class TextPayload
     public string $processedText;
     public array $links = [];
     public array $blocks = [];
+    public array $anchors = [];
 
     public function __construct(string $text)
     {

@@ -130,7 +130,6 @@ final class TextProcessingService
         $anchors = [];
 
         // Регулярное выражение для поиска заголовков (h2 - h6) с возможным атрибутом id
-/*        $pattern = '/<(h[2-6])(?:\s+[^>]*)?(?:id="[^"]*")?>(.*?)<\/\1>/i';*/
         $pattern = '/<(h[2-6])([^>]*)>(.*?)<\/\1>/i';
 
 
@@ -154,7 +153,6 @@ final class TextProcessingService
                 // Добавляем id, если его нет
                 $attributes = trim($attributes) . " id=\"$id\"";
             }
-
 
             // Добавляем информацию в массив навигации
             $anchors[] = [

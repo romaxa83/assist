@@ -6,10 +6,8 @@ use App\Dto\Notes\NoteDto;
 use App\Filament\Resources\NoteResource;
 use App\Models\Notes\Note;
 use App\Services\Notes\NoteService;
-use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Http\RedirectResponse;
 
 class EditNote extends EditRecord
 {
@@ -17,21 +15,14 @@ class EditNote extends EditRecord
 
     protected function getHeaderActions(): array
     {
-        return [
-            Actions\DeleteAction::make(),
-        ];
+        return [];
     }
-
-//    protected function updateTableColumnState()
-//    {
-//    }
 
     protected function handleRecordUpdate($record, array $data): Model
     {
-//        dd($record, $data);
-
         /** @var $record Note */
 
+//        dd($data, $record->tags);
         $dto = NoteDto::byArgs($data);
 
         $record = app(NoteService::class)
@@ -45,11 +36,4 @@ class EditNote extends EditRecord
     {
         return static::getResource()::getUrl('index');
     }
-
-//    protected function afterSave(): RedirectResponse
-//    {
-//        return \Illuminate\Support\Facades\Redirect::to(static::$resource::getUrl('index'));
-//
-//    }
-
 }

@@ -21,11 +21,11 @@ class NoteFactory extends Factory
             'status' => NoteStatus::DRAFT(),
             'slug' => slug($name),
             'text' => $this->faker->text,
+            'text_html' => $this->faker->text,
             'text_blocks' => [],
             'weight' => 0,
             'author_id' => User::factory(),
             'anchors' => [],
-            'links' => [],
         ];
     }
 }

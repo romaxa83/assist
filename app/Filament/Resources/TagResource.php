@@ -101,6 +101,8 @@ class TagResource extends Resource
 
     public static function getPages(): array
     {
-        return [];
+        return [
+            'index' => Pages\ListTags::route('/'),
+        ];
     }
 }

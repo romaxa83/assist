@@ -13,6 +13,7 @@ use App\Models\Users\User;
 use EloquentFilter\Filterable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 
@@ -21,10 +22,10 @@ use Illuminate\Database\Eloquent\Builder;
  * @property NoteStatus status
  * @property string title
  * @property string slug
- * @property string text
- * @property array text_blocks
+ * @property string text        // as markdown
+ * @property string text_html
+ * @property array text_blocks  // blocks by html
  * @property array anchors
- * @property array links
  * @property int weight
  * @property int author_id
  * @property Carbon|null created_at
@@ -32,6 +33,9 @@ use Illuminate\Database\Eloquent\Builder;
  *
  * @see self::author()
  * @property User|BelongsTo author
+ *
+ * @see self::links()
+ * @property Link[]|HasMany links
  *
  * @see Note::scopeSearch()
  * @method static Builder|Note search(string $search)
@@ -54,7 +58,6 @@ class Note extends BaseModel implements HasTags, Sortable
     protected $casts = [
         'status' => NoteStatus::class,
         'anchors' => 'array',
-        'links' => 'array',
         'text_blocks' => 'array',
     ];
 
@@ -74,6 +77,12 @@ class Note extends BaseModel implements HasTags, Sortable
     public function author(): BelongsTo
     {
         return $this->belongsTo(User::class, 'author_id');
+    }
+
+    /** @return HasMany<Link> */
+    public function links(): HasMany
+    {
+        return $this->hasMany(Link::class);
     }
 
     public function scopeSearch($query, string $search): void
