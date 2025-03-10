@@ -2,9 +2,11 @@
 
 namespace App\Filament\Resources\NoteResource\Pages;
 
+use App\Enums\Notes\NoteStatus;
 use App\Filament\Resources\NoteResource;
 use App\Models\Notes\Note;
 use Filament\Actions;
+use Filament\Resources\Components\Tab;
 use Filament\Resources\Pages\ListRecords;
 
 class ListNotes extends ListRecords
@@ -25,10 +27,15 @@ class ListNotes extends ListRecords
     }
 
 
-//    protected function query()
-//    {
-//        dd('D');
-//        return parent::query()->orderBy('creatd_at', 'asc');
-//    }
+    public function getTabs(): array
+    {
+        return [
+            'all' => Tab::make('All'),
+            NoteStatus::DRAFT() => Tab::make()->query(fn ($query) => $query->where('status', NoteStatus::DRAFT())),
+            NoteStatus::MODERATION() => Tab::make()->query(fn ($query) => $query->where('status', NoteStatus::MODERATION())),
+            NoteStatus::PUBLIC() => Tab::make()->query(fn ($query) => $query->where('status', NoteStatus::PUBLIC())),
+            NoteStatus::PRIVATE() => Tab::make()->query(fn ($query) => $query->where('status', NoteStatus::PRIVATE())),
+        ];
+    }
 
 }

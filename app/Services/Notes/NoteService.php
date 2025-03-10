@@ -7,7 +7,6 @@ use App\Enums\Notes\NoteStatus;
 use App\Models\Notes\Link;
 use App\Models\Notes\Note;
 use App\Services\TextProcess\TextProcessService;
-use League\CommonMark\CommonMarkConverter;
 
 final class NoteService
 {
@@ -44,7 +43,7 @@ final class NoteService
 
             $model = $this->fill($model, $dto, false);
 
-            $model->tags()->sync($dto->tags);
+//            $model->tags()->sync($dto->tags);
 
             $payload = $this->textProcessService
                 ->run($dto->text);
@@ -76,9 +75,6 @@ final class NoteService
                     $linkModel->save();
                 }
             }
-
-
-
 
             $model->refresh();
 

@@ -88,4 +88,14 @@ enum NoteStatus: string
 
         return $result;
     }
+
+    public static function forSelect()
+    {
+        $result = [];
+        foreach (static::cases() as $case) {
+            $result[$case->value] = $case->label();
+        }
+
+        return $result;
+    }
 }

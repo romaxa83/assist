@@ -32,8 +32,20 @@ class EditNote extends EditRecord
 
     }
 
+//    protected function mutateFormDataBeforeFill(array $data): array
+//    {
+//        /** @var \App\Models\Notes\Note $record */
+//        $record = $this->record;
+////dd($data);
+//        // Загружаем связанные идентификаторы тегов
+//        $data['tags'] = $record->tags->pluck('id')->toArray();
+//
+//        return $data;
+//    }
+
+
     protected function getRedirectUrl(): ?string
     {
-        return static::getResource()::getUrl('index');
+        return static::getResource()::getUrl('view', [$this->record]);
     }
 }

@@ -37,6 +37,9 @@ use Illuminate\Database\Eloquent\Builder;
  * @see self::links()
  * @property Link[]|HasMany links
  *
+ * @see self::linkeds()
+ * @property Link[]|HasMany linkeds
+ *
  * @see Note::scopeSearch()
  * @method static Builder|Note search(string $search)
  */
@@ -83,6 +86,12 @@ class Note extends BaseModel implements HasTags, Sortable
     public function links(): HasMany
     {
         return $this->hasMany(Link::class);
+    }
+
+    /** @return HasMany<Link> */
+    public function linkeds(): HasMany
+    {
+        return $this->hasMany(Link::class, 'to_note_id');
     }
 
     public function scopeSearch($query, string $search): void

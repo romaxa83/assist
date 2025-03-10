@@ -6,6 +6,7 @@ namespace App\Filament\Resources\NoteResource\Pages;
 use App\Filament\Resources\NoteResource;
 use App\Models\Notes\Note;
 use Filament\Infolists\Infolist;
+use Filament\Resources\Pages\Page;
 use Filament\Resources\Pages\ViewRecord;
 use Illuminate\Contracts\Support\Htmlable;
 use Filament\Actions;
@@ -23,12 +24,20 @@ class ViewNote extends ViewRecord
         return $record->title;
     }
 
-    protected function getActions(): array
-    {
-        return [
-            Actions\EditAction::make(),
-        ];
-    }
+//    protected function getActions(): array
+//    {
+//        return [
+//            Actions\EditAction::make(),
+//        ];
+//    }
+
+//    public static function getRecordSubNavigation(Page $page): array
+//    {
+//        return $page->generateNavigationItems([
+//            EditNote::class,
+//            CreateNote::class,
+//        ]);
+//    }
 
     public function infolist(Infolist $infolist): Infolist
     {
@@ -42,18 +51,22 @@ class ViewNote extends ViewRecord
                                     Components\Group::make([
                                         Components\TextEntry::make('title'),
                                         Components\TextEntry::make('slug'),
-                                        Components\TextEntry::make('created_at')
-                                            ->badge()
-                                            ->date()
-                                            ->color('success'),
+
                                     ]),
                                 ])
                             ,
                             Components\Grid::make(2)
                                 ->schema([
                                     Components\Group::make([
-//                                        Components\SpatieTagsEntry::make('tags'),
+                                        Components\TextEntry::make('created_at')
+                                            ->badge()
+                                            ->date()
+                                            ->color('success')
+                                        ,
 
+                                        Components\TextEntry::make('tags.name')
+                                            ->badge()
+                                        ,
                                     ]),
                                 ])
                             ,
@@ -64,14 +77,6 @@ class ViewNote extends ViewRecord
                     ->schema([
                         Components\TextEntry::make('text')
                             ->markdown()
-//                            ->formatStateUsing(function ($state) {
-//
-////                                dd($state);
-//
-//                                // здесь можно перехватить текст
-//                                return $state;
-//                            })
-
                     ])
                     ->collapsed()
                 ,
@@ -83,16 +88,18 @@ class ViewNote extends ViewRecord
                                 // здесь можно перехватить текст
                                 return $state;
                             })
-
                     ])
                     ->collapsed()
                 ,
-                Components\Section::make('Text as HTML DUMP')
+                Components\Section::make('Text as HTML RAW')
                     ->schema([
                         Components\TextEntry::make('text_html')
-                            ->html()
                             ->formatStateUsing(function ($state) {
-                                return dump($state);
+                                // приводит теги в верхний регистр
+                                return preg_replace_callback('/<[^>]+>/', function ($matches) {
+                                    return mb_strtoupper($matches[0]); // Преобразуем тег в верхний регистр
+                                }, $state);
+
                             })
 
                     ])

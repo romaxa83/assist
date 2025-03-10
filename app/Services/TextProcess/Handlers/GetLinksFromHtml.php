@@ -12,7 +12,10 @@ final class GetLinksFromHtml implements TextProcessorHandler
     {
         $dom = new DOMDocument();
 
-        $dom->loadHTML($payload->processedText);
+        // Добавляем мета-тег для указания кодировки UTF-8
+        $htmlWithEncoding = '<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">' . $payload->processedText;
+
+        $dom->loadHTML($htmlWithEncoding, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
 
         $links = $dom->getElementsByTagName('a');
 

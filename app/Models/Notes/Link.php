@@ -23,6 +23,9 @@ use Illuminate\Support\Carbon;
  *
  * @see self::note()
  * @property Note|BelongsTo note
+ *
+ * @see self::linkedNote()
+ * @property Note|BelongsTo linkedNote
  */
 class Link extends BaseModel
 {
@@ -45,5 +48,11 @@ class Link extends BaseModel
     public function note(): BelongsTo
     {
         return $this->belongsTo(Note::class, 'note_id');
+    }
+
+    /** @return BelongsTo<Note> */
+    public function linkedNote(): BelongsTo
+    {
+        return $this->belongsTo(Note::class, 'to_note_id');
     }
 }

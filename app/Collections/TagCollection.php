@@ -5,6 +5,7 @@ namespace App\Collections;
 use App\Models\Tags\Tag;
 use ArrayIterator;
 use Illuminate\Database\Eloquent\Collection;
+use function Filament\Support\is_slot_empty;
 
 /**
  * @method Tag|null first(callable $callback = null, $default = null)
@@ -18,7 +19,12 @@ class TagCollection extends Collection
     public function __construct(array $items = [])
     {
         usort($items, function ($a, $b) {
-            return $b->weight <=> $a->weight;
+
+            if(empty($a)){
+                return 1;
+            }
+
+            return $b->public_attached <=> $a->public_attached;
         });
         parent::__construct($items);
     }
