@@ -2,15 +2,12 @@
 
 namespace Tests\Unit\Services\TextProcess\Handlers;
 
-use App\Services\Notes\TextProcessingService;
 use App\Services\TextProcess\Handlers\GetLinksFromHtml;
 use App\Services\TextProcess\TextPayload;
 use Tests\TestCase;
 
 class GetLinksFromHtmlTest extends TestCase
 {
-    protected TextProcessingService $service;
-
     public function setUp(): void
     {
         parent::setUp();
@@ -62,6 +59,21 @@ class GetLinksFromHtmlTest extends TestCase
 
         $this->assertEquals('https://www.php-fig.org/psr/psr-1/', $result->links[0]['link']);
         $this->assertEquals('PSR-1 (PHP Standard Recommendation)', $result->links[0]['name']);
+    }
+
+    public function test_trim_links_and_name_as_cyrillic(): void
+    {
+        $html = '
+<p><a href=" https://www.php-fig.org/psr/psr-1/ "> Текст ссылки </a> — это стандарт, который определяет базовые принципы написания кода для  ▶
+' ;
+
+        $payload = new TextPayload($html);
+        $result = (new GetLinksFromHtml())->handle($payload);
+
+        $this->assertCount(1, $result->links);
+
+        $this->assertEquals('https://www.php-fig.org/psr/psr-1/', $result->links[0]['link']);
+        $this->assertEquals('Текст ссылки', $result->links[0]['name']);
     }
 
     public function test_no_links(): void

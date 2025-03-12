@@ -16,6 +16,7 @@ final class TextProcessService
             ->addHandler(new Handlers\ConvertMarkdownToHtml()) // текст из markdown конвертируем в html
             ->addHandler(new Handlers\GetLinksFromHtml())
             ->addHandler(new Handlers\AddAnchorsIntoHtml())     // создаем массив с якорями по тексту (на основе заголовков)
+            ->addHandler(new Handlers\GetBlocksFromHtml())     // создаем массив с якорями по тексту (на основе заголовков)
         ;
 
         return $pipeline->process($payload);

@@ -22,7 +22,6 @@ class EditNote extends EditRecord
     {
         /** @var $record Note */
 
-//        dd($data, $record->tags);
         $dto = NoteDto::byArgs($data);
 
         $record = app(NoteService::class)
@@ -31,18 +30,6 @@ class EditNote extends EditRecord
         return $record;
 
     }
-
-//    protected function mutateFormDataBeforeFill(array $data): array
-//    {
-//        /** @var \App\Models\Notes\Note $record */
-//        $record = $this->record;
-////dd($data);
-//        // Загружаем связанные идентификаторы тегов
-//        $data['tags'] = $record->tags->pluck('id')->toArray();
-//
-//        return $data;
-//    }
-
 
     protected function getRedirectUrl(): ?string
     {

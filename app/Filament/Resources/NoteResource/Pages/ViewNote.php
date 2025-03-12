@@ -11,12 +11,13 @@ use Filament\Resources\Pages\ViewRecord;
 use Illuminate\Contracts\Support\Htmlable;
 use Filament\Actions;
 use Filament\Infolists\Components;
+use Illuminate\Support\HtmlString;
 
 class ViewNote extends ViewRecord
 {
     protected static string $resource = NoteResource::class;
 
-    public function getTitle(): string | Htmlable
+    public function getTitle(): string|Htmlable
     {
         /** @var $record  Note*/
         $record = $this->getRecord();
@@ -24,20 +25,27 @@ class ViewNote extends ViewRecord
         return $record->title;
     }
 
-//    protected function getActions(): array
-//    {
-//        return [
-//            Actions\EditAction::make(),
-//        ];
-//    }
+    public function getSubheading(): string|Htmlable|null
+    {
+        /** @var $record  Note*/
+        $record = $this->getRecord();
+        $meta = $record->getMetaPrivate();
 
-//    public static function getRecordSubNavigation(Page $page): array
-//    {
-//        return $page->generateNavigationItems([
-//            EditNote::class,
-//            CreateNote::class,
-//        ]);
-//    }
+        $icon = '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="#ffbf12" class="w-4 h-4 inline-block">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z" />
+                    </svg>';
+
+        $result = '';
+        if($meta['warning']['has']){
+            foreach ($meta['warning']['reasons'] as $reason){
+                $result .= $icon . ' <span>'. $reason . '</span><br>';
+            }
+        }
+
+
+        return new HtmlString($result);
+    }
+
 
     public function infolist(Infolist $infolist): Infolist
     {
@@ -51,6 +59,9 @@ class ViewNote extends ViewRecord
                                     Components\Group::make([
                                         Components\TextEntry::make('title'),
                                         Components\TextEntry::make('slug'),
+                                        Components\TextEntry::make('status')
+                                            ->badge()
+                                        ,
 
                                     ]),
                                 ])
@@ -66,6 +77,8 @@ class ViewNote extends ViewRecord
 
                                         Components\TextEntry::make('tags.name')
                                             ->badge()
+                                        ,
+                                        Components\TextEntry::make('weight')
                                         ,
                                     ]),
                                 ])

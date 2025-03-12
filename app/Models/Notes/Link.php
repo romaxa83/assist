@@ -20,6 +20,7 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null last_check_at  // даты последней проверки на активность
  * @property Carbon|null created_at
  * @property Carbon|null updated_at
+ * @property array reasons              // если после проверки ссылка стает не активной, здесь будет список причин почему это так
  *
  * @see self::note()
  * @property Note|BelongsTo note
@@ -42,6 +43,7 @@ class Link extends BaseModel
         'is_external' => 'bool',
         'active' => 'bool',
         'attributes' => 'array',
+        'reasons' => 'array',
     ];
 
     /** @return BelongsTo<Note> */

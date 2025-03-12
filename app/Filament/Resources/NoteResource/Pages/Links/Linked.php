@@ -29,7 +29,7 @@ class Linked extends ManageRelatedRecords
 
         $recordTitle = $recordTitle instanceof Htmlable ? $recordTitle->toHtml() : $recordTitle;
 
-        return "Manage {$recordTitle} linked";
+        return "Manage {$recordTitle} linked ??";
     }
 
     public function getBreadcrumb(): string
@@ -40,21 +40,6 @@ class Linked extends ManageRelatedRecords
     public static function getNavigationLabel(): string
     {
         return 'Linked notes';
-    }
-
-    public function form(Form $form): Form
-    {
-        return $form
-            ->schema([
-                Forms\Components\TextInput::make('name')
-                    ->required(),
-                Forms\Components\TextInput::make('link')
-                    ->required(),
-
-                Forms\Components\Toggle::make('active')
-                    ->default(true),
-            ])
-            ->columns(1);
     }
 
     public function infolist(Infolist $infolist): Infolist
@@ -84,25 +69,11 @@ class Linked extends ManageRelatedRecords
                         return NoteResource::getUrl('view', ['record' => $record->note]);
                     })
                 ,
-
                 Tables\Columns\IconColumn::make('active')
                     ->sortable(),
             ])
-            ->headerActions([
-                Tables\Actions\Action::make('check all links')
-                    ->action(function (): void {
-                    })
-                    ->color('success')
-                    ->icon('heroicon-o-check-circle'),
-            ])
-            ->filters([
-                //
-            ])
-            ->actions([
-                Tables\Actions\ViewAction::make()->iconButton(),
-                Tables\Actions\EditAction::make()->iconButton(),
-                Tables\Actions\DeleteAction::make()->iconButton(),
-            ])
+            ->filters([])
+            ->actions([])
             ;
     }
 }

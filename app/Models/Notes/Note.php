@@ -186,12 +186,22 @@ class Note extends BaseModel implements HasTags, Sortable
     {
         $result = [
             'has' => false,
-            'reason' => [],
+            'reasons' => [],
         ];
 
         if($this->tags->isEmpty()){
             $result['has'] = true;
-            $result['reason'][] = 'The note has no attached tags';
+            $result['reasons'][] = __('system.notes.warning.reasons.no_have_tags');
+        }
+
+        if($this->links->isNotEmpty()){
+            foreach ($this->links as $link){
+                if(!empty($link->reasons)){
+                    $result['has'] = true;
+                    $result['reasons'][] = __('system.notes.warning.reasons.have_problem_links');
+                    break;
+                }
+            }
         }
 
         return $result;

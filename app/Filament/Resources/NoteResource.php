@@ -81,8 +81,15 @@ class NoteResource extends Resource
                     ->numeric()
                     ->sortable()
                     ->searchable()
-                    ->extraAttributes(['class' => 'w-16'])
-                    ->alignCenter()
+                    ->extraAttributes(['class' => 'bg-danger-300 dark:bg-danger-600'])
+//                    ->alignCenter()
+//                    ->extraAttributes(function (Note $record) {
+//                        if (!$record->getMetaPrivate()['warning']['has']) {
+//                            return ['class' => 'bg-danger-300 dark:bg-danger-600'];
+//                        }
+//
+//                        return [];
+//                    })
                 ,
                 Tables\Columns\TextColumn::make('title')
                     ->searchable()
@@ -90,13 +97,13 @@ class NoteResource extends Resource
                     ->weight('medium')
                     ->alignLeft()
                     ->description(fn (Note $record): string => $record->slug)
+
                 ,
                 Tables\Columns\SelectColumn::make('status')
                     ->options(function (Note $model) {
                         return $model->getMetaPrivate()['statuses'] ?? [];
                     })
                     ->beforeStateUpdated(function (Note $model, string $state) {
-
                         $service = app(\App\Services\Notes\NoteStatusService::class);
                         $service->setStatus($model, $state);
                     })

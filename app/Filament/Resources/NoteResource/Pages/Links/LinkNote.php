@@ -8,12 +8,15 @@ use App\Models\Notes\Note;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Infolists\Components\IconEntry;
+use Filament\Infolists\Components\KeyValueEntry;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Infolist;
+use Filament\Notifications\Notification;
 use Filament\Resources\Pages\ManageRelatedRecords;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Contracts\Support\Htmlable;
+use Filament\Infolists\Components;
 
 class LinkNote extends ManageRelatedRecords
 {
@@ -42,32 +45,26 @@ class LinkNote extends ManageRelatedRecords
         return 'Note links';
     }
 
-    public function form(Form $form): Form
-    {
-        return $form
-            ->schema([
-                Forms\Components\TextInput::make('name')
-                    ->required(),
-                Forms\Components\TextInput::make('link')
-                    ->required(),
-
-                Forms\Components\Toggle::make('active')
-                    ->default(true),
-            ])
-            ->columns(1);
-    }
-
     public function infolist(Infolist $infolist): Infolist
     {
         return $infolist
-            ->columns(1)
+            ->columns(2)
             ->schema([
                 TextEntry::make('name'),
                 TextEntry::make('link'),
                 IconEntry::make('active'),
                 IconEntry::make('is_external')
                     ->label('External'),
-            ]);
+                TextEntry::make('reasons')
+                    ->color('danger')
+                    ->size(TextEntry\TextEntrySize::Large)
+                    ->listWithLineBreaks()
+                    ->formatStateUsing(fn (string $state): string => __($state))
+                ,
+                KeyValueEntry::make('attributes')
+                ,
+            ])
+            ;
     }
 
     public function table(Table $table): Table
@@ -83,8 +80,12 @@ class LinkNote extends ManageRelatedRecords
                 Tables\Columns\TextColumn::make('linkedNote.title')
                     ->label('Linked note title')
                     ->url(function (Link $record) {
-                        return NoteResource::getUrl('view', ['record' => $record->linkedNote]);
+                        if($record->linkedNote){
+                            return NoteResource::getUrl('view', ['record' => $record->linkedNote]);
+                        }
+                        return '';
                     })
+                    ->openUrlInNewTab()
                 ,
 
                 Tables\Columns\IconColumn::make('active')
@@ -92,10 +93,33 @@ class LinkNote extends ManageRelatedRecords
                 Tables\Columns\IconColumn::make('is_external')
                     ->label('External')
                     ->sortable(),
+                Tables\Columns\TextColumn::make('reasons')
+                    ->label('Reasons is inactive')
+                    ->formatStateUsing(function ($state): string {
+                        if (!empty($state)) {
+                            if(strpos($state, ',')){
+                                $tmp = explode(', ', $state);
+                                return __(current($tmp));
+                            }
+                        }
+                        return __($state);
+                    }),
+                Tables\Columns\TextColumn::make('last_check_at')
+                    ->label('Last Check At')
+                    ->since()
             ])
             ->headerActions([
                 Tables\Actions\Action::make('check all links')
                     ->action(function (): void {
+                        /** @var $note Note */
+                        $note = $this->getRecord();
+                        app(\App\Services\Notes\NoteLinkService::class)
+                            ->checkLinks($note);
+
+                        Notification::make()
+                            ->title('Все ссылки проверены!')
+                            ->success()
+                            ->send();
                     })
                     ->color('success')
                     ->icon('heroicon-o-check-circle'),
@@ -105,8 +129,6 @@ class LinkNote extends ManageRelatedRecords
             ])
             ->actions([
                 Tables\Actions\ViewAction::make()->iconButton(),
-                Tables\Actions\EditAction::make()->iconButton(),
-                Tables\Actions\DeleteAction::make()->iconButton(),
             ])
             ;
     }

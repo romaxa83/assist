@@ -4,14 +4,14 @@ namespace App\Services\Notes;
 
 use App\Dto\Notes\NoteDto;
 use App\Enums\Notes\NoteStatus;
-use App\Models\Notes\Link;
 use App\Models\Notes\Note;
 use App\Services\TextProcess\TextProcessService;
 
 final class NoteService
 {
     public function __construct(
-        protected TextProcessService $textProcessService
+        protected TextProcessService $textProcessService,
+        protected NoteLinkService $noteLinkService,
     )
     {}
 
@@ -49,32 +49,12 @@ final class NoteService
                 ->run($dto->text);
 
             $model->text_html = $payload->processedText;
-            $model->text_blocks = $payload->blocks;
             $model->anchors = $payload->anchors;
+            $model->text_blocks = $payload->blocks;
 
             $model->save();
 
-            foreach ($payload->links as $link){
-                if($linkModel = $model->links->where('link', $link['link'])->first()){
-                    $linkModel->link = $link['link'];
-                    $linkModel->name = $link['name'];
-                    $linkModel->is_external = $link['is_external'];
-                    $linkModel->to_note_id = $link['to_id'];
-                    $linkModel->active = true;
-                    $linkModel->attributes = $link['attributes'];
-                    $linkModel->save();
-                } else {
-                    $linkModel = new Link();
-                    $linkModel->note_id = $model->id;
-                    $linkModel->link = $link['link'];
-                    $linkModel->name = $link['name'];
-                    $linkModel->is_external = $link['is_external'];
-                    $linkModel->to_note_id = $link['to_id'];
-                    $linkModel->active = true;
-                    $linkModel->attributes = $link['attributes'];
-                    $linkModel->save();
-                }
-            }
+            $this->noteLinkService->saveFromTextPayload($payload, $model);
 
             $model->refresh();
 
