@@ -10,7 +10,7 @@ use App\Services\TextProcess\TextPayload;
 use Carbon\CarbonImmutable;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
-
+use Symfony\Component\VarDumper\Caster\LinkStub;
 
 
 final class NoteLinkService
@@ -74,11 +74,59 @@ final class NoteLinkService
         return $model;
     }
 
+    // проверяем привязанные ссылки заметки которая снята с публикации
+    public function linkedNoteRemovePublic(Note $model): void
+    {
+        $links = Link::query()
+            ->where('to_note_id', $model->id)
+            ->where('active', true)
+            ->get();
+
+        foreach ($links as $link){
+            $link->active = false;
+            $link->last_check_at = CarbonImmutable::now();
+            $link->attributes = ['class' => 'inner_link inactive'];
+            $link->reasons = array_merge($link->reasons, ['system.note_links.warning.reasons.linked_note_not_public']);
+            $link->save();
+        }
+    }
+
+    public function replaceLinksInText(Note $model): void
+    {
+        foreach ($model->links as $link){
+            /** @var Link $link */
+
+            $newLink = $link->getAsTag();
+
+            // Регулярное выражение для нахождения тега <a> с указанной ссылкой
+            $pattern = '/<a\s+[^>]*?href="' . preg_quote($link->link, '/') . '".*?>/';
+
+            // меняем в html
+            $newText = preg_replace($pattern, $newLink, $model->text_html);
+
+            $model->text_html = $newText;
+            $model->save();
+
+            // меняем в блоках
+            foreach ($model->blocks as $block){
+                if($block->type == 'text'){
+                    $newContent = preg_replace($pattern, $newLink, $block->content);
+                    $block->content = $newContent;
+                    $block->save();
+                }
+            }
+        }
+    }
+
     public function checkLinks(Note $model): void
     {
         $model->links->each(function(Link $link){
             $this->checkLink($link);
         });
+
+        $model->refresh();
+
+        $this->replaceLinksInText($model);
     }
 
     public function checkLink(Link $model): void
@@ -105,15 +153,18 @@ final class NoteLinkService
                 $model->active = false;
                 $model->attributes = ["target" => "_blank", 'class' => 'inner_link inactive'];
                 $model->reasons = [
-                    "Сайт не доступен, ответ от сервера: [{$response->getBody()}]"
+                    'system.note_links.warning.reasons.site_is_available'
                 ];
             }
         } catch (RequestException $e) {
             $model->active = false;
             $model->attributes = ["target" => "_blank", 'class' => 'inner_link inactive'];
             $model->reasons = [
-                "Сайт не доступен, ответ от сервера: [{$e->getMessage()}]"
+                'system.note_links.warning.reasons.site_is_available'
             ];
+//            $model->reasons = [
+//                "Сайт не доступен, ответ от сервера: [{$e->getMessage()}]"
+//            ];
         }
 
         $model->last_check_at = CarbonImmutable::now();
@@ -130,7 +181,7 @@ final class NoteLinkService
             ->first();
 
         if(is_null($note)){
-            $reasons[] = 'Not found linked note';
+            $reasons[] = 'system.note_links.warning.reasons.linked_note_not_found';
         }
         if(
             $note &&
@@ -139,7 +190,7 @@ final class NoteLinkService
                 || $note->status == NoteStatus::MODERATION
             )
         ){
-            $reasons[] = 'Linked note is not public';
+            $reasons[] = 'system.note_links.warning.reasons.linked_note_not_public';
         }
 
         if(empty($reasons)){

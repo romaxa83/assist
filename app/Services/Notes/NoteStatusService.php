@@ -30,7 +30,6 @@ final class NoteStatusService
         });
     }
 
-
     private function toggleStatus(
         Note $model,
         NoteStatus $status,
@@ -130,6 +129,10 @@ final class NoteStatusService
         $model->status = NoteStatus::MODERATION;
 
         $model->tags->decreasePublicAttached($save);
+
+        // проверяем и деактивируем ссылки на эту заметку в других заметках
+        $service = app(NoteLinkService::class);
+        $service->linkedNoteRemovePublic($model);
 
         return $this->saveAndReturn($model, $save);
     }

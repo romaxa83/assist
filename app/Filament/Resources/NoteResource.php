@@ -167,7 +167,6 @@ class NoteResource extends Resource
                 Tables\Actions\ViewAction::make()->iconButton(),
                 Tables\Actions\EditAction::make()
                     ->iconButton()
-
                 ,
                 Tables\Actions\DeleteAction::make()->iconButton(),
             ])
@@ -206,6 +205,7 @@ class NoteResource extends Resource
             Pages\EditNote::class,
             Pages\Links\LinkNote::class,
             Pages\Links\Linked::class,
+            Pages\Blocks\TextBlocks::class,
         ]);
     }
 
@@ -294,6 +294,7 @@ class NoteResource extends Resource
             'view' => Pages\ViewNote::route('/{record}'),
             'links' => Pages\Links\LinkNote::route('/{record}/links'),
             'linkeds' => Pages\Links\Linked::route('/{record}/linkeds'),
+            'blocks' => Pages\Blocks\TextBlocks::route('/{record}/blocks'),
         ];
     }
 }

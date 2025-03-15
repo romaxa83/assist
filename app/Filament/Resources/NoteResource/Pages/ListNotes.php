@@ -23,18 +23,40 @@ class ListNotes extends ListRecords
     public function getTableQuery(): ?\Illuminate\Database\Eloquent\Builder
     {
         return parent::getTableQuery()
+            ->with([
+                'tags',
+                'links'
+            ])
             ->orderBy(Note::DEFAULT_SORT_FIELD, Note::DEFAULT_SORT_TYPE);
     }
 
-
     public function getTabs(): array
     {
+        $statusCounts = Note::select('status', \DB::raw('COUNT(*) as count'))
+            ->groupBy('status')
+            ->pluck('count', 'status')
+            ->toArray();
+
         return [
-            'all' => Tab::make('All'),
-            NoteStatus::DRAFT() => Tab::make()->query(fn ($query) => $query->where('status', NoteStatus::DRAFT())),
-            NoteStatus::MODERATION() => Tab::make()->query(fn ($query) => $query->where('status', NoteStatus::MODERATION())),
-            NoteStatus::PUBLIC() => Tab::make()->query(fn ($query) => $query->where('status', NoteStatus::PUBLIC())),
-            NoteStatus::PRIVATE() => Tab::make()->query(fn ($query) => $query->where('status', NoteStatus::PRIVATE())),
+            'all' => Tab::make('All')
+                ->badge(array_sum($statusCounts))
+            ,
+            NoteStatus::DRAFT->value => Tab::make()
+                ->query(fn ($query) => $query->where('status', NoteStatus::DRAFT()))
+                ->badge($statusCounts[NoteStatus::DRAFT()] ?? 0)
+            ,
+            NoteStatus::MODERATION->value => Tab::make()
+                ->query(fn ($query) => $query->where('status', NoteStatus::MODERATION()))
+                ->badge($statusCounts[NoteStatus::MODERATION()] ?? 0)
+            ,
+            NoteStatus::PUBLIC->value => Tab::make()
+                ->query(fn ($query) => $query->where('status', NoteStatus::PUBLIC()))
+                ->badge($statusCounts[NoteStatus::PUBLIC()] ?? 0)
+            ,
+            NoteStatus::PRIVATE->value => Tab::make()
+                ->query(fn ($query) => $query->where('status', NoteStatus::PRIVATE()))
+                ->badge($statusCounts[NoteStatus::PRIVATE()] ?? 0)
+            ,
         ];
     }
 

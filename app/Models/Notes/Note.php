@@ -32,13 +32,16 @@ use Illuminate\Database\Eloquent\Builder;
  * @property Carbon|null updated_at
  *
  * @see self::author()
- * @property User|BelongsTo author
+ * @property-read User|BelongsTo $author
  *
  * @see self::links()
- * @property Link[]|HasMany links
+ * @property-read Link[]|HasMany $links
+ *
+ * @see self::blocks()
+ * @property-read Block[]|HasMany $blocks
  *
  * @see self::linkeds()
- * @property Link[]|HasMany linkeds
+ * @property-read Link[]|HasMany $linkeds
  *
  * @see Note::scopeSearch()
  * @method static Builder|Note search(string $search)
@@ -82,13 +85,16 @@ class Note extends BaseModel implements HasTags, Sortable
         return $this->belongsTo(User::class, 'author_id');
     }
 
-    /** @return HasMany<Link> */
     public function links(): HasMany
     {
         return $this->hasMany(Link::class);
     }
 
-    /** @return HasMany<Link> */
+    public function blocks(): HasMany
+    {
+        return $this->hasMany(Block::class);
+    }
+
     public function linkeds(): HasMany
     {
         return $this->hasMany(Link::class, 'to_note_id');
@@ -113,8 +119,6 @@ class Note extends BaseModel implements HasTags, Sortable
 
         return $result;
     }
-
-
 
 
     public function canEdit(?User $user = null): array
@@ -192,6 +196,11 @@ class Note extends BaseModel implements HasTags, Sortable
         if($this->tags->isEmpty()){
             $result['has'] = true;
             $result['reasons'][] = __('system.notes.warning.reasons.no_have_tags');
+        }
+
+        if($this->blocks->isEmpty()){
+            $result['has'] = true;
+            $result['reasons'][] = __('system.notes.warning.reasons.no_have_block');
         }
 
         if($this->links->isNotEmpty()){

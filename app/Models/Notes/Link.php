@@ -57,4 +57,19 @@ class Link extends BaseModel
     {
         return $this->belongsTo(Note::class, 'to_note_id');
     }
+
+    /**
+     * получение как тег "a" (без содержимого и и закрывающегося тега),
+     * с ссылкой и атрибутами, для замены в тексте
+     */
+    public function getAsTag(): string
+    {
+        $tag = '<a href="'. $this->link .'" ';
+        foreach ($this->getAttribute('attributes') as $key => $value){
+            $tag .= $key . '="' . $value . '" ';
+        }
+        $tag .= '>';
+
+        return $tag;
+    }
 }

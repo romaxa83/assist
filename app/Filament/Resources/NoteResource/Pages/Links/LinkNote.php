@@ -16,7 +16,6 @@ use Filament\Resources\Pages\ManageRelatedRecords;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Contracts\Support\Htmlable;
-use Filament\Infolists\Components;
 
 class LinkNote extends ManageRelatedRecords
 {
@@ -26,23 +25,37 @@ class LinkNote extends ManageRelatedRecords
 
     protected static ?string $navigationIcon = 'heroicon-o-link';
 
-    public function getTitle(): string | Htmlable
+    public function getTitle(): string|Htmlable
     {
-        $recordTitle = $this->getRecordTitle();
+        /** @var $record Note */
+        $record = $this->getRecord();
 
-        $recordTitle = $recordTitle instanceof Htmlable ? $recordTitle->toHtml() : $recordTitle;
-
-        return "Manage {$recordTitle} links";
+        return __('system.note_links.page.title', ['title' => $record->title ?? '']);
     }
 
     public function getBreadcrumb(): string
     {
-        return 'Links';
+        return __('system.note_links.page.breadcrumb');
     }
 
     public static function getNavigationLabel(): string
     {
-        return 'Note links';
+        return __('system.note_links.page.navigation_label');
+    }
+
+    public static function getNavigationBadge(): string
+    {
+        $recordId = request()->route('record');
+        if (!$recordId) {
+            return '';
+        }
+        $model = Note::query()
+            ->select('id')
+            ->withCount('links')
+            ->where('id',  $recordId)
+            ->first();
+
+        return $model->links_count ?? 0;
     }
 
     public function infolist(Infolist $infolist): Infolist

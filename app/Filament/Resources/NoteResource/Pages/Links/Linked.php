@@ -5,8 +5,6 @@ namespace App\Filament\Resources\NoteResource\Pages\Links;
 use App\Filament\Resources\NoteResource;
 use App\Models\Notes\Link;
 use App\Models\Notes\Note;
-use Filament\Forms;
-use Filament\Forms\Form;
 use Filament\Infolists\Components\IconEntry;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Infolist;
@@ -40,6 +38,21 @@ class Linked extends ManageRelatedRecords
     public static function getNavigationLabel(): string
     {
         return 'Linked notes';
+    }
+
+    public static function getNavigationBadge(): string
+    {
+        $recordId = request()->route('record');
+        if (!$recordId) {
+            return '';
+        }
+        $model = Note::query()
+            ->select('id')
+            ->withCount('linkeds')
+            ->where('id',  $recordId)
+            ->first();
+
+        return $model->linkeds_count ?? 0;
     }
 
     public function infolist(Infolist $infolist): Infolist

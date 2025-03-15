@@ -12,6 +12,7 @@ final class NoteService
     public function __construct(
         protected TextProcessService $textProcessService,
         protected NoteLinkService $noteLinkService,
+        protected NoteBlockService $noteBlockService,
     )
     {}
 
@@ -55,6 +56,8 @@ final class NoteService
             $model->save();
 
             $this->noteLinkService->saveFromTextPayload($payload, $model);
+
+            $this->noteBlockService->saveFromTextPayload($payload, $model);
 
             $model->refresh();
 
