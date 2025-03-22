@@ -9,7 +9,6 @@ use BackedEnum;
 
 trait InvokableCases
 {
-    /** Return the enum's value when it's $invoked(). */
     public function __invoke()
     {
         return $this instanceof BackedEnum ? $this->value : $this->name;

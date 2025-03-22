@@ -2,10 +2,9 @@
 
 namespace App\Console\Commands;
 
-use App\Services\TextProcess\Handlers\BreakTextIntoBlocks;
-use App\Services\TextProcess\Handlers\GetLinks;
-use App\Services\TextProcess\TextPayload;
-use App\Services\TextProcess\TextProcessingPipeline;
+use App\Core\Enums\MetaProperties\Color;
+use App\Enums\Test\StatusBackendEnum;
+use App\Enums\Test\StatusPurpleEnum;
 use Illuminate\Console\Command;
 
 class TestCommand extends Command
@@ -15,18 +14,16 @@ class TestCommand extends Command
 
     public function handle(): int
     {
-        $pipeline = new TextProcessingPipeline();
-        $pipeline
-            ->addHandler(new GetLinks())
-            ->addHandler(new BreakTextIntoBlocks());
 
-        $text = "<h2>Title</h2>";
-        $payload = new TextPayload($text);
 
-        $result = $pipeline->process($payload);
+        dd(
+            StatusBackendEnum::Draft->in([StatusBackendEnum::Draft, StatusBackendEnum::New]),
+            StatusBackendEnum::Draft->in([StatusBackendEnum::Closed, StatusBackendEnum::New]),
+//            StatusBackendEnum::Draft->color(),
+//            StatusBackendEnum::fromMeta(Color::make('green')),
 
-        dd($pipeline->process($payload));
-
+//            StatusPurpleEnum::Draft()
+        );
 
         return self::SUCCESS;
     }

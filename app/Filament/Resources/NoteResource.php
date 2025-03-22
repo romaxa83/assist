@@ -5,11 +5,10 @@ namespace App\Filament\Resources;
 use App\Enums\Notes\NoteStatus;
 use App\Filament\Resources\NoteResource\Pages;
 use App\Filament\Resources\NoteResource\RelationManagers;
+use App\Models\Blog\Post;
 use App\Models\Notes\Note;
 use Filament\Forms;
 use Filament\Forms\Form;
-use Filament\Infolists\Components;
-use Filament\Infolists\Infolist;
 use Filament\Pages\SubNavigationPosition;
 use Filament\Resources\Pages\Page;
 use Filament\Resources\Resource;
@@ -81,15 +80,6 @@ class NoteResource extends Resource
                     ->numeric()
                     ->sortable()
                     ->searchable()
-                    ->extraAttributes(['class' => 'bg-danger-300 dark:bg-danger-600'])
-//                    ->alignCenter()
-//                    ->extraAttributes(function (Note $record) {
-//                        if (!$record->getMetaPrivate()['warning']['has']) {
-//                            return ['class' => 'bg-danger-300 dark:bg-danger-600'];
-//                        }
-//
-//                        return [];
-//                    })
                 ,
                 Tables\Columns\TextColumn::make('title')
                     ->searchable()
@@ -113,16 +103,6 @@ class NoteResource extends Resource
                     ->sortable()
                     ->date()
             ])
-//            ->contentGrid([
-//                'md' => 2,
-//            ])
-            ->recordClasses(function (Note $record) {
-                if($record->status == NoteStatus::DRAFT){
-                    return '!text-green-500';
-                }
-
-                return null;
-            })
             ->filtersTriggerAction(
                 fn (TableAction $action) => $action
                     ->button()
@@ -170,19 +150,18 @@ class NoteResource extends Resource
                 ,
                 Tables\Actions\DeleteAction::make()->iconButton(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
-            ])
             ->groups([
                 Tables\Grouping\Group::make('created_at')
                     ->label('Note Date')
                     ->date()
                     ->collapsible(),
             ])
-
             ;
+    }
+
+    public static function getGlobalSearchEloquentQuery(): Builder
+    {
+        return parent::getGlobalSearchEloquentQuery()->with(['author', 'category']);
     }
 
     public static function getNavigationBadge(): ?string
@@ -208,75 +187,6 @@ class NoteResource extends Resource
             Pages\Blocks\TextBlocks::class,
         ]);
     }
-
-    public static function infolist(Infolist $infolist): Infolist
-    {
-        return $infolist
-            ->schema([
-                Components\Section::make()
-                    ->schema([
-                        Components\Split::make([
-                            Components\Grid::make(2)
-                                ->schema([
-                                    Components\Group::make([
-                                        Components\TextEntry::make('title'),
-                                        Components\TextEntry::make('slug'),
-
-                                    ]),
-                                ])
-                            ,
-                            Components\Grid::make(2)
-                                ->schema([
-                                    Components\Group::make([
-                                        Components\TextEntry::make('created_at')
-                                            ->badge()
-                                            ->date()
-                                            ->color('success')
-                                        ,
-
-                                        Components\TextEntry::make('tags.name')
-                                            ->badge()
-                                        ,
-                                    ]),
-                                ])
-                            ,
-                        ]),
-                    ])
-                ,
-                Components\Section::make('Text as Markdown')
-                    ->schema([
-                        Components\TextEntry::make('text')
-                            ->markdown()
-                    ])
-                    ->collapsed()
-                ,
-                Components\Section::make('Text as HTML')
-                    ->schema([
-                        Components\TextEntry::make('text_html')
-                            ->html()
-                            ->formatStateUsing(function ($state) {
-                                // здесь можно перехватить текст
-                                return $state;
-                            })
-                    ])
-                    ->collapsed()
-                ,
-                Components\Section::make('Text as HTML RAW')
-                    ->schema([
-                        Components\TextEntry::make('text_html')
-                            ->formatStateUsing(function ($state) {
-                                // приводит теги в верхний регистр
-                                return preg_replace_callback('/<[^>]+>/', function ($matches) {
-                                    return mb_strtoupper($matches[0]); // Преобразуем тег в верхний регистр
-                                }, $state);
-
-                            })
-
-                    ])
-                    ->collapsed()
-            ]);
-    }
-
 
     public static function getRelations(): array
     {

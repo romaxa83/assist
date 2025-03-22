@@ -2,16 +2,14 @@
 
 namespace App\Filament\Resources\NoteResource\Pages;
 
-
 use App\Enums\Notes\NoteStatus;
 use App\Filament\Resources\NoteResource;
 use App\Models\Notes\Note;
+use Filament\Actions\Action;
 use Filament\Infolists\Infolist;
 use Filament\Resources\Components\Tab;
-use Filament\Resources\Pages\Page;
 use Filament\Resources\Pages\ViewRecord;
 use Illuminate\Contracts\Support\Htmlable;
-use Filament\Actions;
 use Filament\Infolists\Components;
 use Illuminate\Support\HtmlString;
 
@@ -68,14 +66,28 @@ class ViewNote extends ViewRecord
             ,
             NoteStatus::PUBLIC->value => Tab::make()
                 ->query(fn ($query) => $query->where('status', NoteStatus::PUBLIC()))
-                ->badge($statusCounts[NoteStatus::PUBLIC()] ?? 0)
+                ->badge($statusCounts[NoteStatus::PUBLIC->value] ?? 0)
             ,
             NoteStatus::PRIVATE->value => Tab::make()
                 ->query(fn ($query) => $query->where('status', NoteStatus::PRIVATE()))
-                ->badge($statusCounts[NoteStatus::PRIVATE()] ?? 0)
+                ->badge($statusCounts[NoteStatus::PRIVATE->value] ?? 0)
             ,
         ];
     }
+
+//    protected function getActions(): array
+//    {
+//        return [
+//            Action::make('setToDraft')
+//                ->label('Перевести в черновик')
+//                ->action(function () {
+//                    $this->record->update(['status' => 'draft']);
+//
+//                }),
+//
+//        ];
+//    }
+
 
     public function infolist(Infolist $infolist): Infolist
     {
@@ -116,6 +128,8 @@ class ViewNote extends ViewRecord
                         ]),
                     ])
                 ,
+
+
                 Components\Section::make('Text as Markdown')
                     ->schema([
                         Components\TextEntry::make('text')

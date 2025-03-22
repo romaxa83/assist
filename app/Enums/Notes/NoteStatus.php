@@ -68,8 +68,8 @@ enum NoteStatus: string
         }
         if($currentStatus->isPublic()){
             $statuses = [
-                $currentStatus,
                 self::MODERATION,
+                $currentStatus,
                 self::PRIVATE,
             ];
         }

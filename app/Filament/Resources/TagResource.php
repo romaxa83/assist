@@ -41,11 +41,6 @@ class TagResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
-
-//            ->query(function (Builder $query) {
-//                return $query;
-//            })
-
             ->columns([
                 Tables\Columns\TextColumn::make('id'),
                 Tables\Columns\TextColumn::make('name')

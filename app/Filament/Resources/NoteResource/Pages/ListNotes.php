@@ -22,12 +22,17 @@ class ListNotes extends ListRecords
 
     public function getTableQuery(): ?\Illuminate\Database\Eloquent\Builder
     {
+        $orderDirection = request('tableSortDirection') ?? Note::DEFAULT_SORT_TYPE;
+        $orderField = request('tableSortColumn') ?? Note::DEFAULT_SORT_FIELD;
+
         return parent::getTableQuery()
             ->with([
                 'tags',
-                'links'
+                'links',
+                'blocks',
             ])
-            ->orderBy(Note::DEFAULT_SORT_FIELD, Note::DEFAULT_SORT_TYPE);
+            ->orderBy($orderField, $orderDirection)
+            ;
     }
 
     public function getTabs(): array
@@ -51,11 +56,11 @@ class ListNotes extends ListRecords
             ,
             NoteStatus::PUBLIC->value => Tab::make()
                 ->query(fn ($query) => $query->where('status', NoteStatus::PUBLIC()))
-                ->badge($statusCounts[NoteStatus::PUBLIC()] ?? 0)
+                ->badge($statusCounts[NoteStatus::PUBLIC->value] ?? 0)
             ,
             NoteStatus::PRIVATE->value => Tab::make()
                 ->query(fn ($query) => $query->where('status', NoteStatus::PRIVATE()))
-                ->badge($statusCounts[NoteStatus::PRIVATE()] ?? 0)
+                ->badge($statusCounts[NoteStatus::PRIVATE->value] ?? 0)
             ,
         ];
     }

@@ -25,11 +25,22 @@ final class NoteService
             $model->author_id = auth()->id();
             $model->weight = 0;
 
+            $payload = $this->textProcessService
+                ->run($dto->text);
+
+            $model->text_html = $payload->processedText;
+            $model->anchors = $payload->anchors;
+            $model->text_blocks = $payload->blocks;
+
             $model->save();
 
             if(count($dto->tags) > 0){
                 $model->tags()->sync($dto->tags);
             }
+
+            $this->noteLinkService->saveFromTextPayload($payload, $model);
+
+            $this->noteBlockService->saveFromTextPayload($payload, $model);
 
             return $model;
         });
