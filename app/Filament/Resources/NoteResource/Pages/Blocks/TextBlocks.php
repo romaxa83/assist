@@ -23,17 +23,19 @@ class TextBlocks extends ManageRelatedRecords
 
         $recordTitle = $recordTitle instanceof Htmlable ? $recordTitle->toHtml() : $recordTitle;
 
-        return "Manage {$recordTitle} text blocks";
+        return __('system.text_block.page.title', [
+            'title' => $recordTitle,
+        ]);
     }
 
     public function getBreadcrumb(): string
     {
-        return 'Text blocks';
+        return __('system.text_block.page.breadcrumb');
     }
 
     public static function getNavigationLabel(): string
     {
-        return 'Text blocks';
+        return __('system.text_block.page.navigation_label');
     }
 
     public static function getNavigationBadge(): string
@@ -59,8 +61,7 @@ class TextBlocks extends ManageRelatedRecords
                 Tables\Columns\Layout\Stack::make([
                     Tables\Columns\Layout\Split::make([
                         Tables\Columns\TextColumn::make('type')
-                            ->sortable()
-                            ->searchable(),
+                            ->sortable(),
                         Tables\Columns\TextColumn::make('lang'),
                         Tables\Columns\TextColumn::make('position'),
                         Tables\Columns\ToggleColumn::make('is_collapse')

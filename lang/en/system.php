@@ -29,6 +29,21 @@ return [
             'navigation_label' => 'Note links',
         ]
     ],
+    'note_linked' => [
+        'page' => [
+            'title' => 'Linked notes',
+            'sub_title' => 'Other notes that have a link to this note - ":title"',
+            'breadcrumb' => 'Linked',
+            'navigation_label' => 'Linked notes',
+        ]
+    ],
+    'text_block' => [
+        'page' => [
+            'title' => 'Text blocks by note - ":title"',
+            'breadcrumb' => 'Text blocks',
+            'navigation_label' => 'Text blocks',
+        ]
+    ],
     'notes' => [
         'warning' => [
             'reasons' => [
@@ -37,5 +52,12 @@ return [
                 'have_problem_links' => 'The note has a problem with links'
             ],
         ],
+        'edit' => [
+            'page' => [
+                'title' => 'Edit note - ":title"',
+                'breadcrumb' => 'Edit note',
+                'navigation_label' => 'Edit note',
+            ]
+        ]
     ]
 ];

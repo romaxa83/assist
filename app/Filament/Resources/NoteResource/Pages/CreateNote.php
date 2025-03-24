@@ -5,6 +5,7 @@ namespace App\Filament\Resources\NoteResource\Pages;
 use App\Dto\Notes\NoteDto;
 use App\Filament\Resources\NoteResource;
 use Filament\Resources\Pages\CreateRecord;
+use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Database\Eloquent\Model;
 
 class CreateNote extends CreateRecord
@@ -20,6 +21,12 @@ class CreateNote extends CreateRecord
         $model = $service->create($dto);
 
         return $model;
+    }
+
+    public function getSubheading(): string|Htmlable|null
+    {
+
+        return '🔸 🔹 ❗️ ✔️ ✅ ⚠️ ';
     }
 
     protected function getRedirectUrl(): string

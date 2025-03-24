@@ -1,0 +1,153 @@
+:root {
+    --base_red: #dd4b39;
+    --base_red_dark: #ad4e4c;
+
+    --base_yellow: #ffbf12;
+    --base_light_yellow: #fff3cd;
+    --base_black: #191714;
+    --base_black_light: #2b2b2b;
+    --base_grey: #6c757d;
+    /*--base_light_grey: #c3d4df;*/
+    --base_light_grey: #dee2e6;
+    --base_white: #ffffff;
+    --base_white_dark: #f8f9fa;
+    --base_blue: #0269c2;
+    --base_light_blue: #2b9ddf;
+
+    /* Link */
+    --link-color: var(--base_light_blue);
+    --link_hover-color: var(--base_blue);
+
+    /* Nav Link */
+    --link-nav-color: var(--base_yellow);
+    --link-nav-hover-color: var(--base_white);
+
+    /* Tag for note */
+    --tag-for-note-background-color: var(--base_yellow);
+    --tag-for-note-color: var(--base_black);
+
+    /* Tag*/
+    --tag-background-color: var(--base_yellow);
+    --tag-color: var(--base_black);
+    --tag-border-color: var(--base_yellow);
+
+    --tag-hover-background-color: var(--base_black);
+    --tag-hover-color: var(--base_yellow);
+    --tag-hover-border-color: var(--base_black);
+
+    --tag-active-background-color: var(--base_black);
+    --tag-active-color: var(--base_yellow);
+    --tag-active-border-color: var(--base_black);
+
+    /* Input */
+    --input-shadow: var(--base_black);
+
+    /* Tooltip */
+    --tooltip-background-color: var(--base_black);
+    --tooltip-color: var(--base_yellow);
+
+    /* Button */
+    --input-shadow: var(--base_black);
+
+    /* Status */
+    --status-draft-background-color: var(--base_black);
+    --status-draft-color: var(--base_yellow);
+    --status-draft-border-color: var(--base_black);
+
+    --status-moderation-background-color: var(--base_black);
+    --status-moderation-color: var(--base_yellow);
+    --status-moderation-border-color: var(--base_black);
+
+    --status-moderated-background-color: var(--base_black);
+    --status-moderated-color: var(--base_yellow);
+    --status-moderated-border-color: var(--base_black);
+
+    --status-public-background-color: var(--base_white);
+    --status-public-color: var(--base_black);
+    --status-public-border-color: var(--base_white);
+
+    --status-private-background-color: var(--base_white);
+    --status-private-color: var(--base_yellow);
+    --status-private-border-color: var(--base_white);
+
+    --status-default-background-color: var(--base_grey);
+    --status-default-color: var(--base_yellow);
+    --status-default-border-color: var(--base_grey);
+
+    /* Button sort */
+    --btn-sort-border-color: var(--base_yellow);
+    --btn-sort-active-border-color: var(--base_black);
+    --btn-sort-hover-border-color: var(--base_black);
+
+    /* Button action */
+    --btn-action-background: var(--base_yellow);
+    --btn-action-color: var(--base_black);
+    --btn-action-border-color: var(--base_black);
+    --btn-action-hover-background: var(--base_black);
+    --btn-action-hover-color: var(--base_yellow);
+    --btn-action-hover-border-color: var(--base_yellow);
+    --btn-action-active-background: var(--base_black);
+    --btn-action-active-color: var(--base_yellow);
+    --btn-action-active-border-color: var(--base_black);
+    --btn-action-disabled-background: var(--base_white_dark);
+    --btn-action-disabled-color: var(--base_grey);
+
+    /* -------------------------------------------------- */
+    /* Table */
+    --tabel-background-color: var(--base_light_grey);
+    --tabel-color: var(--base_black);
+
+    --tabel-head-background-color: var(--base_white);
+    --tabel-head-color: var(--base_black);
+
+    /* row */
+    --tabel-row-background-color: var(--base_light_yellow);
+    --tabel-row-color: var(--base_black);
+    --tabel-row-border-background-color: var(--base_light_grey);
+
+    --tabel-row-hover-background-color: var(--base_white);
+    --tabel-row-hover-color: var(--base_black);
+
+    /* row warning */
+    --tabel-row-warning-background-color: var(--base_red_dark);
+    --tabel-row-warning-color: var(--base_black);
+    --tabel-row-warning-border-background-color: var(--base_light_grey);
+
+    --tabel-row-warning-hover-background-color: var(--base_red);
+    --tabel-row-warning-hover-color: var(--base_black);
+
+    /* row public */
+    --tabel-row-public-background-color: var(--base_white);
+    --tabel-row-public-color: var(--base_black);
+    --tabel-row-public-border-background-color: var(--base_light_grey);
+
+    --tabel-row-public-hover-background-color: var(--base_white);
+    --tabel-row-public-hover-color: var(--base_black);
+    /* -------------------------------------------------- */
+
+    /* -------------------------------------------------- */
+    /* Note blockquote */
+    --blockquote-danger-background-color: var(--base_red_dark);
+    --blockquote-danger-color: var(--base_black);
+    --blockquote-danger-border-color: var(--base_black);
+
+    --blockquote-update-background-color: var(--base_black_light);
+    --blockquote-update-color: var(--base_white);
+    --blockquote-update-border-color: var(--base_white);
+    /* -------------------------------------------------- */
+
+    /* Pagination */
+    --pagination-item-background-color: var(--base_light_yellow);
+    --pagination-item-color: var(--base_black);
+    --pagination-item-border-color: var(--base_light_grey);
+
+    --pagination-item-active-background-color: var(--base_yellow);
+    --pagination-item-active-color: var(--base_black);
+    --pagination-item-active-border-color: var(--base_yellow);
+
+    --pagination-item-hover-background-color: var(--base_yellow);
+    --pagination-item-hover-color: var(--base_black);
+
+    --pagination-item-disabled-background-color: var(--base_white_dark);
+    --pagination-item-disabled-color: var(--base_grey);
+}

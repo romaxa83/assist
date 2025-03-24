@@ -23,21 +23,28 @@ class Linked extends ManageRelatedRecords
 
     public function getTitle(): string | Htmlable
     {
+        return __('system.note_linked.page.title');
+    }
+
+    public function getSubheading(): string | Htmlable
+    {
         $recordTitle = $this->getRecordTitle();
 
         $recordTitle = $recordTitle instanceof Htmlable ? $recordTitle->toHtml() : $recordTitle;
 
-        return "Manage {$recordTitle} linked ??";
+        return __('system.note_linked.page.sub_title', [
+            'title' => $recordTitle,
+        ]);
     }
 
     public function getBreadcrumb(): string
     {
-        return 'Linked';
+        return __('system.note_linked.page.breadcrumb');
     }
 
     public static function getNavigationLabel(): string
     {
-        return 'Linked notes';
+        return __('system.note_linked.page.navigation_label');
     }
 
     public static function getNavigationBadge(): string
